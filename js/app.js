@@ -1,15 +1,18 @@
 (() => {
   "use strict";
 
-  const G = window.GUIDE;
-  const etapes = G.etapes;
+  const GUIDES = window.GUIDES;
   const CLE = "guide-dofus:progression";
 
   // ---------- État sauvegardé dans le navigateur ----------
+  // Les identifiants d'étapes sont uniques entre les guides (e…, g…, a…),
+  // donc « faites » et « succes » sont communs ; seule l'étape en cours dépend du guide.
   const etat = Object.assign(
-    { faites: {}, succes: {}, courante: etapes[0].id, classe: "" },
+    { faites: {}, succes: {}, courante: GUIDES[0].etapes[0].id, courantes: {}, guide: GUIDES[0].id, classe: "" },
     lire()
   );
+  let G = GUIDES.find((g) => g.id === etat.guide) || GUIDES[0];
+  let etapes = G.etapes;
   function lire() {
     try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch { return {}; }
   }
@@ -61,21 +64,37 @@
 
   // ---------- Page principale ----------
   const $ = (s) => document.querySelector(s);
-  const groupes = [];
-  etapes.forEach((e) => {
-    const g = groupes[groupes.length - 1];
-    if (g && g.niveau === e.niveau) g.etapes.push(e);
-    else groupes.push({ niveau: e.niveau, etapes: [e] });
-  });
-  const nomGroupe = (n) => (n === "0" ? "Préambule" : /^\d+$/.test(n) ? `Niveau ${n}` : `Niveaux ${n}`);
-
-  $("#titre-guide").textContent = G.titre;
-  $("#sous-titre").textContent = `Par ${G.auteur} · version du jeu ${G.version} · ${etapes.length} étapes à suivre dans l'ordre, cochez au fur et à mesure.`;
-  $("#nb-total").textContent = etapes.length;
-  G.classes.forEach((c) => $("#classe").insertAdjacentHTML("beforeend", `<option>${echap(c)}</option>`));
-  $("#classe").value = etat.classe;
-
+  let groupes = [];
+  const nomGroupe = (n) => (n === "" ? G.titre : n === "0" ? "Préambule" : /^\d+$/.test(n) ? `Niveau ${n}` : `Niveaux ${n}`);
   const ouvertes = new Set([etat.courante]);
+
+  // Prépare la page pour le guide choisi (onglets en haut).
+  function chargerGuide(id) {
+    etat.courantes[G.id] = etat.courante;
+    G = GUIDES.find((g) => g.id === id) || GUIDES[0];
+    etapes = G.etapes;
+    etat.guide = G.id;
+    etat.courante = etat.courantes[G.id] && index(etat.courantes[G.id]) >= 0 ? etat.courantes[G.id] : etapes[0].id;
+    ouvertes.add(etat.courante);
+    groupes = [];
+    etapes.forEach((e) => {
+      const g = groupes[groupes.length - 1];
+      if (g && g.niveau === e.niveau) g.etapes.push(e);
+      else groupes.push({ niveau: e.niveau, etapes: [e] });
+    });
+    const niveaux = etapes.map((e) => e.niveau).filter((n) => /\d/.test(n));
+    $("#niveau-guide").textContent = G.id === "progression" ? "1 à 200" : niveaux.length ? niveaux[0] : "—";
+    $("#niveau-stat").hidden = G.id !== "progression";
+    $("#titre-guide").textContent = G.titre;
+    $("#sous-titre").textContent = `${G.description} Par ${G.auteur} · version du jeu ${G.version} · ${etapes.length} étapes.`;
+    $("#nb-total").textContent = etapes.length;
+    $("#guides").innerHTML = GUIDES.map((g) =>
+      `<button type="button" class="tab ${g.id === G.id ? "is-active" : ""}" data-guide="${g.id}">${echap(g.titre)}</button>`).join("");
+    $("#recherche").value = "";
+  }
+
+  GUIDES[0].classes.forEach((c) => $("#classe").insertAdjacentHTML("beforeend", `<option>${echap(c)}</option>`));
+  $("#classe").value = etat.classe;
 
   function rendrePage() {
     const q = $("#recherche").value.trim().toLowerCase();
@@ -182,6 +201,8 @@
       ouvertes.has(id) ? ouvertes.delete(id) : ouvertes.add(id);
       rendrePage(); return;
     }
+    const onglet = t.closest("[data-guide]");
+    if (onglet) { chargerGuide(onglet.dataset.guide); sauver(); toutRendre(); return; }
     const act = t.closest("[data-action]");
     if (act) ({ precedente: () => aller(-1), suivante: () => aller(1), terminer: terminerCourante })[act.dataset.action]();
   }
@@ -212,7 +233,7 @@
   $("#classe").addEventListener("change", (ev) => { etat.classe = ev.target.value; sauver(); toutRendre(); });
   $("#reinitialiser").addEventListener("click", () => {
     if (!confirm("Effacer toute ta progression ?")) return;
-    etat.faites = {}; etat.succes = {}; etat.courante = etapes[0].id;
+    etat.faites = {}; etat.succes = {}; etat.courantes = {}; etat.courante = etapes[0].id;
     sauver(); toutRendre();
   });
 
@@ -232,7 +253,7 @@
     racine.dataset.id = e.id;
     racine.innerHTML = `
       <div class="ov__top">
-        <span class="pill pill--accent">${echap(e.niveau === "0" ? "Préambule" : "Niv. " + e.niveau)}</span>
+        <span class="pill pill--accent">${echap(e.niveau === "" ? G.titre : e.niveau === "0" ? "Préambule" : "Niv. " + e.niveau)}</span>
         ${etat.faites[e.id] ? `<span class="pill">Terminée</span>` : ""}
         <span class="ov__count">Étape ${i + 1} / ${etapes.length}</span>
       </div>
@@ -295,6 +316,7 @@
     rendreOverlay();
   }
 
+  chargerGuide(etat.guide);
   toutRendre();
   requestAnimationFrame(() => {
     const el = document.querySelector(".step.is-current");

@@ -8,9 +8,8 @@ import openpyxl
 from openpyxl.utils import column_index_from_string as ci, get_column_letter as gl
 
 src = sys.argv[1]
-onglet = sys.argv[2] if len(sys.argv) > 2 else "Dofus 3.0"
 wb = openpyxl.load_workbook(src)
-ws = wb[onglet]
+ws = wb["Dofus 3.0"]
 
 def txt(v):
     if v is None or isinstance(v, bool):
@@ -102,15 +101,102 @@ for rows in blocks:
     steps.append(step)
 
 version = txt(ws["C1"].value) or ""
-out = {
-    "titre": "Guide de Progression Optimisée",
+guides = [{
+    "id": "progression",
+    "titre": "Progression Optimisée",
+    "description": "Toutes les quêtes du jeu dans l'ordre, du niveau 1 à 200.",
     "auteur": "Skyzio",
     "version": re.sub(r".*:\s*", "", version),
     "classes": list(classes.values()),
     "etapes": steps,
-}
+}]
+
+
+def premiere_ligne(t):
+    lignes = t.split("\n")
+    return lignes[0].strip(), "\n".join(lignes[1:]).strip()
+
+
+# ---------- Dofus des Glaces : une étape par zone de Frigost ----------
+wg = wb["Dofus des Glaces"]
+CATS = [("D", "Série principale"), ("G", "Rescapés"), ("J", "Agriculture"), ("K", "Alchimie"),
+        ("N", "Donjons"), ("Q", "Annexe")]
+zones, cur = [], None
+for r in range(2, wg.max_row + 1):
+    z = txt(wg.cell(r, 1).value)
+    if z:
+        cur = {"zone": z, "rows": []}
+        zones.append(cur)
+    if cur:
+        cur["rows"].append(r)
+etapes_ddg = []
+avant = [r for r in range(2, zones[0]["rows"][0])]
+for zi, zb in enumerate(zones):
+    rows = (avant if zi == 0 else []) + zb["rows"]
+    succes, details, donjons = [], [], []
+    for r in rows:
+        d = txt(wg.cell(r, 2).value)
+        if d:
+            donjons.append(d)
+        for col, label in CATS:
+            v = wg.cell(r, ci(col)).value
+            t = txt(v)
+            if not t or str(v).startswith("="):
+                continue
+            nom, note = premiere_ligne(t)
+            voisin = wg.cell(r, ci(col) + 1).value
+            if isinstance(voisin, str) and voisin.startswith("="):
+                details.append(f"Série « {nom} »" + (f" : {note}" if note else ""))
+                continue
+            succes.append(f"{label} : {nom}")
+            if note:
+                details.append(f"{nom} : {note}")
+    etapes_ddg.append({
+        "id": f"g{zi+1}", "niveau": "", "titre": zb["zone"], "details": details,
+        "infos": [], "succes": succes, **({"donjons": donjons} if donjons else {}),
+    })
+guides.append({
+    "id": "glaces",
+    "titre": "Dofus des Glaces",
+    "description": "Les quêtes de Frigost nécessaires au Dofus des Glaces, zone par zone.",
+    "auteur": "Skyzio", "version": "3.0", "classes": [], "etapes": etapes_ddg,
+})
+
+# ---------- Avis de recherche : une étape par succès ----------
+wa = wb["Avis de recherche"]
+etapes_ar, cur, milice = [], None, None
+for r in range(3, wa.max_row + 1):
+    nom = txt(wa.cell(r, 3).value)
+    if not nom:
+        continue
+    a = txt(wa.cell(r, 1).value)
+    if a or cur is None:
+        cur = {"id": f"a{len(etapes_ar)+1}", "niveau": "", "titre": a or "Avis divers",
+               "details": [], "infos": [], "succes": []}
+        etapes_ar.append(cur)
+    m = txt(wa.cell(r, 5).value)
+    if m:
+        m = re.sub(r"\s*\n\s*", " ", m)
+        if m not in cur["details"]:
+            cur["details"].append(f"Milice : {m}")
+    niv = txt(wa.cell(r, 2).value) or "?"
+    zone = txt(wa.cell(r, 6).value) or ""
+    gain = txt(wa.cell(r, 7).value)
+    unite = "alitons" if r > 66 else "doplons"
+    leg = " · légendaire" if wa.cell(r, 4).value is True else ""
+    cur["succes"].append(f"{nom} (niv. {niv}{leg}) · {zone}" + (f" · {gain} {unite}" if gain else ""))
+for e in etapes_ar:
+    e["details"] = [d.replace("Milice : Milice : ", "Milice : ") for d in e["details"]]
+guides.append({
+    "id": "avis",
+    "titre": "Avis de recherche",
+    "description": "Tous les avis de recherche, leur milice, leur zone et les gains.",
+    "auteur": "Skyzio", "version": "3.0", "classes": [], "etapes": etapes_ar,
+})
+
 dest = Path(__file__).resolve().parent.parent / "data" / "guide.js"
 dest.parent.mkdir(exist_ok=True)
 # Fichier .js (et pas .json) pour que l'appli marche aussi en ouvrant index.html directement.
-dest.write_text("window.GUIDE = " + json.dumps(out, ensure_ascii=False, indent=1) + ";\n", encoding="utf-8")
-print(f"{len(steps)} étapes écrites dans {dest}")
+dest.write_text("window.GUIDES = " + json.dumps(guides, ensure_ascii=False, indent=1) + ";\n", encoding="utf-8")
+for g in guides:
+    print(f"{g['titre']} : {len(g['etapes'])} étapes")

@@ -63,6 +63,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { color-scheme: dark; }
 body {
   margin: 0;
@@ -117,6 +118,14 @@ b { font-weight: 600; }
 .hero__kicker { margin: 0; color: var(--accent); letter-spacing: .18em; text-transform: uppercase; font-size: 12px; font-weight: 600; }
 .hero h1 { margin: 8px 0; font-size: clamp(26px, 4vw, 40px); font-weight: 700; }
 .hero__sub { margin: 0 auto; max-width: 560px; color: var(--texte-2); }
+
+.tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 20px; }
+.tab {
+  padding: 8px 16px; border-radius: 99px; border: 1px solid var(--bord); background: var(--bloc);
+  cursor: pointer; font-weight: 600; font-size: 14px; color: var(--texte-2); transition: background .15s, color .15s;
+}
+.tab:hover { background: var(--bloc-survol); color: var(--texte); }
+.tab.is-active { background: var(--accent); border-color: transparent; color: var(--sur-accent); }
 
 /* ---------- Cartes ---------- */
 .card { background: var(--bloc); border: 1px solid var(--bord); border-radius: var(--rayon); }
