@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guide Dofus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="nav__brand"><span class="nav__dot"></span>Guide Dofus</div>
+    <div class="nav__actions">
+      <select id="classe" class="select" aria-label="Ma classe">
+        <option value="">Ma classe…</option>
+      </select>
+      <button id="ouvrir-overlay" class="btn btn--accent" type="button">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M19 7h-8v6h8V7zm2-4H3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H3V5h18v14z"/></svg>
+        Ouvrir l'overlay
+      </button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <p class="hero__kicker">Guide optimisé</p>
+    <h1 id="titre-guide">Guide de Progression Optimisée</h1>
+    <p id="sous-titre" class="hero__sub"></p>
+  </section>
+
+  <section class="stats card">
+    <div class="stat">
+      <span class="stat__label">Niveau conseillé</span>
+      <span class="stat__value stat__value--accent">1 à 200</span>
+    </div>
+    <div class="stat">
+      <span class="stat__label">Étapes</span>
+      <span class="stat__value"><b id="nb-faites">0</b> / <span id="nb-total">0</span></span>
+    </div>
+    <div class="stat stat--grow">
+      <div class="bar"><div id="barre" class="bar__fill"></div></div>
+    </div>
+    <span id="pourcent" class="stat__value">0 %</span>
+  </section>
+
+  <main class="layout">
+    <aside class="sidebar card">
+      <input id="recherche" class="input" type="search" placeholder="Rechercher une quête, un donjon…">
+      <p class="sidebar__title">Chapitres</p>
+      <nav id="chapitres" class="chapters"></nav>
+      <button id="reinitialiser" class="btn btn--ghost btn--small" type="button">Réinitialiser ma progression</button>
+    </aside>
+    <div id="etapes" class="steps"></div>
+  </main>
+
+  <footer class="footer">
+    Contenu : <em>Guide de Progression Optimisée</em> par Skyzio. Application non officielle, sans lien avec Ankama.
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="data/guide.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
