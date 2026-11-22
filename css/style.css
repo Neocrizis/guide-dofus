@@ -1,19 +1,22 @@
 :root {
-  --accent: #b7dc69;
-  --accent-soft: rgba(183, 220, 105, .12);
-  --accent-glow: rgba(183, 220, 105, .45);
-  --fond: #3e3f3c;
+  /* Palette « nuit et kamas » : fond bleu nuit, accent or ambré. */
+  --accent: #f2b84b;
+  --accent-hover: #ffcd70;
+  --sur-accent: #2b1c02;
+  --accent-soft: rgba(242, 184, 75, .14);
+  --accent-glow: rgba(242, 184, 75, .40);
+  --fond: #141a2b;
+  --fond-menu: #1b2236;
+  --fond-toast: #10151f;
   --fond-site:
-    radial-gradient(ellipse 52% 44% at 62% 22%, rgba(118,123,107,.55) 0%, rgba(118,123,107,0) 72%),
-    radial-gradient(ellipse 46% 41% at 72% 54%, rgba(26,26,26,.5) 0%, rgba(26,26,26,0) 68%),
-    radial-gradient(ellipse 47% 37% at 19% 58%, rgba(107,111,98,.46) 0%, rgba(107,111,98,0) 70%),
-    radial-gradient(ellipse 39% 34% at 6% 15%, rgba(33,33,33,.44) 0%, rgba(33,33,33,0) 66%),
-    radial-gradient(ellipse 51% 43% at 86% 79%, rgba(99,103,91,.4) 0%, rgba(99,103,91,0) 74%),
-    #2b2c29;
+    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(64, 92, 168, .35) 0%, rgba(64, 92, 168, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 10% 60%, rgba(46, 130, 140, .22) 0%, rgba(46, 130, 140, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(120, 70, 150, .20) 0%, rgba(120, 70, 150, 0) 72%),
+    #141a2b;
   --bloc: rgba(255, 255, 255, .05);
   --bloc-2: rgba(255, 255, 255, .08);
   --bloc-survol: rgba(255, 255, 255, .12);
-  --bord: rgba(255, 255, 255, .08);
+  --bord: rgba(160, 185, 255, .12);
   --panneau: rgba(16, 16, 16, .55);
   --texte: #fff;
   --texte-2: rgba(255, 255, 255, .78);
@@ -21,12 +24,50 @@
   --rayon: 20px;
 }
 
+/* ---------- Autres thèmes (sélecteur dans la barre du haut) ---------- */
+/* Givre : bleu glacier de Frigost */
+:root[data-theme="givre"] {
+  --accent: #7fd6f2; --accent-hover: #a6e5f8; --sur-accent: #06232e;
+  --accent-soft: rgba(127, 214, 242, .14); --accent-glow: rgba(127, 214, 242, .40);
+  --fond: #101a22; --fond-menu: #172631; --fond-toast: #0b1319;
+  --bord: rgba(170, 225, 255, .13);
+  --fond-site:
+    radial-gradient(ellipse 55% 45% at 70% 8%, rgba(120, 190, 230, .28) 0%, rgba(120, 190, 230, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 8% 65%, rgba(200, 230, 255, .10) 0%, rgba(200, 230, 255, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(60, 110, 160, .25) 0%, rgba(60, 110, 160, 0) 72%),
+    #101a22;
+}
+/* Braise : brun volcanique et orange feu */
+:root[data-theme="braise"] {
+  --accent: #ff7a45; --accent-hover: #ff9b70; --sur-accent: #2e0d00;
+  --accent-soft: rgba(255, 122, 69, .14); --accent-glow: rgba(255, 122, 69, .40);
+  --fond: #1c1412; --fond-menu: #2a1d1a; --fond-toast: #140e0c;
+  --bord: rgba(255, 200, 170, .11);
+  --fond-site:
+    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(190, 70, 30, .28) 0%, rgba(190, 70, 30, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 10% 60%, rgba(120, 50, 40, .25) 0%, rgba(120, 50, 40, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(230, 140, 60, .12) 0%, rgba(230, 140, 60, 0) 72%),
+    #1c1412;
+}
+/* Pourpre : violet profond et rose */
+:root[data-theme="pourpre"] {
+  --accent: #f07ac0; --accent-hover: #f7a0d3; --sur-accent: #2e0620;
+  --accent-soft: rgba(240, 122, 192, .14); --accent-glow: rgba(240, 122, 192, .40);
+  --fond: #1a1226; --fond-menu: #261a36; --fond-toast: #120c1b;
+  --bord: rgba(225, 190, 255, .12);
+  --fond-site:
+    radial-gradient(ellipse 55% 45% at 72% 10%, rgba(140, 70, 190, .32) 0%, rgba(140, 70, 190, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 10% 62%, rgba(200, 80, 150, .16) 0%, rgba(200, 80, 150, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 88% 88%, rgba(70, 50, 150, .25) 0%, rgba(70, 50, 150, 0) 72%),
+    #1a1226;
+}
+
 * { box-sizing: border-box; }
 html { color-scheme: dark; }
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Barlow, system-ui, sans-serif;
+  font-family: Outfit, system-ui, sans-serif;
   color: var(--texte);
   background: var(--fond-site);
   background-color: var(--fond);
@@ -58,8 +99,8 @@ b { font-weight: 600; }
 }
 .btn:hover { background: var(--bloc-survol); }
 .btn:active { transform: translateY(1px); }
-.btn--accent { background: var(--accent); color: #1f2412; border-color: transparent; }
-.btn--accent:hover { background: #c8e888; box-shadow: 0 0 18px var(--accent-glow); }
+.btn--accent { background: var(--accent); color: var(--sur-accent); border-color: transparent; }
+.btn--accent:hover { background: var(--accent-hover); box-shadow: 0 0 18px var(--accent-glow); }
 .btn--ghost { background: transparent; color: var(--texte-3); }
 .btn--small { padding: 6px 12px; font-size: 12px; }
 .btn:disabled { opacity: .35; cursor: default; }
@@ -68,7 +109,7 @@ b { font-weight: 600; }
   border: 1px solid var(--bord); background: rgba(0,0,0,.25); outline: none;
 }
 .select { width: auto; min-width: 150px; cursor: pointer; }
-.select option { background: #2b2c29; }
+.select option { background: var(--fond-menu); }
 .input:focus, .select:focus { border-color: var(--accent); }
 
 /* ---------- En-tête ---------- */
@@ -114,7 +155,7 @@ b { font-weight: 600; }
 .group__head { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
 .group__badge {
   min-width: 28px; height: 28px; padding: 0 8px; border-radius: 8px;
-  display: grid; place-items: center; background: var(--accent); color: #1f2412; font-weight: 700; font-size: 13px;
+  display: grid; place-items: center; background: var(--accent); color: var(--sur-accent); font-weight: 700; font-size: 13px;
 }
 .group__title { margin: 0; font-size: 18px; font-weight: 700; flex: 1; }
 .group__pct { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
@@ -125,7 +166,7 @@ b { font-weight: 600; }
   transition: background .15s, border-color .15s;
 }
 .step:hover { background: var(--bloc-survol); }
-.step.is-current { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-soft), 0 0 22px rgba(183,220,105,.12); }
+.step.is-current { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-soft), 0 0 22px var(--accent-soft); }
 .step.is-done .step__title { color: var(--texte-3); text-decoration: line-through; text-decoration-color: rgba(255,255,255,.3); }
 .step__head { display: flex; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer; }
 .step__title { flex: 1; font-weight: 600; font-size: 15px; }
@@ -143,7 +184,7 @@ b { font-weight: 600; }
   display: grid; place-items: center; transition: background .15s, border-color .15s;
 }
 .check:checked { background: var(--accent); border-color: var(--accent); }
-.check:checked::after { content: ""; width: 10px; height: 6px; border: 2.5px solid #1f2412; border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.check:checked::after { content: ""; width: 10px; height: 6px; border: 2.5px solid var(--sur-accent); border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
 .pill {
   display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 8px;
   font-size: 12px; background: rgba(0,0,0,.28); color: var(--texte-2); white-space: nowrap;
@@ -153,7 +194,7 @@ b { font-weight: 600; }
   display: inline-block; padding: 0 6px; border-radius: 6px; background: var(--accent-soft); color: var(--accent);
   font-weight: 600; cursor: pointer; border: 0; font-size: .95em;
 }
-.coord:hover { background: var(--accent); color: #1f2412; }
+.coord:hover { background: var(--accent); color: var(--sur-accent); }
 .section { margin-top: 12px; }
 .section__label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
 .section p { margin: 0 0 6px; color: var(--texte-2); white-space: pre-line; font-size: 14px; }
@@ -167,7 +208,7 @@ b { font-weight: 600; }
 .footer { text-align: center; color: var(--texte-3); font-size: 13px; padding: 0 16px 32px; }
 .toast {
   position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0;
-  padding: 10px 16px; border-radius: 12px; background: #1d1e1c; border: 1px solid var(--accent);
+  padding: 10px 16px; border-radius: 12px; background: var(--fond-toast); border: 1px solid var(--accent);
   color: var(--texte); font-size: 14px; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 50;
 }
 .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }

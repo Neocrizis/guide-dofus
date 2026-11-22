@@ -6,13 +6,22 @@
   <title>Guide Dofus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    try { const t = localStorage.getItem("guide-dofus:theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+  </script>
 </head>
 <body>
   <header class="nav">
     <div class="nav__brand"><span class="nav__dot"></span>Guide Dofus</div>
     <div class="nav__actions">
+      <select id="theme" class="select" aria-label="Thème de couleur">
+        <option value="">Thème : Nuit dorée</option>
+        <option value="givre">Thème : Givre</option>
+        <option value="braise">Thème : Braise</option>
+        <option value="pourpre">Thème : Pourpre</option>
+      </select>
       <select id="classe" class="select" aria-label="Ma classe">
         <option value="">Ma classe…</option>
       </select>

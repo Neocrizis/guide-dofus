@@ -197,6 +197,18 @@
   document.addEventListener("click", (ev) => gererClic(ev, document));
   document.addEventListener("change", gererChangement);
   $("#recherche").addEventListener("input", rendrePage);
+  // Thème de couleur : appliqué à la page et à l'overlay.
+  function appliquerTheme(t) {
+    [document, overlayDoc()].forEach((d) => {
+      if (!d) return;
+      if (t) d.documentElement.dataset.theme = t; else delete d.documentElement.dataset.theme;
+    });
+  }
+  $("#theme").value = document.documentElement.dataset.theme || "";
+  $("#theme").addEventListener("change", (ev) => {
+    appliquerTheme(ev.target.value);
+    try { localStorage.setItem("guide-dofus:theme", ev.target.value); } catch { /* stockage indisponible */ }
+  });
   $("#classe").addEventListener("change", (ev) => { etat.classe = ev.target.value; sauver(); toutRendre(); });
   $("#reinitialiser").addEventListener("click", () => {
     if (!confirm("Effacer toute ta progression ?")) return;
@@ -248,6 +260,7 @@
       doc.head.appendChild(c);
     });
     doc.documentElement.lang = "fr";
+    if (document.documentElement.dataset.theme) doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
     doc.body.innerHTML = `<div id="ov" class="ov"></div><div id="toast" class="toast" role="status" aria-live="polite"></div>`;
     doc.addEventListener("click", (ev) => gererClic(ev, doc));
     doc.addEventListener("change", gererChangement);

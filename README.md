@@ -18,7 +18,7 @@ L'application utilise le **Guide de Progression Optimisée de Skyzio** (onglet �
 4. Dans l'overlay, coche les succès, puis **Terminée ✓** pour passer à l'étape suivante (ou les flèches ← → du clavier).
 5. Clique sur une position comme `[2,-15]` pour copier la commande `/travel 2,-15`, à coller dans le chat du jeu.
 
-La progression est sauvegardée dans le navigateur. Le style s'inspire de duffus.fr (fond sombre, accent vert).
+La progression est sauvegardée dans le navigateur. Thème sombre bleu nuit avec un accent doré.
 
 ## Structure
 
