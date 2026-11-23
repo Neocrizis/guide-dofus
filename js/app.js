@@ -395,30 +395,6 @@
   document.addEventListener("click", (ev) => gererClic(ev, document));
   document.addEventListener("change", gererChangement);
 
-  // Photo du personnage : réduite (240 px de haut max) puis gardée avec sa progression.
-  document.addEventListener("change", (ev) => {
-    const input = ev.target.closest?.("[data-photo]");
-    const fichier = input?.files?.[0];
-    if (!fichier) return;
-    const url = URL.createObjectURL(fichier);
-    const img = new Image();
-    img.onload = () => {
-      const r = Math.min(1, 240 / img.height, 240 / img.width);
-      const c = document.createElement("canvas");
-      c.width = Math.round(img.width * r); c.height = Math.round(img.height * r);
-      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-      URL.revokeObjectURL(url);
-      etat.photo = c.toDataURL("image/webp", 0.85);
-      if (!etat.photo.startsWith("data:image/webp")) etat.photo = c.toDataURL("image/jpeg", 0.85);
-      sauver(); rendreAccueil(); toast("Photo enregistrée");
-    };
-    img.onerror = () => { URL.revokeObjectURL(url); toast("Image illisible"); };
-    img.src = url;
-  });
-  document.addEventListener("click", (ev) => {
-    if (!ev.target.closest("[data-photo-suppr]")) return;
-    delete etat.photo; sauver(); rendreAccueil();
-  });
   $("#recherche").addEventListener("input", rendrePage);
   // Thème de couleur : appliqué à la page et à l'overlay.
   function appliquerTheme(t) {
@@ -766,24 +742,18 @@
     racine.innerHTML = `
       <aside class="dash__cote">
         <div class="card dash-perso">
-          ${etat.photo ? `<img class="dash-perso__photo" src="${echap(etat.photo)}" alt="Portrait de ${echap(etat.nom)}">`
-            : lookPerso(etat) ? `<div class="dash-perso__rendu" data-rendu-perso role="img" aria-label="${echap(etat.nom)}, ${echap(etat.classe)}"></div>`
+          ${lookPerso(etat) ? `<div class="dash-perso__rendu" data-rendu-perso role="img" aria-label="${echap(etat.nom)}, ${echap(etat.classe)}"></div>`
             : `<div class="dash-perso__embleme">${echap(initiales(etat.classe))}</div>`}
           <div class="dash-perso__classe">${echap(etat.classe || "Classe non choisie")}</div>
           <div class="dash-perso__niveau">Niveau <b>${niv || "?"}</b></div>
-          ${!etat.photo && lookPerso(etat) ? apparence(etat) : ""}
-          <div class="dash-perso__photo-actions">
-            <label class="btn btn--small btn--ghost">${etat.photo ? "Changer la photo" : "Ajouter une photo"}
-              <input type="file" accept="image/*" data-photo hidden></label>
-            ${etat.photo ? `<button type="button" class="btn btn--small btn--ghost" data-photo-suppr>Retirer</button>` : ""}
-          </div>
+          ${lookPerso(etat) ? apparence(etat) : ""}
         </div>
         <div class="card dash-liste">
           <div class="dash__label">Mes personnages</div>
           ${compte.persos.map((p) => {
             const b = bilan(p, gP);
             return `<button type="button" class="dash-liste__perso ${p.id === etat.id ? "is-actif" : ""}" data-dash-perso="${p.id}">
-              <span class="dash-liste__mini">${p.photo ? `<img src="${echap(p.photo)}" alt="">` : echap(initiales(p.classe))}</span>
+              <span class="dash-liste__mini">${echap(initiales(p.classe))}</span>
               <span class="dash-liste__nom">${echap(p.nom)}<small>${echap(p.classe || "Sans classe")}${p.niveau ? " · niv. " + echap(p.niveau) : ""}</small></span>
               <span class="dash-liste__pct">${pct(b.etapesFaites, b.etapes)} %</span>
             </button>`;
