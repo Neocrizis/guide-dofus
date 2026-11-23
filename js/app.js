@@ -124,6 +124,7 @@
           <span class="group__badge">${gi + 1}</span>
           <h2 class="group__title">${echap(nomGroupe(g.niveau))}</h2>
           <span class="group__pct">${Math.round((faites / g.etapes.length) * 100)} %</span>
+          <button type="button" class="btn btn--ghost btn--small" data-groupe="${gi}">${faites === g.etapes.length ? "Tout décocher" : "Tout cocher"}</button>
         </div>
         <div class="group__list">${visibles.map(rendreEtape).join("")}</div>
       </section>`;
@@ -161,6 +162,7 @@
         ${contenuEtape(e, false)}
         <div class="step__actions">
           <button type="button" class="btn btn--small" data-suivre="${e.id}">Suivre cette étape dans l'overlay</button>
+          <button type="button" class="btn btn--small btn--ghost" data-jusqua="${e.id}">Tout cocher jusqu'ici</button>
         </div>
       </div>
     </article>`;
@@ -177,6 +179,24 @@
     etat.courante = etapes[i].id;
     ouvertes.add(etat.courante);
     sauver(); toutRendre();
+  }
+  // Coche plusieurs étapes d'un coup, puis place l'étape en cours sur la première non faite.
+  function cocherPlusieurs(liste, valeur) {
+    liste.forEach((e) => { if (valeur) etat.faites[e.id] = true; else delete etat.faites[e.id]; });
+    const suivante = etapes.find((e) => !etat.faites[e.id]);
+    if (valeur && etat.faites[etat.courante] && suivante) { etat.courante = suivante.id; ouvertes.add(suivante.id); }
+    sauver(); toutRendre();
+  }
+  function cocherJusqua(id) {
+    const liste = etapes.slice(0, index(id) + 1);
+    cocherPlusieurs(liste, true);
+    toast(`${liste.length} étape${liste.length > 1 ? "s" : ""} cochée${liste.length > 1 ? "s" : ""}`);
+  }
+  function cocherGroupe(gi) {
+    const g = groupes[gi];
+    const tout = g.etapes.every((e) => etat.faites[e.id]);
+    cocherPlusieurs(g.etapes, !tout);
+    toast(tout ? "Chapitre décoché" : "Chapitre coché");
   }
   function terminerCourante() {
     etat.faites[etat.courante] = true;
@@ -210,6 +230,10 @@
     if (t.matches("[data-faite], [data-succes]")) return; // géré par "change"
     const suivre = t.closest("[data-suivre]");
     if (suivre) { etat.courante = suivre.dataset.suivre; sauver(); toutRendre(); toast("Étape affichée dans l'overlay"); return; }
+    const jusqua = t.closest("[data-jusqua]");
+    if (jusqua) { cocherJusqua(jusqua.dataset.jusqua); return; }
+    const groupe = t.closest("[data-groupe]");
+    if (groupe) { cocherGroupe(+groupe.dataset.groupe); return; }
     const toggle = t.closest("[data-toggle]");
     if (toggle) {
       const id = toggle.dataset.toggle;

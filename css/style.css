@@ -184,7 +184,7 @@ b { font-weight: 600; }
 .step.is-open .step__chevron { transform: rotate(180deg); }
 .step__body { display: none; padding: 0 14px 14px 48px; }
 .step.is-open .step__body { display: block; }
-.step__actions { display: flex; gap: 8px; margin-top: 12px; }
+.step__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 
 /* ---------- Petits éléments ---------- */
 .check {
