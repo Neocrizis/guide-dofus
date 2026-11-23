@@ -42,30 +42,51 @@
     return res;
   }
 
+  // Cartes citées dans les objectifs : nom et coordonnées.
+  async function positions(ids) {
+    const liste = [...new Set(ids)].filter((x) => x > 0);
+    const res = {};
+    for (let i = 0; i < liste.length; i += 50) {
+      const qs = liste.slice(i, i + 50).map((x) => `id[$in][]=${x}`).join("&");
+      const r = await json(`${API}/map-positions?${qs}&$limit=50`);
+      r.data.forEach((m) => { res[m.id] = { nom: m.name?.fr || "", x: m.posX, y: m.posY }; });
+    }
+    return res;
+  }
+
   async function chargerQuete(id) {
     const q = await json(`${API}/quests/${id}`);
     const textes = q.steps.flatMap((s) => s.objectives.map((o) => o.text?.fr || ""));
-    const trouve = (type) => textes.flatMap((t) => [...t.matchAll(new RegExp(`\\{${type},(\\d+)\\}`, "g"))].map((m) => +m[1]));
+    const trouve = (type) => textes.flatMap((t) => [...t.matchAll(new RegExp(`\\{${type},(\\d+)(?:::[^}]*)?\\}`, "g"))].map((m) => +m[1]));
     const depart = q.startPosition?.[0];
     const objetsRecompense = q.steps.flatMap((s) => s.rewards.flatMap((r) => (r.itemsReward || []).map((it) => it[0])));
-    const [pnj, monstres, objets, carte] = await Promise.all([
+    const [pnj, monstres, objets, carte, alterations, zones, cartes] = await Promise.all([
       noms("npcs", [...trouve("npc"), depart?.npcId || 0]),
       noms("monsters", trouve("monster")),
       noms("items", [...trouve("item"), ...objetsRecompense]),
       depart?.mapId ? json(`${API}/map-positions/${depart.mapId}`).catch(() => null) : null,
+      noms("alterations", trouve("alteration")).catch(() => ({})),
+      noms("subareas", trouve("subarea")).catch(() => ({})),
+      positions(trouve("map")).catch(() => ({})),
     ]);
     let zone = "";
     if (carte?.subAreaId) {
       const sa = await json(`${API}/subareas/${carte.subAreaId}`).catch(() => null);
       zone = sa?.name?.fr || "";
     }
-    return { q, pnj, monstres, objets, carte, zone };
+    return { q, pnj, monstres, objets, carte, zone, alterations, zones, cartes };
   }
 
   function remplacer(texte, d) {
-    return echap(texte).replace(/\{(\w+),(\d+)[^}]*\}/g, (_, type, id) => {
-      const nom = type === "npc" ? d.pnj[id] : type === "monster" ? d.monstres[id] : type === "item" ? d.objets[id] : null;
-      return nom ? `<b>${echap(nom)}</b>` : "…";
+    return echap(texte).replace(/\{(\w+),(\d+)(?:::([^}]*))?\}/g, (_, type, id, libelle) => {
+      if (type === "map") {
+        const c = d.cartes?.[id];
+        const nom = libelle || c?.nom;
+        return `${nom ? `<b>${nom}</b>` : "la carte"}${c ? " " + coord(c.x, c.y) : ""}`;
+      }
+      const nom = type === "npc" ? d.pnj[id] : type === "monster" ? d.monstres[id] : type === "item" ? d.objets[id]
+        : type === "alteration" ? d.alterations?.[id] : type === "subarea" ? d.zones?.[id] : null;
+      return nom ? `<b>${echap(nom)}</b>` : libelle || "…";
     });
   }
 
@@ -80,7 +101,8 @@
         const pos = o.map ? [o.map.posX, o.map.posY] : o.coords ? [o.coords.x, o.coords.y] : null;
         const txt = remplacer(nettoyer(o.text?.fr || ""), d).trim();
         if (!txt) return "";
-        return `<li><span>${txt}${pos ? " " + coord(pos[0], pos[1]) : ""}</span></li>`;
+        const dejaCarte = /\{map,\d+/.test(o.text?.fr || "");
+        return `<li><span>${txt}${pos && !dejaCarte ? " " + coord(pos[0], pos[1]) : ""}</span></li>`;
       }).join("");
       const rec = s.rewards.flatMap((r) => [
         r.experienceRatio > 0 ? "Expérience" : null,
