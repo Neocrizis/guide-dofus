@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=15">
+  <link rel="stylesheet" href="css/style.css?v=16">
   <script>
     try { const t = localStorage.getItem("guide-dofus:theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
   </script>
@@ -19,7 +19,21 @@
       <nav class="nav__vues" aria-label="Pages">
         <a class="nav__vue" href="#" data-lien-vue="accueil">Tableau de bord</a>
         <a class="nav__vue" href="#guide" data-lien-vue="guide">Guides</a>
+        <a class="nav__vue" href="#dofus" data-lien-vue="dofus">Dofus</a>
         <a class="nav__vue" href="#archimonstres" data-lien-vue="archimonstres">Archimonstres</a>
+        <a class="nav__vue" href="#almanax" data-lien-vue="almanax">Almanax</a>
+        <a class="nav__vue" href="#encyclopedie" data-lien-vue="encyclopedie">Encyclopédie</a>
+        <details class="nav__outils">
+          <summary class="nav__vue">Outils ▾</summary>
+          <div class="nav__menu">
+            <a href="https://dofusdb.fr/fr/tools/treasure-hunt" target="_blank" rel="noopener"><b>Chasse au trésor</b><small>Outil DofusDB</small></a>
+            <a href="https://dofusdb.fr/fr/tools/map" target="_blank" rel="noopener"><b>Carte du monde</b><small>DofusDB</small></a>
+            <a href="https://barbofus.com/unity-skins" target="_blank" rel="noopener"><b>Skins</b><small>Galerie Barbofus</small></a>
+            <a href="https://barbofus.com/skinator" target="_blank" rel="noopener"><b>Créer un skin</b><small>Skinator Barbofus</small></a>
+            <a href="https://www.dofusbook.net/desktop/fr/equipement/stuffs-publics" target="_blank" rel="noopener"><b>Stuffs</b><small>Stuffs publics DofusBook</small></a>
+            <a href="https://www.dofusbook.net/desktop/fr/equipement/mes-stuffs" target="_blank" rel="noopener"><b>Mes stuffs</b><small>DofusBook</small></a>
+          </div>
+        </details>
       </nav>
     </div>
     <div class="nav__actions">
@@ -45,6 +59,8 @@
   </header>
 
   <section id="vue-accueil" class="dash" hidden></section>
+
+  <div id="vue-pages" class="pages" hidden></div>
 
   <div id="vue-archis" hidden>
     <section class="hero">
@@ -172,13 +188,16 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/guide.js?v=15"></script>
-  <script src="data/archimonstres.js?v=15"></script>
-  <script src="data/quetes.js?v=15"></script>
-  <script src="js/quetes.js?v=15"></script>
-  <script src="js/app.js?v=15"></script>
-  <script src="js/config.js?v=15"></script>
+  <script src="data/guide.js?v=16"></script>
+  <script src="data/archimonstres.js?v=16"></script>
+  <script src="data/quetes.js?v=16"></script>
+  <script src="data/dofus.js?v=16"></script>
+  <script src="data/duffus.js?v=16"></script>
+  <script src="js/quetes.js?v=16"></script>
+  <script src="js/pages.js?v=16"></script>
+  <script src="js/app.js?v=16"></script>
+  <script src="js/config.js?v=16"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-  <script src="js/compte.js?v=15"></script>
+  <script src="js/compte.js?v=16"></script>
 </body>
 </html>

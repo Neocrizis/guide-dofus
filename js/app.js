@@ -329,6 +329,31 @@
 
   document.addEventListener("click", (ev) => gererClic(ev, document));
   document.addEventListener("change", gererChangement);
+
+  // Photo du personnage : réduite (240 px de haut max) puis gardée avec sa progression.
+  document.addEventListener("change", (ev) => {
+    const input = ev.target.closest?.("[data-photo]");
+    const fichier = input?.files?.[0];
+    if (!fichier) return;
+    const url = URL.createObjectURL(fichier);
+    const img = new Image();
+    img.onload = () => {
+      const r = Math.min(1, 240 / img.height, 240 / img.width);
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * r); c.height = Math.round(img.height * r);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      etat.photo = c.toDataURL("image/webp", 0.85);
+      if (!etat.photo.startsWith("data:image/webp")) etat.photo = c.toDataURL("image/jpeg", 0.85);
+      sauver(); rendreAccueil(); toast("Photo enregistrée");
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); toast("Image illisible"); };
+    img.src = url;
+  });
+  document.addEventListener("click", (ev) => {
+    if (!ev.target.closest("[data-photo-suppr]")) return;
+    delete etat.photo; sauver(); rendreAccueil();
+  });
   $("#recherche").addEventListener("input", rendrePage);
   // Thème de couleur : appliqué à la page et à l'overlay.
   function appliquerTheme(t) {
@@ -676,16 +701,22 @@
     racine.innerHTML = `
       <aside class="dash__cote">
         <div class="card dash-perso">
-          <div class="dash-perso__embleme">${echap(initiales(etat.classe))}</div>
+          ${etat.photo ? `<img class="dash-perso__photo" src="${echap(etat.photo)}" alt="Portrait de ${echap(etat.nom)}">`
+            : `<div class="dash-perso__embleme">${echap(initiales(etat.classe))}</div>`}
           <div class="dash-perso__classe">${echap(etat.classe || "Classe non choisie")}</div>
           <div class="dash-perso__niveau">Niveau <b>${niv || "?"}</b></div>
+          <div class="dash-perso__photo-actions">
+            <label class="btn btn--small btn--ghost">${etat.photo ? "Changer la photo" : "Ajouter une photo"}
+              <input type="file" accept="image/*" data-photo hidden></label>
+            ${etat.photo ? `<button type="button" class="btn btn--small btn--ghost" data-photo-suppr>Retirer</button>` : ""}
+          </div>
         </div>
         <div class="card dash-liste">
           <div class="dash__label">Mes personnages</div>
           ${compte.persos.map((p) => {
             const b = bilan(p, gP);
             return `<button type="button" class="dash-liste__perso ${p.id === etat.id ? "is-actif" : ""}" data-dash-perso="${p.id}">
-              <span class="dash-liste__mini">${echap(initiales(p.classe))}</span>
+              <span class="dash-liste__mini">${p.photo ? `<img src="${echap(p.photo)}" alt="">` : echap(initiales(p.classe))}</span>
               <span class="dash-liste__nom">${echap(p.nom)}<small>${echap(p.classe || "Sans classe")}${p.niveau ? " · niv. " + echap(p.niveau) : ""}</small></span>
               <span class="dash-liste__pct">${pct(b.etapesFaites, b.etapes)} %</span>
             </button>`;
@@ -732,6 +763,7 @@
                 ${barre("Succès et quêtes", bP.itemsFaits, bP.items)}
                 ${barre("Avis de recherche", bA.itemsFaits, bA.items)}
                 ${barre("Archimonstres", bR.archisPris, bR.archis)}
+                ${window.Pages ? barre("Dofus terminés", window.Pages.DOFUS.dofus.filter((d) => window.Pages.bilanDofus(d, etat.quetes || {}).p === 100).length, window.Pages.DOFUS.dofus.length) : ""}
               </div>
             </div>
           </div>
@@ -753,13 +785,20 @@
   }
 
   // Deux pages : tableau de bord (par défaut) et guides (#guide).
+  const PAGES = ["dofus", "almanax", "encyclopedie"];
   function afficherVue() {
-    const vue = { "#guide": "guide", "#archimonstres": "archimonstres" }[location.hash] || "accueil";
+    const [h, param] = location.hash.slice(1).split("/");
+    const vue = ["guide", "archimonstres", ...PAGES].includes(h) ? h : "accueil";
     const guide = vue === "guide";
+    const page = PAGES.includes(vue);
     $("#vue-guide").hidden = !guide;
     $("#vue-archis").hidden = vue !== "archimonstres";
     $("#vue-accueil").hidden = vue !== "accueil";
+    $("#vue-pages").hidden = !page;
     document.querySelectorAll("[data-lien-vue]").forEach((a) => a.classList.toggle("is-active", a.dataset.lienVue === vue));
+    document.querySelectorAll(".nav__outils[open]").forEach((d) => d.removeAttribute("open"));
+    if (page) { window.Pages?.afficher(vue, param); return; }
+    window.Pages?.cacher();
     if (vue === "archimonstres") { rendreArchis(); window.scrollTo(0, 0); return; }
     if (guide) {
       rendrePage();
@@ -779,6 +818,7 @@
     rendrePage();
     rendreAccueil();
     rendreArchis();
+    window.Pages?.rendre();
     rendreOverlay();
   }
 
@@ -791,6 +831,9 @@
       changerPerso(actif.id);
     },
     toast,
+    etat: () => etat,
+    sauver: () => { sauver(); rendreAccueil(); },
+    noter,
   };
 
   chargerGuide(etat.guide);
