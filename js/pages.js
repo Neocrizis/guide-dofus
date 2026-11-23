@@ -22,7 +22,9 @@
   const nivQuete = (id) => D.quetes[id]?.[1] ?? window.QUETES?.quetes?.[id]?.[1] ?? "?";
 
   // ---------- Quêtes terminées (par personnage) ----------
-  const faites = () => app()?.etat().quetes || {};
+  // Quêtes cochées ici + celles déjà validées dans le guide de progression.
+  const duGuide = () => app()?.quetesGuide?.() || {};
+  const faites = () => ({ ...duGuide(), ...(app()?.etat().quetes || {}) });
   function marquer(id, fait) {
     const e = app().etat();
     e.quetes = e.quetes || {};
@@ -62,7 +64,7 @@
       <section class="hero">
         <p class="hero__kicker">Quêtes des Dofus</p>
         <h1>Dofus</h1>
-        <p class="hero__sub">Les quêtes à faire pour chaque Dofus, leurs prérequis et les donjons à passer. Coche les quêtes terminées : la progression est enregistrée pour ton personnage.</p>
+        <p class="hero__sub">Les quêtes à faire pour chaque Dofus, leurs prérequis et les donjons à passer. Les quêtes validées dans le guide sont cochées automatiquement, et tu peux cocher les autres ici.</p>
       </section>
       <div class="pages-barre card">
         <input class="input" type="search" data-page-filtre placeholder="Rechercher un Dofus…" value="${echap(filtreDofus)}">
@@ -83,11 +85,12 @@
       }).join("") || `<li class="dash__vide">Aucun Dofus ne correspond.</li>`}</ul>`;
   }
 
-  function ligneQuete(id, f) {
+  function ligneQuete(id, f, g) {
     const fait = !!f[id];
+    const viaGuide = fait && g[id] && !app()?.etat().quetes?.[id];
     return `<li class="qcoche ${fait ? "is-fait" : ""}">
-      <label><input type="checkbox" class="check" data-quete-coche="${id}" ${fait ? "checked" : ""}>
-        <span class="qcoche__nom">${echap(nomQuete(id))}</span></label>
+      <label ${viaGuide ? `title="Validée dans le guide : décoche-la dans le guide pour la retirer"` : ""}><input type="checkbox" class="check" data-quete-coche="${id}" ${fait ? "checked" : ""} ${viaGuide ? "disabled" : ""}>
+        <span class="qcoche__nom">${echap(nomQuete(id))}</span>${viaGuide ? ` <span class="pill qcoche__guide">Guide</span>` : ""}</label>
       <span class="qcoche__niv">Niv. ${echap(nivQuete(id))}</span>
       <button type="button" class="btn btn--small btn--ghost" data-quete-ouvrir="${id}">Détail</button>
     </li>`;
@@ -96,6 +99,7 @@
   function rendreDetailDofus(el, id) {
     const d = D.dofus.find((x) => x.id === id);
     if (!d) { location.hash = "dofus"; return; }
+    const g = duGuide();
     const f = faites();
     const b = bilanDofus(d, f);
     const img = iconesPretes[d.id];
@@ -114,17 +118,17 @@
             </div>
           </div>
           <div class="dofus-entete__actions">
-            <button type="button" class="btn btn--small" data-dofus-tout="${d.id}">${b.ok === b.total ? "Tout décocher" : "Tout cocher"}</button>
+            ${b.ok < b.total || d.quetes.some((q) => app()?.etat().quetes?.[q]) ? `<button type="button" class="btn btn--small" data-dofus-tout="${d.id}">${b.ok === b.total ? "Tout décocher" : "Tout cocher"}</button>` : ""}
           </div>
         </div>
         ${d.prerequis.length ? `<section class="card dofus-bloc">
           <div class="dash__label">Prérequis · ${b.pre} / ${b.preTotal}</div>
           <p class="dialog__hint">Quêtes à terminer avant de pouvoir lancer celles du Dofus.${restants.length ? ` Il en reste ${restants.length}.` : " Tout est bon !"}</p>
-          <ul class="qcoches">${d.prerequis.map((q) => ligneQuete(q, f)).join("")}</ul>
+          <ul class="qcoches">${d.prerequis.map((q) => ligneQuete(q, f, g)).join("")}</ul>
         </section>` : ""}
         <section class="card dofus-bloc">
           <div class="dash__label">Quêtes du Dofus · ${b.ok} / ${b.total}</div>
-          <ul class="qcoches">${d.quetes.map((q) => ligneQuete(q, f)).join("")}</ul>
+          <ul class="qcoches">${d.quetes.map((q) => ligneQuete(q, f, g)).join("")}</ul>
         </section>
         ${d.donjons.length ? `<section class="card dofus-bloc">
           <div class="dash__label">Donjons à passer · ${d.donjons.length}</div>
@@ -262,7 +266,8 @@
       const d = D.dofus.find((x) => x.id === +tout.dataset.dofusTout);
       const e = app().etat();
       e.quetes = e.quetes || {};
-      const cocher = d.quetes.some((id) => !e.quetes[id]);
+      const f = faites();
+      const cocher = d.quetes.some((id) => !f[id]);
       d.quetes.forEach((id) => { if (cocher) e.quetes[id] = 1; else delete e.quetes[id]; });
       if (cocher) app().noter(d.nom, "Quêtes du Dofus terminées");
       app().sauver();

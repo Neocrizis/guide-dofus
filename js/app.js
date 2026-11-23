@@ -716,6 +716,18 @@
     });
     return { etapes: guide.etapes.length, etapesFaites, items, itemsFaits };
   }
+  // Quêtes du jeu validées via le guide : cases cochées, et toutes les cases d'une étape terminée
+  // (avec les quêtes du Dofus des Glaces affichées dans les étapes Frigost). Sert aux pages Dofus.
+  function quetesGuide(p = etat) {
+    const res = {};
+    const ajouter = (s) => String(s).split("\n").forEach((l) => (window.Quetes?.idsPour(l) || []).forEach((id) => { res[id] = 1; }));
+    GUIDES.forEach((g) => g.etapes.forEach((e) => {
+      const finie = !!p.faites?.[e.id];
+      e.succes.forEach((s, i) => { if (finie || p.succes?.[`${e.id}|${i}`]) ajouter(s); });
+      if (finie) zonesGlaces(e).forEach((z) => z.succes.forEach(ajouter));
+    }));
+    return res;
+  }
   const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
   const initiales = (c) => (c ? c.slice(0, 2) : "?");
   const niveauNum = (p) => Math.min(200, Math.max(0, parseInt(p.niveau, 10) || 0));
@@ -829,7 +841,7 @@
                 ${barre("Succès et quêtes", bP.itemsFaits, bP.items)}
                 ${barre("Avis de recherche", bA.itemsFaits, bA.items)}
                 ${barre("Archimonstres", bR.archisPris, bR.archis)}
-                ${window.Pages ? barre("Dofus terminés", window.Pages.DOFUS.dofus.filter((d) => window.Pages.bilanDofus(d, etat.quetes || {}).p === 100).length, window.Pages.DOFUS.dofus.length) : ""}
+                ${window.Pages ? barre("Dofus terminés", window.Pages.DOFUS.dofus.filter((d) => window.Pages.bilanDofus(d, window.Pages.faites()).p === 100).length, window.Pages.DOFUS.dofus.length) : ""}
               </div>
             </div>
           </div>
@@ -901,6 +913,7 @@
     etat: () => etat,
     sauver: () => { sauver(); rendreAccueil(); },
     noter,
+    quetesGuide: () => quetesGuide(),
   };
 
   chargerGuide(etat.guide);

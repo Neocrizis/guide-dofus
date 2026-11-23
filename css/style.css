@@ -611,3 +611,5 @@ a.btn { text-decoration: none; }
 .apparence__couleurs input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
 .apparence__couleurs input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
 .compte-theme { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 16px; padding-bottom: 16px; border-bottom: 1px solid var(--bord); }
+.qcoche__guide { font-size: 10px; padding: 1px 6px; margin-left: 6px; vertical-align: middle; }
+.qcoche input:disabled { opacity: .75; cursor: not-allowed; }
