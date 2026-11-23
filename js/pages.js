@@ -53,6 +53,10 @@
   }
   let iconesPretes = {};
 
+  // Image de fond au survol : la salle du boss du donjon phare de chaque Dofus (cartes rendues par DofusDB),
+  // ou le lieu de départ de la quête quand le Dofus n'a pas de donjon.
+  const FONDS = {7113:192413696,19629:152834048,972:116654595,17078:157289472,737:155718656,16061:136840192,15235:132909056,694:136578048,23237:208408576,23408:210243584,739:62915584,7754:104333827,7043:112203523,7112:211550208,18043:169873408,7115:160564224,7114:187437056,8698:129500160,6980:239601156,19398:187957512,20286:184689921,26066:220467200,29136:220729857,31794:236454912,10907:76288008,13344:101450251};
+  const fond = (id) => FONDS[id] ? `--fond:url('${API}/img/maps/0.5/${FONDS[id]}.jpg')` : "";
   // ---------- Page Dofus ----------
   let filtreDofus = "";
   function rendreListeDofus(el) {
@@ -73,7 +77,7 @@
       <ul class="dofus-grille">${liste.map((d) => {
         const b = bilanDofus(d, f);
         const img = iconesPretes[d.id];
-        return `<li><a class="dofus-carte card ${b.p === 100 ? "is-fini" : ""}" href="#dofus/${d.id}">
+        return `<li><a class="dofus-carte card ${b.p === 100 ? "is-fini" : ""}" href="#dofus/${d.id}" style="${fond(d.id)}">
           <span class="dofus-carte__img">${img ? `<img src="${echap(img)}" alt="" loading="lazy">` : ""}</span>
           <span class="dofus-carte__txt">
             <b>${echap(d.nom)}</b>
@@ -107,7 +111,7 @@
     el.innerHTML = `
       <div class="dofus-detail">
         <a class="btn btn--ghost btn--small" href="#dofus">← Tous les Dofus</a>
-        <div class="card dofus-entete">
+        <div class="card dofus-entete" style="${fond(d.id)}">
           <span class="dofus-carte__img dofus-carte__img--grand">${img ? `<img src="${echap(img)}" alt="">` : ""}</span>
           <div class="dofus-entete__txt">
             <p class="hero__kicker">Niveau ${d.niveau}${d.succes ? ` · Succès « ${echap(d.succes)} »` : ""}</p>

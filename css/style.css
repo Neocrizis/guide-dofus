@@ -520,8 +520,21 @@ a.btn { text-decoration: none; }
 .pages-barre__info { font-size: 13px; color: var(--texte-3); }
 .pages-barre__info b { color: var(--accent); }
 .dofus-grille { list-style: none; padding: 0; margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
-.dofus-carte { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 14px; color: inherit; text-decoration: none; transition: background .15s, border-color .15s; }
-.dofus-carte:hover { background: var(--bloc-2); border-color: var(--accent); }
+.dofus-carte { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 14px; color: inherit; text-decoration: none;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, border-color .25s, background .25s; }
+.dofus-carte::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10,12,20,.92) 0%, rgba(10,12,20,.55) 60%, rgba(10,12,20,.25)), var(--fond, none) center / cover no-repeat;
+  opacity: 0; transform: scale(1.15); transition: opacity .45s, transform 1.2s cubic-bezier(.2,.8,.2,1); }
+.dofus-grille li { position: relative; }
+.dofus-carte:hover, .dofus-carte:focus-visible { transform: translateY(-4px) scale(1.04); z-index: 2; border-color: var(--accent); box-shadow: 0 18px 40px -12px rgba(0,0,0,.7), 0 0 0 1px var(--accent), 0 0 28px -6px var(--accent); }
+.dofus-carte:hover::before, .dofus-carte:focus-visible::before { opacity: 1; transform: scale(1); }
+.dofus-carte__img img { transition: transform .45s cubic-bezier(.2,.8,.2,1), filter .45s; }
+.dofus-carte:hover .dofus-carte__img img { transform: scale(1.18) rotate(-6deg); filter: drop-shadow(0 0 10px var(--accent)); }
+.dofus-carte__img { transition: background .3s; }
+.dofus-carte:hover .dofus-carte__img { background: rgba(255,255,255,.08); backdrop-filter: blur(4px); }
+.dofus-entete { position: relative; isolation: isolate; overflow: hidden; }
+.dofus-entete::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10,12,20,.9) 0%, rgba(10,12,20,.6) 55%, rgba(10,12,20,.3)), var(--fond, none) center / cover no-repeat; animation: fond-entre .9s ease-out both; }
+@keyframes fond-entre { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .dofus-carte, .dofus-carte::before, .dofus-carte__img img { transition: none; } .dofus-carte:hover { transform: none; } }
 .dofus-carte.is-fini { border-color: var(--accent); }
 .dofus-carte__img { width: 56px; height: 56px; border-radius: 14px; background: var(--bloc-2); display: grid; place-items: center; overflow: hidden; }
 .dofus-carte__img img { width: 48px; height: 48px; object-fit: contain; }
