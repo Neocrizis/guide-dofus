@@ -13,8 +13,8 @@
     try { const t = localStorage.getItem("guide-dofus:theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
   </script>
   <style>
-    .roue { max-width: 1080px; width: calc(100% - 32px); margin: 0 auto 32px; padding: 0; overflow: hidden; }
-    .roue iframe { display: block; width: 100%; height: 1500px; border: 0; }
+    .roue { max-width: 1080px; width: calc(100% - 32px); margin: 0 auto 32px; padding: 12px 0 0; overflow: hidden; }
+    .roue iframe { display: block; width: 100%; height: 1300px; border: 0; background: transparent; color-scheme: normal; }
     .roue__repli { margin: 0; padding: 14px 18px; border-top: 1px solid var(--bord); font-size: 13px; color: var(--texte-3); text-align: center; }
     .roue__repli a { color: var(--accent); }
   </style>
@@ -41,8 +41,7 @@
   </section>
 
   <main class="roue card">
-    <iframe id="roue-de-la-chance" src="https://roue-dofus.neocrizis.workers.dev/?masquer=historique"
-            title="Roue de la chance" allow="clipboard-write"></iframe>
+    <iframe id="roue-de-la-chance" title="Roue de la chance" allow="clipboard-write"></iframe>
     <p class="roue__repli">La roue ne s'affiche pas ? <a href="https://roue-dofus.neocrizis.workers.dev/" target="_blank" rel="noopener">Ouvre-la dans un nouvel onglet</a>.</p>
   </main>
 
@@ -51,10 +50,15 @@
   </footer>
 
   <script>
+    // La roue prend le design du site (police, couleurs et thème choisi dans Mon compte).
+    const ROUE = "https://roue-dofus.neocrizis.workers.dev";
+    let theme = "";
+    try { theme = localStorage.getItem("guide-dofus:theme") || ""; } catch {}
+    document.getElementById("roue-de-la-chance").src = ROUE + "/?masquer=historique&style=guide" + (theme ? "&theme=" + encodeURIComponent(theme) : "");
     // La roue envoie sa hauteur : le cadre s'ajuste, sans double barre de défilement.
     // Seuls les messages venant de la roue sont pris en compte.
     addEventListener("message", (e) => {
-      if (e.origin !== "https://roue-dofus.neocrizis.workers.dev" || !e.data || e.data.type !== "roue-de-la-chance:hauteur") return;
+      if (e.origin !== ROUE || !e.data || e.data.type !== "roue-de-la-chance:hauteur") return;
       const h = Number(e.data.hauteur);
       if (h > 200 && h < 20000) document.getElementById("roue-de-la-chance").style.height = h + "px";
     });
