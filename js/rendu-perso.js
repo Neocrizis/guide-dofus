@@ -39,12 +39,14 @@
         for (const e of p.dl) {
           if (typeof e === "number" && e >= 0) { coul = e && couleurs[e - 1] != null ? rgb(couleurs[e - 1]) : null; continue; }
           const ch = p.ch[k++];
+          const teinte = coul;
+          coul = null; // une couleur ne s'applique qu'au morceau qui suit (les yeux, juste après, gardent leur couleur)
           if (!ch) continue;
           const T = e === -1 ? M : mul(M, e);
           const [debut, nb] = ch;
           for (let i = debut; i < debut + nb; i++) {
             const v = s.I[i] * 4, x = s.V[v], y = s.V[v + 1];
-            L.push(T[0] * x + T[2] * y + T[4], T[1] * x + T[3] * y + T[5], s.V[v + 2], s.V[v + 3], ...(coul || [1, 1, 1]), coul ? 1 : 0);
+            L.push(T[0] * x + T[2] * y + T[4], T[1] * x + T[3] * y + T[5], s.V[v + 2], s.V[v + 3], ...(teinte || [1, 1, 1]), teinte ? 1 : 0);
           }
         }
         break;
