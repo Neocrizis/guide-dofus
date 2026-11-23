@@ -60,22 +60,9 @@
     if (portraits.has(cle)) return portraits.get(cle);
     portraits.set(cle, "");
     filePortraits = filePortraits.then(async () => {
-      toilePortrait = toilePortrait || Object.assign(document.createElement("canvas"), { width: 240, height: 300 });
-      await window.RenduPerso.dessiner(toilePortrait, look, { fixe: true });
-      const W = 240, H = 300, c2 = Object.assign(document.createElement("canvas"), { width: W, height: H }).getContext("2d", { willReadFrequently: true });
-      c2.drawImage(toilePortrait, 0, 0);
-      const px = c2.getImageData(0, 0, W, H).data;
-      let haut = -1, bas = -1;
-      for (let y = 0; y < H && haut < 0; y++) for (let x = 0; x < W; x++) if (px[(y * W + x) * 4 + 3] > 40) { haut = y; break; }
-      for (let y = H - 1; y >= 0 && bas < 0; y--) for (let x = 0; x < W; x++) if (px[(y * W + x) * 4 + 3] > 40) { bas = y; break; }
-      if (haut < 0) return;
-      const cote = Math.round((bas - haut) * 0.42);
-      let sx = 0, n = 0;
-      for (let y = haut; y < haut + cote; y++) for (let x = 0; x < W; x++) if (px[(y * W + x) * 4 + 3] > 40) { sx += x; n++; }
-      const cx = n ? sx / n : W / 2;
-      const out = Object.assign(document.createElement("canvas"), { width: 96, height: 96 });
-      out.getContext("2d").drawImage(c2.canvas, cx - cote / 2, haut - cote * 0.06, cote, cote, 0, 0, 96, 96);
-      const url = out.toDataURL("image/webp");
+      toilePortrait = toilePortrait || Object.assign(document.createElement("canvas"), { width: 128, height: 128 });
+      await window.RenduPerso.dessiner(toilePortrait, look, { fixe: true, portrait: true });
+      const url = toilePortrait.toDataURL("image/webp");
       portraits.set(cle, url);
       document.querySelectorAll(`[data-portrait="${CSS.escape(cle)}"]`).forEach((el) => { el.innerHTML = `<img src="${url}" alt="">`; });
     }).catch(() => {});

@@ -109,14 +109,22 @@
   // Joue la respiration en boucle ; renvoie { arreter() }. Avec { fixe: true }, dessine une seule image.
   // Un même canvas peut être redessiné : l'animation précédente s'arrête et le contexte WebGL est réutilisé.
   const etats = new WeakMap();
-  async function dessiner(canvas, look, { fixe = false } = {}) {
+  // Cadre carré autour de la tête (pour un portrait) : les ailes, armes ou capes ne décalent pas le centrage.
+  function cadreTete(lots, tete) {
+    const [x0, y0, x1, y1] = cadre([lots.filter((l) => l.s === tete)]);
+    if (!isFinite(x0)) return null;
+    const cote = Math.max(x1 - x0, y1 - y0) * 1.15, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 + DECALAGE * cote;
+    return [cx - cote / 2, cy - cote / 2, cx + cote / 2, cy + cote / 2];
+  }
+  const DECALAGE = 0.08;
+  async function dessiner(canvas, look, { fixe = false, portrait = false } = {}) {
     const st = etats.get(canvas) || { ctx: null, tour: 0 };
     etats.set(canvas, st);
     const tour = ++st.tour;
     const [pose, ...skins] = await Promise.all([charger(BASE + "pose.json"), skin(look.tete), skin(look.corps)]);
     if (tour !== st.tour) return { arreter() {} }; // un dessin plus récent a été demandé entre-temps
     const images = pose.frames.map((f) => triangles(f, skins, look.couleurs || []));
-    const c = cadre(images);
+    const c = (portrait && cadreTete(images[0], skins[0])) || cadre(images);
     st.ctx = st.ctx || preparer(canvas);
     const ctx = st.ctx;
     const reduit = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -135,5 +143,5 @@
   }
   const catalogue = () => charger(BASE + "classes.json?v=3");
 
-  window.RenduPerso = { dessiner, catalogue };
+  window.RenduPerso = { dessiner, catalogue};
 })();
