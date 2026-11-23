@@ -604,6 +604,7 @@ a.btn { text-decoration: none; }
 .apparence__corps { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 10px; padding: 12px; border-radius: 12px; background: var(--bloc-2); width: 100%; }
 .apparence__ligne { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
 .pastille { font: inherit; font-size: 13px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--bord, rgba(255,255,255,.15)); background: transparent; color: var(--texte-2, inherit); cursor: pointer; }
+.apparence__ligne[aria-label="Visage"] .pastille { min-width: 32px; padding: 4px 6px; }
 .pastille.is-on { background: var(--accent); color: var(--sur-accent); border-color: var(--accent); }
 .apparence__couleurs { display: flex; gap: 6px; }
 .apparence__couleurs input[type="color"] { width: 30px; height: 30px; padding: 0; border: 2px solid var(--bloc); border-radius: 50%; background: none; cursor: pointer; overflow: hidden; }

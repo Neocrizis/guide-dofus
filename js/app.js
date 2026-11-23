@@ -60,7 +60,7 @@
           ${[["m", "Mâle"], ["f", "Femelle"]].map(([k, t]) => `<button type="button" class="pastille ${k === sexe ? "is-on" : ""}" data-look="sexe" data-val="${k}" aria-pressed="${k === sexe}">${t}</button>`).join("")}
         </div>
         <div class="apparence__ligne" role="group" aria-label="Visage">
-          ${c[sexe].tetes.map((_, i) => `<button type="button" class="pastille ${i === (l.tete || 0) ? "is-on" : ""}" data-look="tete" data-val="${i}" aria-pressed="${i === (l.tete || 0)}">Visage ${i + 1}</button>`).join("")}
+          ${c[sexe].tetes.map((_, i) => `<button type="button" class="pastille ${i === (l.tete || 0) ? "is-on" : ""}" data-look="tete" data-val="${i}" aria-pressed="${i === (l.tete || 0)}" aria-label="Visage ${i + 1}" title="Visage ${i + 1}">${i + 1}</button>`).join("")}
         </div>
         <div class="apparence__couleurs">
           ${look.couleurs.map((n, i) => `<label title="${NOMS_COULEURS[i]}"><input type="color" value="${hex(n)}" data-look-couleur="${i}" aria-label="${NOMS_COULEURS[i]}"></label>`).join("")}
