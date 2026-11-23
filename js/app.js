@@ -6,6 +6,9 @@
   const ONGLETS = GUIDES.filter((g) => g.id !== "glaces");
   const CLE_ANCIENNE = "guide-dofus:progression"; // une seule progression (avant les personnages)
   const CLE = "guide-dofus:personnages";
+  // ?mode=overlay : la page n'affiche que l'overlay (utilisé par l'appli Windows sans cadre, transparente).
+  const MODE_OV = new URLSearchParams(location.search).get("mode") === "overlay";
+  const CLE_OPACITE = "guide-dofus:ov-opacite";
 
   // ---------- Personnages sauvegardés dans le navigateur ----------
   // Chaque personnage a son nom, sa classe et sa propre progression.
@@ -367,14 +370,14 @@
     if (t.matches("[data-faite], [data-succes], [data-archi]")) return; // géré par "change"
     const suivre = t.closest("[data-suivre]");
     if (suivre) { etat.courante = suivre.dataset.suivre; sauver(); toutRendre(); toast("Étape affichée dans l'overlay"); return; }
-    if (doc !== document && ovQuete) {
+    if ((doc !== document || MODE_OV) && ovQuete) {
       if (t.closest("[data-ov-retour]")) { fermerQueteOverlay(); return; }
       if (window.Quetes.gererClic(ovQuete, ev)) return;
     }
     const quete = t.closest("[data-quete]");
     if (quete) {
       ev.preventDefault();
-      if (doc !== document) ouvrirQueteOverlay(quete.dataset.quete);
+      if (doc !== document || MODE_OV) ouvrirQueteOverlay(quete.dataset.quete);
       else window.Quetes?.ouvrir(quete.dataset.quete);
       return;
     }
@@ -536,7 +539,7 @@
     if (!doc || !window.Quetes) return;
     const racine = doc.getElementById("ov");
     racine.dataset.id = "";
-    racine.innerHTML = `
+    racine.innerHTML = `${enteteOv()}
       <div class="ov__top"><button type="button" class="btn btn--small" data-ov-retour>← Retour à l'étape</button></div>
       <div class="ov__card card ov__quete"></div>`;
     ovQuete = { el: racine.querySelector(".ov__quete"), liste: null };
@@ -546,6 +549,25 @@
     ovQuete = null;
     rendreOverlay();
   }
+
+  // Barre de titre façon journal de quêtes du jeu. Dans l'appli (mode overlay) : poignée pour déplacer
+  // la fenêtre et réglage de la transparence.
+  function opaciteOv() { try { return +(localStorage.getItem(CLE_OPACITE) ?? 85); } catch { return 85; } }
+  function enteteOv() {
+    return `<div class="ov__barre" data-tauri-drag-region>
+      <img class="ov__barre-ico" src="${new URL("img/outils/quest.webp", location.href)}" alt="" data-tauri-drag-region>
+      <span class="ov__barre-titre" data-tauri-drag-region>Journal de quêtes</span>
+      ${MODE_OV ? `<label class="ov__opacite" title="Transparence du fond"><span aria-hidden="true">◐</span><input type="range" min="0" max="100" value="${opaciteOv()}" data-ov-opacite aria-label="Opacité du fond"></label>` : ""}
+    </div>`;
+  }
+  function appliquerOpacite(doc = overlayDoc()) {
+    doc?.documentElement.style.setProperty("--ov-alpha", String(opaciteOv() / 100));
+  }
+  document.addEventListener("input", (ev) => {
+    if (!ev.target.matches?.("[data-ov-opacite]")) return;
+    try { localStorage.setItem(CLE_OPACITE, ev.target.value); } catch { /* stockage indisponible */ }
+    appliquerOpacite(document);
+  });
 
   function rendreOverlay() {
     const doc = overlayDoc();
@@ -559,6 +581,7 @@
     const memeEtape = racine.dataset.id === e.id;
     racine.dataset.id = e.id;
     racine.innerHTML = `
+      ${enteteOv()}
       <div class="ov__top">
         <span class="pill pill--accent">${echap(e.niveau === "" ? G.titre : e.niveau === "0" ? "Préambule" : "Niv. " + e.niveau)}</span>
         ${etat.faites[e.id] ? `<span class="pill">Terminée</span>` : ""}
@@ -948,6 +971,22 @@
     quetesGuide: () => quetesGuide(),
   };
 
+  if (MODE_OV) {
+    document.documentElement.classList.add("mode-ov");
+    document.title = "Guide Dofus · Journal";
+    document.body.insertAdjacentHTML("afterbegin", `<div id="ov" class="ov"></div>`);
+    overlay = window;
+    appliquerOpacite(document);
+    document.addEventListener("keydown", (ev) => {
+      if (ev.target.matches?.("input, textarea")) return;
+      if (ovQuete && (ev.key === "Escape" || ev.key === "Backspace")) { fermerQueteOverlay(); return; }
+      if (ovQuete) return;
+      if (ev.key === "ArrowRight") aller(1);
+      if (ev.key === "ArrowLeft") aller(-1);
+    });
+    // Progression modifiée dans un autre onglet du site (même navigateur) : on recharge.
+    window.addEventListener("storage", (ev) => { if (ev.key === CLE) location.reload(); });
+  }
   chargerGuide(etat.guide);
   rendrePersos();
   try { localStorage.setItem(CLE, JSON.stringify(compte)); } catch { /* stockage indisponible */ }
