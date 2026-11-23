@@ -37,12 +37,6 @@
       </nav>
     </div>
     <div class="nav__actions">
-      <select id="theme" class="select" aria-label="Thème de couleur">
-        <option value="">Thème : Nuit dorée</option>
-        <option value="givre">Thème : Givre</option>
-        <option value="braise">Thème : Braise</option>
-        <option value="pourpre">Thème : Pourpre</option>
-      </select>
       <button id="gerer-persos" class="btn" type="button" title="Gérer mes personnages">
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm-8 1a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm8 1c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4zm-8 0c-.3 0-.7 0-1.1.1A4.4 4.4 0 0 1 9 17v2H1v-2c0-2.2 4.4-3.5 7-4z"/></svg>
         Personnages
@@ -156,6 +150,17 @@
       <h2>Mon compte</h2>
       <button id="compte-fermer" class="btn btn--ghost btn--small" type="button">Fermer</button>
     </div>
+    <label class="compte-theme">
+      <span class="section__label">Thème du site</span>
+        <select id="theme" class="select" aria-label="Thème de couleur">
+          <option value="">Ocre (Nuit dorée)</option>
+          <option value="emeraude">Émeraude</option>
+          <option value="pourpre">Pourpre</option>
+          <option value="turquoise">Turquoise</option>
+          <option value="ivoire">Ivoire</option>
+          <option value="ebene">Ébène</option>
+        </select>
+    </label>
     <div id="compte-connexion">
       <p class="dialog__hint">Connecte-toi pour retrouver tes personnages et ta progression sur tous tes appareils.</p>
       <button id="compte-google" class="btn btn--google" type="button">

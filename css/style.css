@@ -24,42 +24,66 @@
   --rayon: 20px;
 }
 
-/* ---------- Autres thèmes (sélecteur dans la barre du haut) ---------- */
-/* Givre : bleu glacier de Frigost */
-:root[data-theme="givre"] {
-  --accent: #7fd6f2; --accent-hover: #a6e5f8; --sur-accent: #06232e;
-  --accent-soft: rgba(127, 214, 242, .14); --accent-glow: rgba(127, 214, 242, .40);
-  --fond: #101a22; --fond-menu: #172631; --fond-toast: #0b1319;
-  --bord: rgba(170, 225, 255, .13);
+/* ---------- Thèmes des Dofus primordiaux (Ocre = thème par défaut ci-dessus) ---------- */
+/* Émeraude : vert profond et vert vif */
+:root[data-theme="emeraude"] {
+  --accent: #4fd18b; --accent-hover: #7be2a9; --sur-accent: #032313;
+  --accent-soft: rgba(79, 209, 139, .14); --accent-glow: rgba(79, 209, 139, .40);
+  --fond: #0f1c17; --fond-menu: #15291f; --fond-toast: #0a140f;
+  --bord: rgba(160, 255, 200, .12);
   --fond-site:
-    radial-gradient(ellipse 55% 45% at 70% 8%, rgba(120, 190, 230, .28) 0%, rgba(120, 190, 230, 0) 70%),
-    radial-gradient(ellipse 45% 40% at 8% 65%, rgba(200, 230, 255, .10) 0%, rgba(200, 230, 255, 0) 70%),
-    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(60, 110, 160, .25) 0%, rgba(60, 110, 160, 0) 72%),
-    #101a22;
+    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(40, 150, 95, .30) 0%, rgba(40, 150, 95, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 10% 60%, rgba(30, 110, 120, .20) 0%, rgba(30, 110, 120, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(120, 170, 60, .14) 0%, rgba(120, 170, 60, 0) 72%),
+    #0f1c17;
 }
-/* Braise : brun volcanique et orange feu */
-:root[data-theme="braise"] {
-  --accent: #ff7a45; --accent-hover: #ff9b70; --sur-accent: #2e0d00;
-  --accent-soft: rgba(255, 122, 69, .14); --accent-glow: rgba(255, 122, 69, .40);
-  --fond: #1c1412; --fond-menu: #2a1d1a; --fond-toast: #140e0c;
-  --bord: rgba(255, 200, 170, .11);
-  --fond-site:
-    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(190, 70, 30, .28) 0%, rgba(190, 70, 30, 0) 70%),
-    radial-gradient(ellipse 45% 40% at 10% 60%, rgba(120, 50, 40, .25) 0%, rgba(120, 50, 40, 0) 70%),
-    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(230, 140, 60, .12) 0%, rgba(230, 140, 60, 0) 72%),
-    #1c1412;
-}
-/* Pourpre : violet profond et rose */
+/* Pourpre : rouge sang et grenat */
 :root[data-theme="pourpre"] {
-  --accent: #f07ac0; --accent-hover: #f7a0d3; --sur-accent: #2e0620;
-  --accent-soft: rgba(240, 122, 192, .14); --accent-glow: rgba(240, 122, 192, .40);
-  --fond: #1a1226; --fond-menu: #261a36; --fond-toast: #120c1b;
-  --bord: rgba(225, 190, 255, .12);
+  --accent: #ef4f6b; --accent-hover: #f57a8f; --sur-accent: #2e030d;
+  --accent-soft: rgba(239, 79, 107, .14); --accent-glow: rgba(239, 79, 107, .40);
+  --fond: #1c1016; --fond-menu: #2a1720; --fond-toast: #130a0f;
+  --bord: rgba(255, 170, 190, .12);
   --fond-site:
-    radial-gradient(ellipse 55% 45% at 72% 10%, rgba(140, 70, 190, .32) 0%, rgba(140, 70, 190, 0) 70%),
-    radial-gradient(ellipse 45% 40% at 10% 62%, rgba(200, 80, 150, .16) 0%, rgba(200, 80, 150, 0) 70%),
-    radial-gradient(ellipse 50% 40% at 88% 88%, rgba(70, 50, 150, .25) 0%, rgba(70, 50, 150, 0) 72%),
-    #1a1226;
+    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(170, 30, 70, .32) 0%, rgba(170, 30, 70, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 10% 60%, rgba(110, 30, 90, .24) 0%, rgba(110, 30, 90, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(200, 60, 60, .14) 0%, rgba(200, 60, 60, 0) 72%),
+    #1c1016;
+}
+/* Turquoise : bleu lagon */
+:root[data-theme="turquoise"] {
+  --accent: #3fd4d0; --accent-hover: #72e3e0; --sur-accent: #022524;
+  --accent-soft: rgba(63, 212, 208, .14); --accent-glow: rgba(63, 212, 208, .40);
+  --fond: #0e1a20; --fond-menu: #14262e; --fond-toast: #091216;
+  --bord: rgba(150, 240, 240, .12);
+  --fond-site:
+    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(30, 150, 170, .30) 0%, rgba(30, 150, 170, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 10% 60%, rgba(40, 90, 160, .24) 0%, rgba(40, 90, 160, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(60, 200, 180, .12) 0%, rgba(60, 200, 180, 0) 72%),
+    #0e1a20;
+}
+/* Ivoire : gris chaud et blanc nacré */
+:root[data-theme="ivoire"] {
+  --accent: #f1e6cc; --accent-hover: #fff6e2; --sur-accent: #2a2414;
+  --accent-soft: rgba(241, 230, 204, .14); --accent-glow: rgba(241, 230, 204, .40);
+  --fond: #1a1916; --fond-menu: #262420; --fond-toast: #12110f;
+  --bord: rgba(255, 245, 220, .12);
+  --fond-site:
+    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(200, 190, 160, .18) 0%, rgba(200, 190, 160, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 10% 60%, rgba(140, 130, 110, .16) 0%, rgba(140, 130, 110, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(220, 210, 190, .10) 0%, rgba(220, 210, 190, 0) 72%),
+    #1a1916;
+}
+/* Ébène : noir profond et reflets violets */
+:root[data-theme="ebene"] {
+  --accent: #b59cff; --accent-hover: #cbb9ff; --sur-accent: #1a0b3a;
+  --accent-soft: rgba(181, 156, 255, .14); --accent-glow: rgba(181, 156, 255, .40);
+  --fond: #0b0b10; --fond-menu: #15141c; --fond-toast: #07070a;
+  --bord: rgba(200, 185, 255, .10);
+  --fond-site:
+    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(90, 60, 160, .22) 0%, rgba(90, 60, 160, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 10% 60%, rgba(40, 40, 60, .30) 0%, rgba(40, 40, 60, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(120, 80, 200, .12) 0%, rgba(120, 80, 200, 0) 72%),
+    #0b0b10;
 }
 
 * { box-sizing: border-box; }
@@ -585,3 +609,4 @@ a.btn { text-decoration: none; }
 .apparence__couleurs input[type="color"] { width: 30px; height: 30px; padding: 0; border: 2px solid var(--bloc); border-radius: 50%; background: none; cursor: pointer; overflow: hidden; }
 .apparence__couleurs input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
 .apparence__couleurs input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+.compte-theme { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 16px; padding-bottom: 16px; border-bottom: 1px solid var(--bord); }
