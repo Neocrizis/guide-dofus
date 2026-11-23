@@ -716,3 +716,14 @@ html.ov-travers .ov__nav, html.ov-travers .ov__opacite, html.ov-travers .ov__com
 .qliste__btn--ok { opacity: .6; }
 .qliste__btn--ok > span:first-child { text-decoration: line-through; text-decoration-thickness: 2px; }
 .qliste__btn--ok .qliste__niv { text-decoration: none; }
+
+/* Étapes de quête à cocher : faites = grisées, en cours = mise en évidence */
+.qetape__tete { cursor: pointer; }
+.qetape__case { flex: none; }
+.qetapes__aide { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--texte-3); margin-left: 6px; }
+.qetape { transition: opacity .2s, border-color .2s, background .2s; }
+.qetape--faite { opacity: .45; }
+.qetape--faite .qetape__tete b { text-decoration: line-through; }
+.qetape--faite .qetape__desc, .qetape--faite .qetape__obj, .qetape--faite .qetape__rec { display: none; }
+.qetape--courante { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+.quete__liens:last-of-type { margin-top: 16px; }

@@ -96,6 +96,8 @@
     const prerequis = (q.need?.quests || []).map((id) => DATA.quetes[id]?.[0] || null).filter(Boolean);
     const depart = q.startPosition?.[0];
     const pnjDepart = depart && d.pnj[depart.npcId];
+    const etapesFaites = window.GuideDofus?.etat().qetapes?.[q.id] || {};
+    const enCours = q.steps.findIndex((_, i) => !etapesFaites[i]);
     const etapes = q.steps.map((s, i) => {
       const objectifs = s.objectives.map((o) => {
         const pos = o.map ? [o.map.posX, o.map.posY] : o.coords ? [o.coords.x, o.coords.y] : null;
@@ -112,8 +114,9 @@
         ...(r.emotesReward || []).length ? ["Émote"] : [],
         ...(r.spellsReward || []).length ? ["Sort"] : [],
       ]).filter(Boolean);
-      return `<li class="qetape">
-        <div class="qetape__tete"><span class="qetape__num">${i + 1}</span><b>${echap(s.name?.fr || "Étape")}</b></div>
+      const ok = !!etapesFaites[i];
+      return `<li class="qetape${ok ? " qetape--faite" : ""}${i === enCours ? " qetape--courante" : ""}">
+        <label class="qetape__tete">${window.GuideDofus ? `<input type="checkbox" class="check qetape__case" data-qetape="${q.id}|${i}" ${ok ? "checked" : ""} aria-label="Étape ${i + 1} faite">` : ""}<span class="qetape__num">${i + 1}</span><b>${echap(s.name?.fr || "Étape")}</b></label>
         ${s.description?.fr ? `<p class="qetape__desc">${echap(nettoyer(s.description.fr))}</p>` : ""}
         ${objectifs ? `<ul class="qetape__obj">${objectifs}</ul>` : ""}
         ${rec.length ? `<div class="qetape__rec">Récompenses : ${[...new Set(rec)].join(", ")}</div>` : ""}
@@ -135,9 +138,9 @@
         ${d.carte ? coord(d.carte.posX, d.carte.posY) : ""}</p>
       </div>` : ""}
       ${prerequis.length ? `<div class="quete__depart"><span class="section__label">Prérequis</span><p>${prerequis.map(echap).join(", ")}</p></div>` : ""}
-      ${liens(q)}
-      <span class="section__label">Étapes</span>
+      <span class="section__label">Étapes${window.GuideDofus ? ` <small class="qetapes__aide">coche une étape une fois faite</small>` : ""}</span>
       <ol class="qetapes">${etapes}</ol>
+      ${liens(q)}
       <p class="quete__source">Clique sur une position pour copier la commande /travel.</p>`;
   }
 
@@ -194,10 +197,33 @@
     else { vue.liste = { titre: texte.replace(/^[^:]+ : /, ""), ids }; rendreListe(vue); }
     return true;
   }
+  // Étape de quête cochée : grisée, l'étape suivante passe en évidence. Toutes cochées → quête terminée.
+  function cocherEtape(vue, c) {
+    const G = window.GuideDofus;
+    const [qid, i] = c.dataset.qetape.split("|").map(Number);
+    const etat = G.etat();
+    const faites = ((etat.qetapes ??= {})[qid] ??= {});
+    if (c.checked) faites[i] = 1; else delete faites[i];
+    if (!Object.keys(faites).length) delete etat.qetapes[qid];
+    const items = [...vue.el.querySelectorAll(".qetape")];
+    items.forEach((li, j) => li.classList.toggle("qetape--faite", !!faites[j]));
+    const enCours = items.findIndex((_, j) => !faites[j]);
+    items.forEach((li, j) => li.classList.toggle("qetape--courante", j === enCours));
+    if (enCours === -1 && !etat.quetes?.[qid]) {
+      G.sauver();
+      vue.el.querySelector(`[data-quete-fait="${qid}"]`)?.click();
+      return;
+    }
+    G.sauver();
+    if (enCours > 0 && c.checked) items[enCours].scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+
   // Clics à l'intérieur d'une vue (choix d'une quête, retour à la liste).
   function gererClic(vue, ev) {
     const q = ev.target.closest("[data-quete-id]");
     if (q) { afficherQuete(vue, +q.dataset.queteId); return true; }
+    const caseEtape = ev.target.closest("[data-qetape]");
+    if (caseEtape && window.GuideDofus) { cocherEtape(vue, caseEtape); return true; }
     const fait = ev.target.closest("[data-quete-fait]");
     if (fait && window.GuideDofus) {
       const id = +fait.dataset.queteFait;
