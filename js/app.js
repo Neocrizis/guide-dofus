@@ -47,9 +47,10 @@
     const c = classeCat(p);
     if (!c) return null;
     const l = p.look || {}, g = c[l.sexe === "f" ? "f" : "m"];
-    return { corps: g.corps, tete: g.tetes[Math.min(l.tete || 0, g.tetes.length - 1)], couleurs: g.couleurs.map((d, i) => l.couleurs?.[i] ?? d) };
+    return { corps: g.corpsListe?.[l.corps || 0] ?? g.corps, tete: g.tetes[Math.min(l.tete || 0, g.tetes.length - 1)], couleurs: g.couleurs.map((d, i) => l.couleurs?.[i] ?? d) };
   }
   const hex = (n) => "#" + n.toString(16).padStart(6, "0");
+  const NOMS_CORPS = ["Classique", "Rétro", "Avant-gardiste"];
   const NOMS_COULEURS = ["Peau", "Cheveux", "Couleur 3", "Couleur 4", "Couleur 5", "Couleur 6"];
   function apparence(p) {
     const c = classeCat(p), l = p.look || {}, sexe = l.sexe === "f" ? "f" : "m", look = lookPerso(p);
@@ -59,8 +60,11 @@
         <div class="apparence__ligne" role="group" aria-label="Sexe">
           ${[["m", "Mâle"], ["f", "Femelle"]].map(([k, t]) => `<button type="button" class="pastille ${k === sexe ? "is-on" : ""}" data-look="sexe" data-val="${k}" aria-pressed="${k === sexe}">${t}</button>`).join("")}
         </div>
+        ${(c[sexe].corpsListe || []).length > 1 ? `<div class="apparence__ligne" role="group" aria-label="Corps">
+          ${c[sexe].corpsListe.map((_, i) => `<button type="button" class="pastille ${i === (l.corps || 0) ? "is-on" : ""}" data-look="corps" data-val="${i}" aria-pressed="${i === (l.corps || 0)}">${NOMS_CORPS[i] || "Corps " + (i + 1)}</button>`).join("")}
+        </div>` : ""}
         <div class="apparence__ligne" role="group" aria-label="Visage">
-          ${c[sexe].tetes.map((_, i) => `<button type="button" class="pastille ${i === (l.tete || 0) ? "is-on" : ""}" data-look="tete" data-val="${i}" aria-pressed="${i === (l.tete || 0)}" aria-label="Visage ${i + 1}" title="Visage ${i + 1}">${i + 1}</button>`).join("")}
+          ${c[sexe].tetes.map((_, i) => { const nom = c[sexe].tetesNoms?.[i] || ""; let n = 0; for (let j = 0; j <= i; j++) if (!c[sexe].tetesNoms?.[j]) n++; return `<button type="button" class="pastille ${i === (l.tete || 0) ? "is-on" : ""}" data-look="tete" data-val="${i}" aria-pressed="${i === (l.tete || 0)}" aria-label="Visage ${nom || n}" title="Visage ${nom || n}">${nom || n}</button>`; }).join("")}
         </div>
         <div class="apparence__couleurs">
           ${look.couleurs.map((n, i) => `<label title="${NOMS_COULEURS[i]}"><input type="color" value="${hex(n)}" data-look-couleur="${i}" aria-label="${NOMS_COULEURS[i]}"></label>`).join("")}
@@ -89,6 +93,7 @@
     const l = (etat.look = etat.look || {});
     if (b.dataset.look === "sexe") { l.sexe = b.dataset.val; l.tete = 0; }
     else if (b.dataset.look === "tete") l.tete = +b.dataset.val;
+    else if (b.dataset.look === "corps") l.corps = +b.dataset.val;
     else delete l.couleurs;
     sauver(); rendreAccueil();
     document.querySelector(".apparence")?.setAttribute("open", "");

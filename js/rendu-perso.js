@@ -133,7 +133,7 @@
     requestAnimationFrame(boucle);
     return { arreter };
   }
-  const catalogue = () => charger(BASE + "classes.json?v=2");
+  const catalogue = () => charger(BASE + "classes.json?v=3");
 
   window.RenduPerso = { dessiner, catalogue };
 })();
