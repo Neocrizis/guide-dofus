@@ -398,3 +398,8 @@ b { font-weight: 600; }
   .nav__left { flex-wrap: wrap; gap: 6px 12px; }
   .dash-tuiles, .reprendres { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Quêtes du Dofus des Glaces intégrées aux étapes Frigost */
+.pill--glaces { background: rgba(127, 214, 242, .14); color: #9fe0f5; }
+.section.glaces { padding: 10px 12px; border-radius: 12px; background: rgba(127, 214, 242, .06); border: 1px solid rgba(127, 214, 242, .16); }
+.section.glaces .section__label { color: #9fe0f5; }

@@ -63,6 +63,20 @@
       return `<li><label><input type="checkbox" class="check" data-succes="${k}" ${etat.succes[k] ? "checked" : ""}><span>${texte(s)}</span></label></li>`;
     }).join("")}</ul>`;
   }
+  // Quêtes du Dofus des Glaces affichées dans les étapes Frigost du guide de progression.
+  // Mêmes cases que l'onglet « Dofus des Glaces » : cocher ici coche là-bas aussi.
+  const GLACES_DANS_ETAPE = {
+    e63: ["g1", "g2"], e74: ["g3", "g4"], e79: ["g5"], e81: ["g6"], e93: ["g7"],
+    e100: ["g8"], e108: ["g9"], e109: ["g10"], e115: ["g11"],
+  };
+  const zonesGlaces = (e) => (GLACES_DANS_ETAPE[e.id] || [])
+    .map((id) => GUIDES.find((g) => g.id === "glaces")?.etapes.find((z) => z.id === id)).filter(Boolean);
+  function sectionGlaces(e) {
+    return zonesGlaces(e).map((z) => {
+      const faits = z.succes.filter((_, i) => etat.succes[`${z.id}|${i}`]).length;
+      return section(`Dofus des Glaces · ${echap(z.titre)} (${faits}/${z.succes.length})`, listeSucces(z), "glaces");
+    }).join("");
+  }
   function contenuEtape(e, compact) {
     const conseilClasse = etat.classe && e.classes && e.classes[etat.classe];
     const donjons = [
@@ -72,6 +86,7 @@
     ];
     return [
       section("Succès et quêtes", listeSucces(e)),
+      sectionGlaces(e),
       section("À faire", paragraphes(e.details)),
       section("Conseils", paragraphes(e.infos), "tips"),
       section("Donjons", tags(donjons)),
@@ -157,6 +172,7 @@
         <span class="step__meta">
           ${e.id === etat.courante ? `<span class="pill pill--accent">En cours</span>` : ""}
           ${e.succes.length ? `<span class="pill">${e.succes.length} succès</span>` : ""}
+          ${zonesGlaces(e).length ? `<span class="pill pill--glaces">Dofus des Glaces</span>` : ""}
           ${nbDonjons ? `<span class="pill">${nbDonjons} donjon${nbDonjons > 1 ? "s" : ""}</span>` : ""}
         </span>
         <svg class="step__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
@@ -272,7 +288,7 @@
     if (t.dataset.faite) basculerFaite(t.dataset.faite, t.checked);
     if (t.dataset.succes) {
       if (t.checked) etat.succes[t.dataset.succes] = true; else delete etat.succes[t.dataset.succes];
-      if (t.checked) noter(t.closest("label")?.textContent.trim() || "Quête", { progression: "Succès / quête", glaces: "Dofus des Glaces", avis: "Avis de recherche" }[G.id]);
+      if (t.checked) noter(t.closest("label")?.textContent.trim() || "Quête", { e: "Succès / quête", g: "Dofus des Glaces", a: "Avis de recherche" }[t.dataset.succes[0]]);
       sauver(); toutRendre();
     }
   }
