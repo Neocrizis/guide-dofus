@@ -592,6 +592,29 @@
     toast("Ton navigateur ne gère pas le Picture-in-Picture : fenêtre classique ouverte");
   });
 
+  // Outil externe (chasse au trésor DofusDB) ouvert dans une petite fenêtre toujours au premier plan.
+  document.addEventListener("click", async (ev) => {
+    const lien = ev.target.closest("[data-outil-overlay]");
+    if (!lien || ev.ctrlKey || ev.metaKey || ev.shiftKey) return;
+    ev.preventDefault();
+    lien.closest("details")?.removeAttribute("open");
+    const url = lien.href, titre = lien.querySelector("b")?.textContent || "Outil";
+    if ("documentPictureInPicture" in window) {
+      try {
+        const win = await window.documentPictureInPicture.requestWindow({ width: 420, height: 680 });
+        win.document.title = titre;
+        win.document.body.style.cssText = "margin:0;background:#141a2b;overflow:hidden";
+        const f = win.document.createElement("iframe");
+        f.src = url; f.title = titre; f.allow = "clipboard-write";
+        f.style.cssText = "border:0;width:100vw;height:100vh;display:block";
+        win.document.body.append(f);
+        return;
+      } catch (err) { console.error(err); }
+    }
+    const win = window.open(url, "guide-dofus-outil", "width=420,height=700");
+    if (!win) window.open(url, "_blank", "noopener");
+  });
+
 
 
   // ---------- Archimonstres (quête « L'éternelle moisson », Dofus Ocre) ----------
