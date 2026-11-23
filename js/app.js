@@ -66,11 +66,20 @@
   function tags(liste) {
     return liste && liste.length ? `<div class="tags">${liste.map((t) => `<span class="pill">${texte(t)}</span>`).join("")}</div>` : "";
   }
+  // Bouton « Détail » quand la case correspond à des quêtes connues (js/quetes.js).
+  function boutonsQuete(s) {
+    if (!window.Quetes) return "";
+    const lignes = String(s).split("\n").map((l) => l.trim()).filter((l) => window.Quetes.idsPour(l));
+    if (!lignes.length) return "";
+    const multi = String(s).includes("\n");
+    return `<span class="quete-btns">${lignes.map((l) =>
+      `<button type="button" class="quete-btn" data-quete="${echap(l)}" title="Voir le détail de la quête">${multi ? echap(l.replace(/^[^:]+ : /, "")) : "Détail"}</button>`).join("")}</span>`;
+  }
   function listeSucces(e) {
     if (!e.succes.length) return "";
     return `<ul class="list">${e.succes.map((s, i) => {
       const k = `${e.id}|${i}`;
-      return `<li><label><input type="checkbox" class="check" data-succes="${k}" ${etat.succes[k] ? "checked" : ""}><span>${texte(s)}</span></label></li>`;
+      return `<li><label><input type="checkbox" class="check" data-succes="${k}" ${etat.succes[k] ? "checked" : ""}><span>${texte(s)}</span></label>${boutonsQuete(s)}</li>`;
     }).join("")}</ul>`;
   }
   // Quêtes du Dofus des Glaces affichées dans les étapes Frigost du guide de progression.
@@ -265,6 +274,8 @@
     if (t.matches("[data-faite], [data-succes], [data-archi]")) return; // géré par "change"
     const suivre = t.closest("[data-suivre]");
     if (suivre) { etat.courante = suivre.dataset.suivre; sauver(); toutRendre(); toast("Étape affichée dans l'overlay"); return; }
+    const quete = t.closest("[data-quete]");
+    if (quete) { ev.preventDefault(); window.Quetes?.ouvrir(quete.dataset.quete); return; }
     const chap = t.closest("[data-chapitre]");
     if (chap) { ev.preventDefault(); doc.getElementById(chap.dataset.chapitre)?.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
     const continuer = t.closest("[data-continuer]");
