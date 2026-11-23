@@ -407,6 +407,10 @@
       location.hash = "guide"; return;
     }
     if (t.closest("[data-ov-compte]")) { $("#compte-btn").click(); return; }
+    if (t.closest("[data-ov-menu]")) { reglagesOuverts = !reglagesOuverts; doc.querySelector(".ov__reglages")?.toggleAttribute("hidden", !reglagesOuverts); return; }
+    const taille = t.closest("[data-ov-taille]");
+    if (taille) { majPrefsOv({ taille: Math.min(150, Math.max(70, prefsOv().taille + 10 * +taille.dataset.ovTaille)) }); return; }
+    if (t.matches("[data-ov-compact]")) { majPrefsOv({ compact: t.checked }); return; }
     const jouerDash = t.closest("[data-dash-perso]");
     if (jouerDash) { changerPerso(jouerDash.dataset.dashPerso); return; }
     const dashAction = t.closest("[data-dash]");
@@ -576,9 +580,30 @@
     return `<div class="ov__barre" data-tauri-drag-region>
       <img class="ov__barre-ico" src="${new URL("img/outils/quest.webp", location.href)}" alt="" data-tauri-drag-region>
       <span class="ov__barre-titre" data-tauri-drag-region>Dofus Guide</span>
-      ${MODE_OV ? `<button type="button" class="ov__compte" data-ov-compte title="Mon compte (synchronisation avec le site)">👤</button>` : ""}
-      ${MODE_OV ? `<label class="ov__opacite" title="Transparence du fond"><span aria-hidden="true">◐</span><input type="range" min="0" max="100" value="${opaciteOv()}" data-ov-opacite aria-label="Opacité du fond"></label>` : ""}
-    </div>`;
+      ${MODE_OV ? `<button type="button" class="ov__compte" data-ov-compte title="Mon compte (synchronisation avec le site)" aria-label="Mon compte"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 21c0-4.4 4-7 9-7s9 2.6 9 7z"/></svg></button>
+      <button type="button" class="ov__menu-btn" data-ov-menu title="Réglages" aria-label="Réglages">⋮</button>` : ""}
+    </div>
+    ${MODE_OV ? `<div class="ov__reglages" ${reglagesOuverts ? "" : "hidden"}>
+      <label>Fond <input type="range" min="0" max="100" value="${opaciteOv()}" data-ov-opacite aria-label="Opacité du fond"></label>
+      <div class="ov__reglage">Texte
+        <button type="button" data-ov-taille="-1" aria-label="Texte plus petit">A−</button>
+        <button type="button" data-ov-taille="1" aria-label="Texte plus grand">A+</button>
+      </div>
+      <label class="ov__reglage"><input type="checkbox" data-ov-compact ${prefsOv().compact ? "checked" : ""}> Compact</label>
+    </div>` : ""}`;
+  }
+  // Réglages de l'appli : taille du texte (en %) et mode compact.
+  const CLE_APPLI = "guide-dofus:appli";
+  let reglagesOuverts = false;
+  function prefsOv() { try { return { taille: 100, compact: false, ...JSON.parse(localStorage.getItem(CLE_APPLI) || "{}") }; } catch { return { taille: 100, compact: false }; } }
+  function majPrefsOv(maj) {
+    const p = { ...prefsOv(), ...maj };
+    try { localStorage.setItem(CLE_APPLI, JSON.stringify(p)); } catch { /* stockage indisponible */ }
+    appliquerPrefsOv(p);
+  }
+  function appliquerPrefsOv(p = prefsOv()) {
+    document.documentElement.style.setProperty("--ov-taille", String(p.taille / 100));
+    document.documentElement.classList.toggle("ov-compact", !!p.compact);
   }
   function appliquerOpacite(doc = overlayDoc()) {
     doc?.documentElement.style.setProperty("--ov-alpha", String(opaciteOv() / 100));
@@ -1003,6 +1028,18 @@
 
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
+    // Design propre à l'appli (n'affecte pas le site).
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=1">`);
+    appliquerPrefsOv();
+    // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
+    const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };
+    document.body.insertAdjacentHTML("beforeend", Object.keys(DIRS).map((d) => `<div class="ov-poignee ov-poignee--${d}" data-resize="${DIRS[d]}"></div>`).join(""));
+    document.addEventListener("mousedown", (ev) => {
+      const p = ev.target.closest?.("[data-resize]");
+      if (!p || ev.button !== 0) return;
+      ev.preventDefault();
+      window.__TAURI_INTERNALS__?.invoke("plugin:window|start_resize_dragging", { label: "journal", value: p.dataset.resize }).catch(() => {});
+    });
     document.title = "Guide Dofus · Journal";
     document.body.insertAdjacentHTML("afterbegin", `<div id="ov" class="ov"></div>`);
     overlay = window;

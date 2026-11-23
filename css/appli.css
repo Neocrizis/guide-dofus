@@ -1,0 +1,101 @@
+/* Design de l'appli Windows « Dofus Guide » (page ?mode=overlay) : chargé uniquement par l'appli,
+   inspiré des panneaux de Dofus 3 (« Quêtes suivies »). N'affecte pas le site. */
+html.mode-ov {
+  --d-fond: 44, 46, 76;            /* bleu ardoise des panneaux du jeu */
+  --d-texte: #f2f2f5;
+  --d-texte-2: #c9cad8;
+  --d-texte-3: #9a9cb3;
+  --d-jaune: #f5e14a;              /* objets / mots-clés du jeu */
+  --d-orange: #f0a93b;
+  --d-sep: rgba(255, 255, 255, .09);
+  --ov-taille: 1;
+  font-family: "Segoe UI", Tahoma, system-ui, sans-serif;
+}
+html.mode-ov body { font-family: inherit; font-size: calc(14px * var(--ov-taille)); color: var(--d-texte); }
+
+/* Panneau */
+html.mode-ov .ov {
+  --ov-panneau: rgba(var(--d-fond), var(--ov-alpha, .92));
+  height: 100vh; border-radius: 4px; border: 1px solid rgba(255, 255, 255, .1);
+  background: var(--ov-panneau); box-shadow: none;
+}
+html.mode-ov .ov, html.mode-ov .ov * { text-shadow: 0 1px 2px rgba(0, 0, 0, .7); }
+
+/* Barre de titre : comme « QUÊTES SUIVIES (6) ⋮ » */
+html.mode-ov .ov__barre { padding: 6px 8px 6px 10px; background: rgba(0, 0, 0, calc(var(--ov-alpha, .92) * .18)); border-bottom: 1px solid var(--d-sep); gap: 6px; }
+html.mode-ov .ov__barre-ico { width: 15px; height: 15px; }
+html.mode-ov .ov__barre-titre { font-size: calc(12.5px * var(--ov-taille)); font-weight: 600; letter-spacing: .04em; color: var(--d-texte); }
+html.mode-ov .ov__compte, html.mode-ov .ov__menu-btn { background: none; border: 0; color: var(--d-texte-2); cursor: pointer; font-size: 15px; line-height: 1; padding: 2px 5px; border-radius: 3px; }
+html.mode-ov .ov__compte { margin-left: auto; font-size: 12px; }
+html.mode-ov .ov__compte:hover, html.mode-ov .ov__menu-btn:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+
+/* Réglages (menu ⋮) */
+html.mode-ov .ov__reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 10px; font-size: 12px; color: var(--d-texte-2); background: rgba(0, 0, 0, .25); border-bottom: 1px solid var(--d-sep); }
+html.mode-ov .ov__reglages[hidden] { display: none; }
+html.mode-ov .ov__reglages label, html.mode-ov .ov__reglage { display: flex; align-items: center; gap: 6px; }
+html.mode-ov .ov__reglages input[type="range"] { width: 90px; accent-color: var(--d-orange); }
+html.mode-ov .ov__reglages button { background: rgba(255, 255, 255, .08); border: 1px solid var(--d-sep); color: var(--d-texte); border-radius: 3px; padding: 2px 7px; cursor: pointer; font: inherit; }
+html.mode-ov .ov__reglages button:hover { background: rgba(255, 255, 255, .16); }
+html.mode-ov .ov__reglages input[type="checkbox"] { accent-color: var(--d-orange); }
+
+/* Ligne niveau / étape */
+html.mode-ov .ov > .ov__top { padding: 8px 10px 0; }
+html.mode-ov .ov .pill { background: none; padding: 0; border-radius: 0; font-size: calc(12px * var(--ov-taille)); color: var(--d-orange); font-weight: 600; }
+html.mode-ov .ov__count { color: var(--d-texte-3); font-size: calc(11.5px * var(--ov-taille)); }
+html.mode-ov .ov > .bar { margin: 6px 10px 0; height: 3px; background: rgba(0, 0, 0, .35); border-radius: 0; }
+html.mode-ov .ov > .bar .bar__fill { background: var(--d-orange); box-shadow: none; border-radius: 0; }
+html.mode-ov .ov > .bar .bar__fill::after { display: none; }
+
+/* Contenu de l'étape */
+html.mode-ov .ov__card.card { margin: 6px 0 0; padding: 6px 10px 10px; background: none; border: 0; border-radius: 0; }
+html.mode-ov .ov__card.card::after { display: none; }
+html.mode-ov .ov__title { font-size: calc(16px * var(--ov-taille)); font-weight: 700; color: #fff; margin-bottom: 2px; }
+html.mode-ov .section { margin-top: 0; padding: 8px 0; border-top: 1px solid var(--d-sep); }
+html.mode-ov .ov__title + .section { border-top: 0; }
+html.mode-ov .ov__card .section__label { font-size: calc(13px * var(--ov-taille)); font-weight: 700; letter-spacing: 0; text-transform: none; color: #fff; margin-bottom: 4px; }
+html.mode-ov .ov__card .section__label::before { display: none; }
+html.mode-ov .section p { font-size: calc(13px * var(--ov-taille)); color: var(--d-texte-2); line-height: 1.35; }
+html.mode-ov .tips { border-left: 0; padding-left: 0; }
+html.mode-ov .tips .section__label { color: var(--d-jaune); }
+/* Objectifs : puce façon marqueur de carte */
+html.mode-ov .list { gap: 4px; }
+html.mode-ov .list label { font-size: calc(13px * var(--ov-taille)); color: var(--d-texte-2); gap: 8px; }
+html.mode-ov .list input:checked + span { color: var(--d-texte-3); }
+html.mode-ov .check { width: 14px; height: 14px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, .55); background: rgba(0, 0, 0, .3); }
+html.mode-ov .check:checked { background: var(--d-orange); border-color: var(--d-orange); box-shadow: none; }
+html.mode-ov .check:checked::after { width: 7px; height: 4px; border-width: 2px; }
+html.mode-ov .quete-btn { background: none; border: 0; padding: 0 2px; color: var(--d-jaune); font-size: calc(12px * var(--ov-taille)); text-decoration: underline; text-underline-offset: 2px; }
+html.mode-ov .quete-btn:hover { background: none; color: #fff; }
+html.mode-ov .coord { background: none; border: 0; padding: 0; color: var(--d-jaune); font-weight: 600; }
+html.mode-ov .coord:hover { background: none; color: #fff; }
+html.mode-ov .tags .pill { color: var(--d-jaune); font-weight: 600; }
+html.mode-ov .section.glaces { background: none; border: 0; border-top: 1px solid var(--d-sep); border-radius: 0; padding: 8px 0; }
+
+/* Boutons du bas : compacts, façon boutons du jeu */
+html.mode-ov .ov > .ov__nav { padding: 6px 8px 8px; gap: 6px; border-top: 1px solid var(--d-sep); }
+html.mode-ov .ov__nav .btn { padding: 5px 8px; font-size: calc(13px * var(--ov-taille)); border-radius: 3px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .12); color: var(--d-texte); text-shadow: none; }
+html.mode-ov .ov__nav .btn:hover { background: rgba(255, 255, 255, .16); transform: none; }
+html.mode-ov .ov__nav .btn--accent { background: linear-gradient(#f6b955, #e0922c); border-color: #f8c977; color: #2a1a05; font-weight: 700; }
+html.mode-ov .ov__nav .btn--accent::before { display: none; }
+
+/* Défilement discret */
+html.mode-ov .ov__card { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .25) transparent; }
+
+/* Mode compact : l'essentiel seulement */
+html.ov-compact .ov > .ov__top, html.ov-compact .ov > .bar { display: none; }
+html.ov-compact .ov__card .tips, html.ov-compact .ov__card .section:has(.tags) { display: none; }
+html.ov-compact .ov__title { font-size: calc(14px * var(--ov-taille)); }
+html.ov-compact .ov__nav .btn { padding: 3px 6px; }
+
+/* Poignées de redimensionnement (bords et coins de la fenêtre) */
+.ov-poignee { position: fixed; z-index: 100; }
+.ov-poignee--n, .ov-poignee--s { left: 8px; right: 8px; height: 5px; cursor: ns-resize; }
+.ov-poignee--n { top: 0; } .ov-poignee--s { bottom: 0; }
+.ov-poignee--e, .ov-poignee--w { top: 8px; bottom: 8px; width: 5px; cursor: ew-resize; }
+.ov-poignee--e { right: 0; } .ov-poignee--w { left: 0; }
+.ov-poignee--ne, .ov-poignee--nw, .ov-poignee--se, .ov-poignee--sw { width: 10px; height: 10px; }
+.ov-poignee--ne { top: 0; right: 0; cursor: nesw-resize; } .ov-poignee--sw { bottom: 0; left: 0; cursor: nesw-resize; }
+.ov-poignee--nw { top: 0; left: 0; cursor: nwse-resize; } .ov-poignee--se { bottom: 0; right: 0; cursor: nwse-resize; }
+/* Petit coin visible en bas à droite */
+.ov-poignee--se::after { content: ""; position: absolute; right: 2px; bottom: 2px; width: 7px; height: 7px; border-right: 2px solid rgba(255, 255, 255, .35); border-bottom: 2px solid rgba(255, 255, 255, .35); }
+html.ov-travers .ov-poignee { display: none; }

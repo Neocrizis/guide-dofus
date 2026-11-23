@@ -701,7 +701,7 @@ html { scroll-behavior: smooth; }
 
 /* Mode appli (?mode=overlay) : fenêtre transparente, seul le journal est affiché. */
 html.mode-ov, html.mode-ov body { background: transparent !important; overflow: hidden; }
-html.mode-ov body > *:not(#ov):not(#toast):not(dialog) { display: none !important; }
+html.mode-ov body > *:not(#ov):not(#toast):not(dialog):not(.ov-poignee) { display: none !important; }
 html.mode-ov .ov { height: calc(100vh - 2px); }
 html.mode-ov .ov__barre { cursor: move; }
 .ov__compte { margin-left: auto; background: none; border: 0; cursor: pointer; font-size: 14px; padding: 2px 4px; border-radius: 6px; opacity: .8; }
