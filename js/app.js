@@ -912,6 +912,7 @@
           <div class="dash-entete__actions">
             <button type="button" class="btn btn--accent" data-continuer="${etat.guide}">Continuer le guide</button>
             <button type="button" class="btn" data-dash="overlay">Ouvrir l'overlay</button>
+            <a class="btn" href="https://github.com/Neocrizis/guide-dofus-overlay/releases/download/v1.0.0/Guide.Dofus.Overlay_1.0.0_x64-setup.exe" title="Overlay sans cadre, transparent, au-dessus du jeu">Télécharger l'appli Windows</a>
           </div>
         </div>
 

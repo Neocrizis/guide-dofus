@@ -739,3 +739,9 @@ html.ov-travers .ov__nav, html.ov-travers .ov__opacite, html.ov-travers .ov__com
 .qetape--faite .qetape__tete b { text-decoration: line-through; opacity: .5; }
 .qetape--faite .qetape__num { filter: grayscale(1); opacity: .5; }
 .qetape--faite .qetape__desc { display: none; }
+
+/* Bouton de téléchargement de l'appli Windows */
+a.btn:not(.btn--accent) { color: var(--texte); }
+.btn--appli { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+.btn--appli img { width: 18px; height: 18px; }
+@media (max-width: 700px) { .btn--appli { display: none; } }
