@@ -187,7 +187,7 @@
   const TYPES = {
     quests: { nom: "Quêtes", sel: ["id", "name", "levelMin"], niv: (o) => o.levelMin, lien: "quest" },
     dungeons: { nom: "Donjons", sel: ["id", "name", "optimalPlayerLevel"], niv: (o) => o.optimalPlayerLevel, lien: "dungeon" },
-    monsters: { nom: "Monstres", sel: ["id", "name", "img"], niv: () => null, lien: "monster" },
+    monsters: { nom: "Monstres", sel: ["id", "name", "img", "gfxId"], niv: () => null, lien: "monster" },
     items: { nom: "Objets", sel: ["id", "name", "level", "img", "iconId"], niv: (o) => o.level, lien: "item" },
   };
   const enc = { type: "quests", q: "", res: null, charge: false, n: 0 };
@@ -226,7 +226,7 @@
           <ul class="enc-liste">${res.map((o) => {
             const niv = t.niv(o);
             const nom = echap(o.name?.fr || "Sans nom");
-            const src = o.img || (t.lien === "monster" ? `${API}/img/monsters/${o.id}.png` : "");
+            const src = o.img || "";
             const img = src ? `<img src="${echap(src)}" alt="" loading="lazy">` : "";
             const contenu = `${img ? `<span class="enc-img">${img}</span>` : ""}<span class="enc-nom">${nom}</span>${niv != null ? `<small>Niv. ${niv}</small>` : ""}`;
             return enc.type === "quests"
