@@ -708,3 +708,6 @@ html.mode-ov .ov__barre { cursor: move; }
 .ov__compte:hover { opacity: 1; background: rgba(255,255,255,.08); }
 .ov__compte + .ov__opacite { margin-left: 4px; }
 html.mode-ov dialog { max-width: calc(100vw - 24px); }
+/* Appli : clic au travers actif (Ctrl+Maj+T pour revenir). */
+html.ov-travers .ov__barre-titre::after { content: " · clic au travers (Ctrl+Maj+T)"; text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--texte-3); }
+html.ov-travers .ov__nav, html.ov-travers .ov__opacite, html.ov-travers .ov__compte { opacity: .35; }
