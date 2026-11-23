@@ -80,8 +80,7 @@
           </span>
           <span class="dofus-carte__pct">${b.p} %</span>
         </a></li>`;
-      }).join("") || `<li class="dash__vide">Aucun Dofus ne correspond.</li>`}</ul>
-      <p class="archis-source">Quêtes et donjons tirés des données du jeu via DofusDB.</p>`;
+      }).join("") || `<li class="dash__vide">Aucun Dofus ne correspond.</li>`}</ul>`;
   }
 
   function ligneQuete(id, f) {
@@ -116,7 +115,6 @@
           </div>
           <div class="dofus-entete__actions">
             <button type="button" class="btn btn--small" data-dofus-tout="${d.id}">${b.ok === b.total ? "Tout décocher" : "Tout cocher"}</button>
-            <a class="btn btn--small btn--ghost" href="${SITE}/item/${d.id}" target="_blank" rel="noopener">Voir sur DofusDB ↗</a>
           </div>
         </div>
         ${d.prerequis.length ? `<section class="card dofus-bloc">
@@ -180,7 +178,7 @@
           <div class="almanax__bonus"><b>${echap(a.name?.fr || a.name || "Bonus")}</b><p>${bonus(a.desc?.fr ?? a.desc)}</p></div>
           ${a.npc?.name ? `<div class="almanax__pnj">Méryde : ${echap(a.npc.name.fr || a.npc.name)}</div>` : ""}
         </article>`).join("")}</div>
-      <p class="archis-source">Données du jeu via DofusDB. Les offrandes se déposent au temple de l'Almanax [-4,-24].</p>`;
+      <p class="archis-source">Les offrandes se déposent au temple de l'Almanax [-4,-24].</p>`;
   }
 
   // ---------- Encyclopédie ----------
@@ -232,8 +230,7 @@
             return enc.type === "quests"
               ? `<li><button type="button" class="enc-item" data-quete-ouvrir="${o.id}">${contenu}</button></li>`
               : `<li><a class="enc-item" href="${SITE}/${t.lien}/${o.id}" target="_blank" rel="noopener">${contenu}<span class="enc-ext">↗</span></a></li>`;
-          }).join("")}</ul>`}</div>
-      <p class="archis-source">Données du jeu via DofusDB. Les fiches autres que les quêtes s'ouvrent sur dofusdb.fr.</p>`;
+          }).join("")}</ul>`}</div>`;
     if (actif) { const i = el.querySelector("[data-enc-q]"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
   }
 
