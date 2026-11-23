@@ -97,7 +97,10 @@
     const depart = q.startPosition?.[0];
     const pnjDepart = depart && d.pnj[depart.npcId];
     const G = window.GuideDofus;
-    const grises = G?.etat().qobj?.[q.id] || {};
+    const faiteQ = !!G?.etat().quetes?.[q.id];
+    const donnees = G?.etat().qobj?.[q.id];
+    const grises = donnees || {};
+    let lignesTotal = 0;
     const etapes = q.steps.map((s, i) => {
       let nObj = 0, nGris = 0;
       const objectifs = s.objectives.map((o, j) => {
@@ -105,8 +108,8 @@
         const txt = remplacer(nettoyer(o.text?.fr || ""), d).trim();
         if (!txt) return "";
         const dejaCarte = /\{map,\d+/.test(o.text?.fr || "");
-        const gris = !!grises[`${i}.${j}`];
-        nObj++; if (gris) nGris++;
+        const gris = donnees ? !!grises[`${i}.${j}`] : faiteQ; // quête déjà terminée : tout grisé
+        nObj++; lignesTotal++; if (gris) nGris++;
         return `<li class="qobj${gris ? " qobj--faite" : ""}"${G ? ` data-qobj="${q.id}|${i}.${j}" title="Cliquer pour griser / dégriser"` : ""}><span>${txt}${pos && !dejaCarte ? " " + coord(pos[0], pos[1]) : ""}</span></li>`;
       }).join("");
       const rec = s.rewards.flatMap((r) => [
@@ -143,16 +146,18 @@
       ${prerequis.length ? `<div class="quete__depart"><span class="section__label">Prérequis</span><p>${prerequis.map(echap).join(", ")}</p></div>` : ""}
       <span class="section__label">Étapes${window.GuideDofus ? ` <small class="qetapes__aide">clique sur une ligne pour la griser</small>` : ""}</span>
       <ol class="qetapes">${etapes}</ol>
-      ${liens(q)}
+      ${liens(q, lignesTotal > 0)}
       <p class="quete__source">Clique sur une position pour copier la commande /travel.</p>`;
   }
 
   // Soluces externes et case « quête terminée » (enregistrée pour le personnage actif).
-  function liens(q) {
+  // Avec des lignes à griser, la quête se valide en grisant la dernière : pas de bouton, juste l'état.
+  function liens(q, parLignes) {
     const nom = q.name?.fr || "";
     const faite = !!window.GuideDofus?.etat().quetes?.[q.id];
     return `<div class="quete__liens">
-      ${window.GuideDofus ? `<button type="button" class="btn btn--small ${faite ? "btn--accent" : ""}" data-quete-fait="${q.id}" aria-pressed="${faite}">${faite ? "✓ Quête terminée" : "Marquer comme terminée"}</button>` : ""}
+      ${window.GuideDofus && parLignes ? `<span class="pill quete__etat${faite ? " pill--accent" : ""}" data-quete-etat>${faite ? "✓ Quête terminée" : "Grise toutes les lignes pour terminer la quête"}</span>` : ""}
+      ${window.GuideDofus && !parLignes ? `<button type="button" class="btn btn--small ${faite ? "btn--accent" : ""}" data-quete-fait="${q.id}" aria-pressed="${faite}">${faite ? "✓ Quête terminée" : "Marquer comme terminée"}</button>` : ""}
       <a class="btn btn--small btn--ghost" href="https://www.dofuspourlesnoobs.com/apps/search?q=${encodeURIComponent(nom)}" target="_blank" rel="noopener">Soluce DPLN ↗</a>
       <a class="btn btn--small btn--ghost" href="https://dofusdb.fr/fr/database/quest/${q.id}" target="_blank" rel="noopener">DofusDB ↗</a>
     </div>`;
@@ -201,18 +206,34 @@
     return true;
   }
   // Ligne d'objectif cliquée : grisée (ou dégrisée). Étape entièrement grisée → étape grisée.
-  // La quête ne se valide qu'avec « Marquer comme terminée ».
+  // Dernière ligne grisée → quête terminée (retour à la liste dans l'appli) ; une ligne dégrisée → quête rouverte.
   function griserObjectif(vue, li) {
     const G = window.GuideDofus;
     const [qid, cle] = li.dataset.qobj.split("|");
     const etat = G.etat();
-    const grises = ((etat.qobj ??= {})[qid] ??= {});
+    const lignes = [...vue.el.querySelectorAll("[data-qobj]")];
+    etat.qobj ??= {};
+    if (!etat.qobj[qid]) { // première fois : on part de ce qui est affiché (tout grisé si la quête était terminée)
+      etat.qobj[qid] = {};
+      lignes.forEach((x) => { if (x.classList.contains("qobj--faite")) etat.qobj[qid][x.dataset.qobj.split("|")[1]] = 1; });
+    }
+    const grises = etat.qobj[qid];
     if (grises[cle]) delete grises[cle]; else grises[cle] = 1;
-    if (!Object.keys(grises).length) delete etat.qobj[qid];
     li.classList.toggle("qobj--faite", !!grises[cle]);
     const etape = li.closest(".qetape");
-    const lignes = [...etape.querySelectorAll("[data-qobj]")];
-    etape.classList.toggle("qetape--faite", lignes.every((x) => x.classList.contains("qobj--faite")));
+    etape.classList.toggle("qetape--faite", [...etape.querySelectorAll("[data-qobj]")].every((x) => x.classList.contains("qobj--faite")));
+    const toutes = lignes.every((x) => x.classList.contains("qobj--faite"));
+    const faite = !!etat.quetes?.[+qid];
+    if (!Object.keys(grises).length) delete etat.qobj[qid];
+    if (toutes !== faite) {
+      window.Pages?.marquer(+qid, toutes); // enregistre aussi la progression
+      const pill = vue.el.querySelector("[data-quete-etat]");
+      if (pill) { pill.classList.toggle("pill--accent", toutes); pill.textContent = toutes ? "✓ Quête terminée" : "Grise toutes les lignes pour terminer la quête"; }
+      if (toutes) {
+        G.toast?.("Quête terminée");
+        if (vue.apresFait) { setTimeout(() => { if (vue.liste) rendreListe(vue); else vue.apresFait(); }, 350); return; }
+      }
+    }
     G.sauver();
   }
 
