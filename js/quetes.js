@@ -116,7 +116,7 @@
       ${liens(q)}
       <span class="section__label">Étapes</span>
       <ol class="qetapes">${etapes}</ol>
-      <p class="quete__source">Données du jeu via DofusDB. Clique sur une position pour copier la commande /travel.</p>`;
+      <p class="quete__source">Clique sur une position pour copier la commande /travel.</p>`;
   }
 
   // Soluces externes et case « quête terminée » (enregistrée pour le personnage actif).
@@ -125,7 +125,6 @@
     const faite = !!window.GuideDofus?.etat().quetes?.[q.id];
     return `<div class="quete__liens">
       ${window.GuideDofus ? `<button type="button" class="btn btn--small ${faite ? "btn--accent" : ""}" data-quete-fait="${q.id}" aria-pressed="${faite}">${faite ? "✓ Quête terminée" : "Marquer comme terminée"}</button>` : ""}
-      ${DUFFUS[q.id] ? `<a class="btn btn--small btn--ghost" href="https://duffus.fr/quete/${DUFFUS[q.id]}" target="_blank" rel="noopener">Soluce Duffus ↗</a>` : ""}
       <a class="btn btn--small btn--ghost" href="https://www.dofuspourlesnoobs.com/apps/search?q=${encodeURIComponent(nom)}" target="_blank" rel="noopener">Soluce DPLN ↗</a>
       <a class="btn btn--small btn--ghost" href="https://dofusdb.fr/fr/database/quest/${q.id}" target="_blank" rel="noopener">DofusDB ↗</a>
     </div>`;
