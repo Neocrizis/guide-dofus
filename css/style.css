@@ -508,7 +508,7 @@ a.btn { text-decoration: none; }
   background: var(--fond-menu); border: 1px solid var(--bord); border-radius: 14px; box-shadow: 0 12px 32px rgba(0, 0, 0, .4);
   display: flex; flex-direction: column;
 }
-.nav__menu a { display: flex; flex-direction: column; padding: 9px 12px; border-radius: 10px; color: var(--texte); text-decoration: none; font-size: 14px; }
+.nav__menu a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; color: var(--texte); text-decoration: none; font-size: 14px; }
 .nav__menu a:hover { background: var(--bloc-2); }
 .nav__menu small { color: var(--texte-3); font-size: 12px; }
 .nav__menu a::after { content: none; }
@@ -613,3 +613,5 @@ a.btn { text-decoration: none; }
 .compte-theme { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 16px; padding-bottom: 16px; border-bottom: 1px solid var(--bord); }
 .qcoche__guide { font-size: 10px; padding: 1px 6px; margin-left: 6px; vertical-align: middle; }
 .qcoche input:disabled { opacity: .75; cursor: not-allowed; }
+.nav__menu a > span { display: flex; flex-direction: column; }
+.nav__ico { width: 30px; height: 30px; object-fit: contain; flex: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
