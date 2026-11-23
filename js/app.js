@@ -924,6 +924,15 @@
     rendreOverlay();
   }
 
+  // Projecteur des cartes : la lumière suit la souris (voir .card::after dans css/style.css).
+  document.addEventListener("pointermove", (ev) => {
+    const c = ev.target.closest?.(".card");
+    if (!c) return;
+    const r = c.getBoundingClientRect();
+    c.style.setProperty("--mx", `${ev.clientX - r.left}px`);
+    c.style.setProperty("--my", `${ev.clientY - r.top}px`);
+  }, { passive: true });
+
   // Petite interface pour js/compte.js (comptes en ligne).
   window.GuideDofus = {
     compte: () => JSON.parse(JSON.stringify(compte)),
