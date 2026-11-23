@@ -344,7 +344,7 @@ b { font-weight: 600; }
 .dash-liste__perso:hover { background: var(--bloc-2); }
 .dash-liste__perso.is-actif { background: var(--accent-soft); border-color: var(--accent-soft); }
 .dash-liste__mini {
-  width: 34px; height: 34px; flex: none; border-radius: 50%; display: grid; place-items: center;
+  width: 42px; height: 42px; flex: none; border-radius: 50%; display: grid; place-items: center;
   font-size: 13px; font-weight: 700; background: var(--bloc-2); color: var(--accent);
 }
 .dash-liste__nom { flex: 1; min-width: 0; font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

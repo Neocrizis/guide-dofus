@@ -49,6 +49,42 @@
     const l = p.look || {}, g = c[l.sexe === "f" ? "f" : "m"];
     return { corps: g.corpsListe?.[l.corps || 0] ?? g.corps, tete: g.tetes[Math.min(l.tete || 0, g.tetes.length - 1)], couleurs: g.couleurs.map((d, i) => l.couleurs?.[i] ?? d) };
   }
+  // Portrait (tête) du personnage, tiré du rendu animé : même classe, sexe, visage et couleurs.
+  // Dessiné une fois par apparence sur un canvas caché, puis gardé en image.
+  const portraits = new Map();
+  let toilePortrait = null, filePortraits = Promise.resolve();
+  function portrait(p) {
+    const look = lookPerso(p);
+    if (!look || !window.RenduPerso) return "";
+    const cle = JSON.stringify(look);
+    if (portraits.has(cle)) return portraits.get(cle);
+    portraits.set(cle, "");
+    filePortraits = filePortraits.then(async () => {
+      toilePortrait = toilePortrait || Object.assign(document.createElement("canvas"), { width: 240, height: 300 });
+      await window.RenduPerso.dessiner(toilePortrait, look, { fixe: true });
+      const W = 240, H = 300, c2 = Object.assign(document.createElement("canvas"), { width: W, height: H }).getContext("2d", { willReadFrequently: true });
+      c2.drawImage(toilePortrait, 0, 0);
+      const px = c2.getImageData(0, 0, W, H).data;
+      let haut = -1, bas = -1;
+      for (let y = 0; y < H && haut < 0; y++) for (let x = 0; x < W; x++) if (px[(y * W + x) * 4 + 3] > 40) { haut = y; break; }
+      for (let y = H - 1; y >= 0 && bas < 0; y--) for (let x = 0; x < W; x++) if (px[(y * W + x) * 4 + 3] > 40) { bas = y; break; }
+      if (haut < 0) return;
+      const cote = Math.round((bas - haut) * 0.42);
+      let sx = 0, n = 0;
+      for (let y = haut; y < haut + cote; y++) for (let x = 0; x < W; x++) if (px[(y * W + x) * 4 + 3] > 40) { sx += x; n++; }
+      const cx = n ? sx / n : W / 2;
+      const out = Object.assign(document.createElement("canvas"), { width: 96, height: 96 });
+      out.getContext("2d").drawImage(c2.canvas, cx - cote / 2, haut - cote * 0.06, cote, cote, 0, 0, 96, 96);
+      const url = out.toDataURL("image/webp");
+      portraits.set(cle, url);
+      document.querySelectorAll(`[data-portrait="${CSS.escape(cle)}"]`).forEach((el) => { el.innerHTML = `<img src="${url}" alt="">`; });
+    }).catch(() => {});
+    return "";
+  }
+  function mini(p) {
+    const url = portrait(p), cle = lookPerso(p) ? JSON.stringify(lookPerso(p)) : "";
+    return `<span class="dash-liste__mini" ${cle ? `data-portrait="${echap(cle)}"` : ""}>${url ? `<img src="${url}" alt="">` : echap(initiales(p.classe))}</span>`;
+  }
   const hex = (n) => "#" + n.toString(16).padStart(6, "0");
   const NOMS_CORPS = ["Classique", "Rétro", "Avant-gardiste"];
   const NOMS_COULEURS = ["Peau", "Cheveux", "Couleur 3", "Couleur 4", "Couleur 5", "Couleur 6"];
@@ -794,7 +830,7 @@
           ${compte.persos.map((p) => {
             const b = bilan(p, gP);
             return `<button type="button" class="dash-liste__perso ${p.id === etat.id ? "is-actif" : ""}" data-dash-perso="${p.id}">
-              <span class="dash-liste__mini">${echap(initiales(p.classe))}</span>
+              ${mini(p)}
               <span class="dash-liste__nom">${echap(p.nom)}<small>${echap(p.classe || "Sans classe")}${p.niveau ? " · niv. " + echap(p.niveau) : ""}</small></span>
               <span class="dash-liste__pct">${pct(b.etapesFaites, b.etapes)} %</span>
             </button>`;
