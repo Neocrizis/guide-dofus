@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/style.css?v=10">
   <script>
     try { const t = localStorage.getItem("guide-dofus:theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
   </script>
@@ -19,6 +19,7 @@
       <nav class="nav__vues" aria-label="Pages">
         <a class="nav__vue" href="#" data-lien-vue="accueil">Tableau de bord</a>
         <a class="nav__vue" href="#guide" data-lien-vue="guide">Guides</a>
+        <a class="nav__vue" href="#archimonstres" data-lien-vue="archimonstres">Archimonstres</a>
       </nav>
     </div>
     <div class="nav__actions">
@@ -44,6 +45,41 @@
   </header>
 
   <section id="vue-accueil" class="dash" hidden></section>
+
+  <div id="vue-archis" hidden>
+    <section class="hero">
+      <p class="hero__kicker">Dofus Ocre</p>
+      <h1>Archimonstres</h1>
+      <p class="hero__sub">Quête « L'éternelle moisson » : capture les archimonstres et les boss demandés, étape par étape. Coche-les au fur et à mesure.</p>
+    </section>
+    <section class="stats card">
+      <div class="stat">
+        <span class="stat__label">Archimonstres</span>
+        <span class="stat__value"><b id="archis-nb">0</b> / <span id="archis-total">0</span></span>
+      </div>
+      <div class="stat">
+        <span class="stat__label">Boss</span>
+        <span class="stat__value"><b id="boss-nb">0</b> / <span id="boss-total">0</span></span>
+      </div>
+      <div class="stat stat--grow">
+        <div class="bar"><div id="archis-barre" class="bar__fill"></div></div>
+      </div>
+      <span id="archis-pourcent" class="stat__value">0 %</span>
+    </section>
+    <div class="archis-filtres card">
+      <input id="archis-recherche" class="input" type="search" placeholder="Rechercher un monstre ou une zone…">
+      <select id="archis-etape" class="select" aria-label="Étape"></select>
+      <select id="archis-zone" class="select" aria-label="Zone"></select>
+      <select id="archis-type" class="select" aria-label="Type">
+        <option value="">Archimonstres et boss</option>
+        <option value="archi">Archimonstres</option>
+        <option value="boss">Boss</option>
+      </select>
+      <label class="archis-masquer"><input id="archis-masquer" type="checkbox" class="check"> Masquer les capturés</label>
+    </div>
+    <div id="archis-liste" class="archis"></div>
+    <p class="archis-source">Liste tirée des données du jeu via DofusDB.</p>
+  </div>
 
   <div id="vue-guide" hidden>
   <section class="hero">
@@ -128,10 +164,11 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/guide.js?v=9"></script>
-  <script src="js/app.js?v=9"></script>
-  <script src="js/config.js?v=9"></script>
+  <script src="data/guide.js?v=10"></script>
+  <script src="data/archimonstres.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
+  <script src="js/config.js?v=10"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-  <script src="js/compte.js?v=9"></script>
+  <script src="js/compte.js?v=10"></script>
 </body>
 </html>

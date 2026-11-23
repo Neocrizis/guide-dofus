@@ -338,7 +338,7 @@ b { font-weight: 600; }
 .dash-entete__sous { margin: 0; color: var(--texte-2); }
 .dash-entete__actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-.dash-tuiles { display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px; }
+.dash-tuiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 6px; }
 .tuile { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
 .tuile + .tuile { border-left: 1px solid var(--bord); }
 .tuile__icone { width: 42px; height: 42px; flex: none; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
@@ -370,7 +370,8 @@ b { font-weight: 600; }
 .activite__texte small { display: block; font-weight: 400; color: var(--texte-3); font-size: 12px; }
 .activite__date { font-size: 12px; color: var(--texte-3); white-space: nowrap; }
 
-.reprendres { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.reprendres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+a.reprendre { color: inherit; text-decoration: none; }
 .reprendre {
   display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 14px; text-align: left; cursor: pointer;
   border: 1px solid var(--bord); background: var(--bloc); transition: background .15s, border-color .15s;
@@ -403,3 +404,30 @@ b { font-weight: 600; }
 .pill--glaces { background: rgba(127, 214, 242, .14); color: #9fe0f5; }
 .section.glaces { padding: 10px 12px; border-radius: 12px; background: rgba(127, 214, 242, .06); border: 1px solid rgba(127, 214, 242, .16); }
 .section.glaces .section__label { color: #9fe0f5; }
+
+/* ---------- Archimonstres ---------- */
+#vue-archis > .stats, .archis-filtres, .archis, .archis-source { max-width: 1240px; width: calc(100% - 32px); margin-left: auto; margin-right: auto; }
+.archis-filtres { margin-top: 16px; padding: 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; position: sticky; top: 92px; z-index: 5; background: var(--panneau); backdrop-filter: blur(18px); }
+.archis-filtres .input { flex: 1 1 240px; width: auto; }
+.archis-masquer { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--texte-2); cursor: pointer; }
+.archis { margin-top: 16px; display: flex; flex-direction: column; gap: 16px; }
+.group__title small { font-weight: 500; color: var(--texte-3); font-size: 14px; }
+.archis__grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+.archi label {
+  display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "c nom niv" "c zone zone"; column-gap: 10px;
+  padding: 10px 12px; border-radius: 12px; background: var(--bloc); border: 1px solid var(--bord); cursor: pointer; align-items: center;
+}
+.archi label:hover { background: var(--bloc-2); }
+.archi .check { grid-area: c; }
+.archi__nom { grid-area: nom; font-weight: 600; font-size: 14px; }
+.archi__niv { grid-area: niv; font-size: 12px; color: var(--accent); font-weight: 600; }
+.archi__zone { grid-area: zone; font-size: 12px; color: var(--texte-3); }
+.archi.is-pris .archi__nom { color: var(--texte-3); text-decoration: line-through; }
+.archis-source { margin-top: 16px; margin-bottom: 32px; font-size: 12px; color: var(--texte-3); text-align: center; }
+@media (max-width: 1000px) {
+  .reprendres { grid-template-columns: minmax(0, 1fr); }
+  .tuile:nth-child(odd) { border-left: 0; }
+  .tuile:nth-child(even) { border-left: 1px solid var(--bord); }
+}
+@media (max-width: 620px) { .archis-filtres { position: static; } .archis-filtres .select { flex: 1 1 100%; } .tuile:nth-child(even) { border-left: 0; } }
+a.btn { text-decoration: none; }

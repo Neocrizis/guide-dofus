@@ -192,6 +192,7 @@
         <div class="step__actions">
           <button type="button" class="btn btn--small" data-suivre="${e.id}">Suivre cette étape dans l'overlay</button>
           <button type="button" class="btn btn--small btn--ghost" data-jusqua="${e.id}">Tout cocher jusqu'ici</button>
+          ${/Éternelle Moisson/i.test(e.titre) ? `<a class="btn btn--small btn--accent" href="#archimonstres">Voir la liste des archimonstres</a>` : ""}
         </div>
       </div>
     </article>`;
@@ -261,7 +262,7 @@
     const t = ev.target;
     const travel = t.closest("[data-travel]");
     if (travel) { ev.stopPropagation(); copier(travel.dataset.travel, doc); return; }
-    if (t.matches("[data-faite], [data-succes]")) return; // géré par "change"
+    if (t.matches("[data-faite], [data-succes], [data-archi]")) return; // géré par "change"
     const suivre = t.closest("[data-suivre]");
     if (suivre) { etat.courante = suivre.dataset.suivre; sauver(); toutRendre(); toast("Étape affichée dans l'overlay"); return; }
     const chap = t.closest("[data-chapitre]");
@@ -278,6 +279,8 @@
       ({ persos: () => $("#gerer-persos").click(), compte: () => $("#compte-btn").click(), overlay: () => $("#ouvrir-overlay").click() })[dashAction.dataset.dash]();
       return;
     }
+    const etapeArchis = t.closest("[data-archis-etape]");
+    if (etapeArchis) { cocherEtapeArchis(+etapeArchis.dataset.archisEtape); return; }
     const jusqua = t.closest("[data-jusqua]");
     if (jusqua) { cocherJusqua(jusqua.dataset.jusqua); return; }
     const groupe = t.closest("[data-groupe]");
@@ -296,6 +299,7 @@
   function gererChangement(ev) {
     const t = ev.target;
     if (t.dataset.faite) basculerFaite(t.dataset.faite, t.checked);
+    if (t.dataset.archi) cocherArchi(+t.dataset.archi, t.checked);
     if (t.dataset.succes) {
       if (t.checked) etat.succes[t.dataset.succes] = true; else delete etat.succes[t.dataset.succes];
       if (t.checked) noter(t.closest("label")?.textContent.trim() || "Quête", { e: "Succès / quête", g: "Dofus des Glaces", a: "Avis de recherche" }[t.dataset.succes[0]]);
@@ -482,6 +486,79 @@
   });
 
 
+
+  // ---------- Archimonstres (quête « L'éternelle moisson », Dofus Ocre) ----------
+  const ARCHIS = window.ARCHIMONSTRES || { etapes: [], monstres: [] };
+  const capture = (m) => !!(etat.archis && etat.archis[m.id]);
+  function bilanArchis(p) {
+    const pris = p.archis || {};
+    const archis = ARCHIS.monstres.filter((m) => m.archi), boss = ARCHIS.monstres.filter((m) => !m.archi);
+    return {
+      archis: archis.length, archisPris: archis.filter((m) => pris[m.id]).length,
+      boss: boss.length, bossPris: boss.filter((m) => pris[m.id]).length,
+    };
+  }
+  (() => {
+    const etapesOpt = ARCHIS.etapes.map((e) => `<option value="${e.n}">Étape ${e.n} · niv. ${e.niveau}</option>`).join("");
+    $("#archis-etape").innerHTML = `<option value="">Toutes les étapes</option>${etapesOpt}`;
+    const zones = [...new Set(ARCHIS.monstres.map((m) => m.zone).filter(Boolean))].sort((a, b) => a.localeCompare(b, "fr"));
+    $("#archis-zone").innerHTML = `<option value="">Toutes les zones</option>` + zones.map((z) => `<option>${echap(z)}</option>`).join("");
+  })();
+  function rendreArchis() {
+    if ($("#vue-archis").hidden) return;
+    const q = $("#archis-recherche").value.trim().toLowerCase();
+    const etape = $("#archis-etape").value, zone = $("#archis-zone").value, type = $("#archis-type").value;
+    const masquer = $("#archis-masquer").checked;
+    const b = bilanArchis(etat);
+    $("#archis-nb").textContent = b.archisPris; $("#archis-total").textContent = b.archis;
+    $("#boss-nb").textContent = b.bossPris; $("#boss-total").textContent = b.boss;
+    const p = Math.round(((b.archisPris + b.bossPris) / (b.archis + b.boss || 1)) * 100);
+    $("#archis-barre").style.width = `${p}%`; $("#archis-pourcent").textContent = `${p} %`;
+    const garde = (m) => (!etape || String(m.etape) === etape) && (!zone || m.zone === zone)
+      && (!type || (type === "archi") === m.archi) && (!masquer || !capture(m))
+      && (!q || `${m.nom} ${m.sousZone} ${m.zone}`.toLowerCase().includes(q));
+    const html = ARCHIS.etapes.map((e) => {
+      const tous = ARCHIS.monstres.filter((m) => m.etape === e.n);
+      const visibles = tous.filter(garde);
+      if (!visibles.length) return "";
+      const pris = tous.filter(capture).length;
+      return `<section class="group card">
+        <div class="group__head">
+          <span class="group__badge">${e.n}</span>
+          <h2 class="group__title">Étape ${e.n} <small>· niveau ${e.niveau}</small></h2>
+          <span class="group__pct">${pris} / ${tous.length}</span>
+          <button type="button" class="btn btn--ghost btn--small" data-archis-etape="${e.n}">${pris === tous.length ? "Tout décocher" : "Tout cocher"}</button>
+        </div>
+        <ul class="archis__grille">${visibles.map((m) => `<li class="archi ${capture(m) ? "is-pris" : ""}">
+          <label>
+            <input type="checkbox" class="check" data-archi="${m.id}" ${capture(m) ? "checked" : ""}>
+            <span class="archi__nom">${echap(m.nom)}${m.archi ? "" : ` <span class="pill pill--accent">Boss</span>`}</span>
+            <span class="archi__niv">Niv. ${m.niveau}</span>
+            <span class="archi__zone">${echap(m.sousZone)}${m.zone && m.zone !== m.sousZone ? ` · ${echap(m.zone)}` : ""}</span>
+          </label></li>`).join("")}</ul>
+      </section>`;
+    }).join("");
+    $("#archis-liste").innerHTML = html || `<div class="empty card">Aucun monstre ne correspond à ces filtres.</div>`;
+  }
+  function cocherArchi(id, valeur) {
+    etat.archis = etat.archis || {};
+    const m = ARCHIS.monstres.find((x) => x.id === id);
+    if (valeur) { etat.archis[id] = true; if (m) noter(m.nom, m.archi ? "Archimonstre capturé" : "Boss capturé"); }
+    else delete etat.archis[id];
+    sauver(); rendreArchis(); rendreAccueil();
+  }
+  function cocherEtapeArchis(n) {
+    etat.archis = etat.archis || {};
+    const liste = ARCHIS.monstres.filter((m) => m.etape === n);
+    const tout = liste.every(capture);
+    liste.forEach((m) => { if (tout) delete etat.archis[m.id]; else etat.archis[m.id] = true; });
+    if (!tout) noter(`Étape ${n} de L'éternelle moisson complétée`, "Archimonstres");
+    sauver(); rendreArchis(); rendreAccueil();
+    toast(tout ? `Étape ${n} décochée` : `Étape ${n} cochée`);
+  }
+  ["#archis-recherche", "#archis-etape", "#archis-zone", "#archis-type", "#archis-masquer"].forEach((s) =>
+    $(s).addEventListener(s === "#archis-recherche" ? "input" : "change", rendreArchis));
+
   // ---------- Tableau de bord (page d'accueil) ----------
   const fmt = (n) => n.toLocaleString("fr-FR");
   function depuis(date) {
@@ -524,6 +601,7 @@
     etapes: `<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M3 5h2v2H3zm4 0h14v2H7zM3 11h2v2H3zm4 0h14v2H7zm-4 6h2v2H3zm4 0h14v2H7z"/></svg>`,
     succes: `<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M19 4h-2V3H7v1H5a2 2 0 0 0-2 2v1a4 4 0 0 0 3.6 4A5 5 0 0 0 11 14.9V18H8v2h8v-2h-3v-3.1A5 5 0 0 0 17.4 11 4 4 0 0 0 21 7V6a2 2 0 0 0-2-2zM5 7V6h2v3a2 2 0 0 1-2-2zm14 0a2 2 0 0 1-2 2V6h2z"/></svg>`,
     glaces: `<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M11 2h2v4.2l2.6-2.6 1.4 1.4-4 4V11h2l4-4 1.4 1.4-2.6 2.6H22v2h-4.2l2.6 2.6-1.4 1.4-4-4H13v2l4 4-1.4 1.4-2.6-2.6V22h-2v-4.2l-2.6 2.6L7 19l4-4v-2H9l-4 4-1.4-1.4L6.2 13H2v-2h4.2L3.6 8.4 5 7l4 4h2V9L7 5l1.4-1.4L11 6.2z"/></svg>`,
+    archis: `<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2C7 2 4 5.6 4 10c0 2.6 1.2 4.6 3 6v4h2v-2h2v2h2v-2h2v2h2v-4c1.8-1.4 3-3.4 3-6 0-4.4-3-8-8-8zm-3 11a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm6 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>`,
     avis: `<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg>`,
   };
 
@@ -531,9 +609,9 @@
     const racine = $("#vue-accueil");
     if (racine.hidden) return;
     const [gP, gG, gA] = ["progression", "glaces", "avis"].map((id) => GUIDES.find((g) => g.id === id));
-    const bP = bilan(etat, gP), bG = bilan(etat, gG), bA = bilan(etat, gA);
+    const bP = bilan(etat, gP), bG = bilan(etat, gG), bA = bilan(etat, gA), bR = bilanArchis(etat);
     const niv = niveauNum(etat);
-    const parts = [pct(bP.etapesFaites, bP.etapes), pct(bP.itemsFaits, bP.items), pct(bG.itemsFaits, bG.items), pct(bA.itemsFaits, bA.items)];
+    const parts = [pct(bP.etapesFaites, bP.etapes), pct(bP.itemsFaits, bP.items), pct(bG.itemsFaits, bG.items), pct(bA.itemsFaits, bA.items), pct(bR.archisPris, bR.archis)];
     const global = Math.round(parts.reduce((a, b) => a + b, 0) / parts.length);
     const connecte = $("#compte-btn").classList.contains("is-connecte");
     const compteVisible = !$("#compte-btn").hidden;
@@ -548,7 +626,11 @@
         <span class="reprendre__titre">${echap(e.titre)}</span>
         <span class="reprendre__go">Continuer →</span>
       </button>`;
-    }).join("");
+    }).join("") + `<a class="reprendre" href="#archimonstres">
+        <span class="reprendre__guide">Archimonstres · ${pct(bR.archisPris + bR.bossPris, bR.archis + bR.boss)} %</span>
+        <span class="reprendre__titre">${bR.archisPris} archimonstre${bR.archisPris > 1 ? "s" : ""} et ${bR.bossPris} boss capturé${bR.archisPris + bR.bossPris > 1 ? "s" : ""}</span>
+        <span class="reprendre__go">Voir la liste →</span>
+      </a>`;
 
     racine.innerHTML = `
       <aside class="dash__cote">
@@ -594,6 +676,7 @@
           ${tuile("Succès et quêtes", bP.itemsFaits, bP.items, ICONES.succes)}
           ${tuile("Dofus des Glaces", bG.itemsFaits, bG.items, ICONES.glaces)}
           ${tuile("Avis de recherche", bA.itemsFaits, bA.items, ICONES.avis)}
+          ${tuile("Archimonstres", bR.archisPris, bR.archis, ICONES.archis)}
         </div>
 
         <div class="dash__grille">
@@ -609,6 +692,7 @@
                 ${barre("Succès et quêtes", bP.itemsFaits, bP.items)}
                 ${barre("Dofus des Glaces", bG.itemsFaits, bG.items)}
                 ${barre("Avis de recherche", bA.itemsFaits, bA.items)}
+                ${barre("Archimonstres", bR.archisPris, bR.archis)}
               </div>
             </div>
           </div>
@@ -631,10 +715,13 @@
 
   // Deux pages : tableau de bord (par défaut) et guides (#guide).
   function afficherVue() {
-    const guide = location.hash === "#guide";
+    const vue = { "#guide": "guide", "#archimonstres": "archimonstres" }[location.hash] || "accueil";
+    const guide = vue === "guide";
     $("#vue-guide").hidden = !guide;
-    $("#vue-accueil").hidden = guide;
-    document.querySelectorAll("[data-lien-vue]").forEach((a) => a.classList.toggle("is-active", a.dataset.lienVue === (guide ? "guide" : "accueil")));
+    $("#vue-archis").hidden = vue !== "archimonstres";
+    $("#vue-accueil").hidden = vue !== "accueil";
+    document.querySelectorAll("[data-lien-vue]").forEach((a) => a.classList.toggle("is-active", a.dataset.lienVue === vue));
+    if (vue === "archimonstres") { rendreArchis(); window.scrollTo(0, 0); return; }
     if (guide) {
       rendrePage();
       requestAnimationFrame(() => {
@@ -652,6 +739,7 @@
   function toutRendre() {
     rendrePage();
     rendreAccueil();
+    rendreArchis();
     rendreOverlay();
   }
 
