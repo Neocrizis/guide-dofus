@@ -575,7 +575,7 @@
   function enteteOv() {
     return `<div class="ov__barre" data-tauri-drag-region>
       <img class="ov__barre-ico" src="${new URL("img/outils/quest.webp", location.href)}" alt="" data-tauri-drag-region>
-      <span class="ov__barre-titre" data-tauri-drag-region>Journal de quêtes</span>
+      <span class="ov__barre-titre" data-tauri-drag-region>Dofus Guide</span>
       ${MODE_OV ? `<button type="button" class="ov__compte" data-ov-compte title="Mon compte (synchronisation avec le site)">👤</button>` : ""}
       ${MODE_OV ? `<label class="ov__opacite" title="Transparence du fond"><span aria-hidden="true">◐</span><input type="range" min="0" max="100" value="${opaciteOv()}" data-ov-opacite aria-label="Opacité du fond"></label>` : ""}
     </div>`;
