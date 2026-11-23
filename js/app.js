@@ -639,6 +639,7 @@
         <ul class="archis__grille">${visibles.map((m) => `<li class="archi ${capture(m) ? "is-pris" : ""}">
           <label>
             <input type="checkbox" class="check" data-archi="${m.id}" ${capture(m) ? "checked" : ""}>
+            <span class="archi__img"><img src="https://api.dofusdb.fr/img/monsters/${m.id}.png" alt="" loading="lazy" onerror="this.remove()"></span>
             <span class="archi__nom">${echap(m.nom)}${m.archi ? "" : ` <span class="pill pill--accent">Boss</span>`}</span>
             <span class="archi__niv">Niv. ${m.niveau}</span>
             <span class="archi__zone">${echap(m.sousZone)}${m.zone && m.zone !== m.sousZone ? ` · ${echap(m.zone)}` : ""}</span>

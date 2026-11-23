@@ -414,11 +414,14 @@ a.reprendre { color: inherit; text-decoration: none; }
 .group__title small { font-weight: 500; color: var(--texte-3); font-size: 14px; }
 .archis__grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
 .archi label {
-  display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "c nom niv" "c zone zone"; column-gap: 10px;
+  display: grid; grid-template-columns: auto auto 1fr auto; grid-template-areas: "c img nom niv" "c img zone zone"; column-gap: 10px;
   padding: 10px 12px; border-radius: 12px; background: var(--bloc); border: 1px solid var(--bord); cursor: pointer; align-items: center;
 }
 .archi label:hover { background: var(--bloc-2); }
 .archi .check { grid-area: c; }
+.archi__img { grid-area: img; width: 48px; height: 48px; border-radius: 10px; background: var(--bloc-2); display: grid; place-items: center; overflow: hidden; }
+.archi__img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.archi.is-pris .archi__img img { opacity: .45; filter: grayscale(.6); }
 .archi__nom { grid-area: nom; font-weight: 600; font-size: 14px; }
 .archi__niv { grid-area: niv; font-size: 12px; color: var(--accent); font-weight: 600; }
 .archi__zone { grid-area: zone; font-size: 12px; color: var(--texte-3); }
