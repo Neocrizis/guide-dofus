@@ -273,3 +273,6 @@ b { font-weight: 600; }
 .compte-form { display: flex; gap: 8px; flex-wrap: wrap; }
 .compte-form .input { flex: 1; min-width: 200px; }
 #compte-btn.is-connecte { border-color: var(--accent); color: var(--accent); }
+.btn--google { width: 100%; justify-content: center; background: #fff; color: #1f1f1f; border-color: transparent; padding: 11px 16px; }
+.btn--google:hover { background: #f1f3f4; }
+.dialog__sep { margin: 14px 0 8px; text-align: center; font-size: 13px; color: var(--texte-3); }

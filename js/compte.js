@@ -79,6 +79,14 @@
   bouton.addEventListener("click", () => { majInterface(); dialogue.showModal(); });
   document.getElementById("compte-fermer").addEventListener("click", () => dialogue.close());
 
+  document.getElementById("compte-google").addEventListener("click", async () => {
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: location.origin + location.pathname },
+    });
+    if (error) document.getElementById("compte-message").textContent = "Connexion Google impossible : " + error.message;
+  });
+
   document.getElementById("compte-form").addEventListener("submit", async (ev) => {
     ev.preventDefault();
     const email = document.getElementById("compte-adresse").value.trim();
