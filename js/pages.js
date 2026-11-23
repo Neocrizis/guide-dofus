@@ -43,7 +43,7 @@
   function chargerIcones() {
     if (icones) return icones;
     const qs = D.dofus.map((d) => `id[$in][]=${d.id}`).join("&");
-    icones = json(`${API}/items?${qs}&$limit=50&$select[]=id&$select[]=img`)
+    icones = json(`${API}/items?${qs}&$limit=50&$select[]=id&$select[]=img&$select[]=iconId`)
       .then((r) => Object.fromEntries(r.data.map((o) => [o.id, o.img])))
       .catch(() => ({}));
     icones.then((r) => { iconesPretes = r; rendre(); });
@@ -188,7 +188,7 @@
     quests: { nom: "Quêtes", sel: ["id", "name", "levelMin"], niv: (o) => o.levelMin, lien: "quest" },
     dungeons: { nom: "Donjons", sel: ["id", "name", "optimalPlayerLevel"], niv: (o) => o.optimalPlayerLevel, lien: "dungeon" },
     monsters: { nom: "Monstres", sel: ["id", "name", "img"], niv: () => null, lien: "monster" },
-    items: { nom: "Objets", sel: ["id", "name", "level", "img"], niv: (o) => o.level, lien: "item" },
+    items: { nom: "Objets", sel: ["id", "name", "level", "img", "iconId"], niv: (o) => o.level, lien: "item" },
   };
   const enc = { type: "quests", q: "", res: null, charge: false, n: 0 };
   const slug = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/œ/g, "oe").toLowerCase().replace(/['’]/g, "").trim();
@@ -226,7 +226,8 @@
           <ul class="enc-liste">${res.map((o) => {
             const niv = t.niv(o);
             const nom = echap(o.name?.fr || "Sans nom");
-            const img = o.img ? `<img src="${echap(o.img)}" alt="" loading="lazy">` : "";
+            const src = o.img || (t.lien === "monster" ? `${API}/img/monsters/${o.id}.png` : "");
+            const img = src ? `<img src="${echap(src)}" alt="" loading="lazy">` : "";
             const contenu = `${img ? `<span class="enc-img">${img}</span>` : ""}<span class="enc-nom">${nom}</span>${niv != null ? `<small>Niv. ${niv}</small>` : ""}`;
             return enc.type === "quests"
               ? `<li><button type="button" class="enc-item" data-quete-ouvrir="${o.id}">${contenu}</button></li>`
