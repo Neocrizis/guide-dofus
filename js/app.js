@@ -566,7 +566,8 @@
     racine.innerHTML = `${enteteOv()}
       <div class="ov__top"><button type="button" class="btn btn--small" data-ov-retour>← Retour à l'étape</button></div>
       <div class="ov__card card ov__quete"></div>`;
-    ovQuete = { el: racine.querySelector(".ov__quete"), liste: null };
+    ovQuete = { el: racine.querySelector(".ov__quete"), liste: null,
+      apresFait: () => { fermerQueteOverlay(); toast("Quête terminée"); } };
     window.Quetes.montrer(ovQuete, texte);
   }
   function fermerQueteOverlay() {
@@ -1031,7 +1032,7 @@
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
     // Design propre à l'appli (n'affecte pas le site).
-    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=1">`);
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=2">`);
     appliquerPrefsOv();
     // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
     const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };

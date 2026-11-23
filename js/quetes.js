@@ -138,8 +138,9 @@
       <p class="dialog__hint">Ce succès regroupe ${ids.length} quête${ids.length > 1 ? "s" : ""}. Choisis-en une pour voir son détail.</p>
       <ul class="qliste">${ids.map((id) => {
         const [nom, niv] = DATA.quetes[id] || ["Quête " + id, "?"];
-        return `<li><button type="button" class="qliste__btn" data-quete-id="${id}">
-          <span>${echap(nom)}</span><span class="qliste__niv">Niv. ${niv}</span></button></li>`;
+        const ok = !!window.GuideDofus?.etat().quetes?.[id];
+        return `<li><button type="button" class="qliste__btn${ok ? " qliste__btn--ok" : ""}" data-quete-id="${id}">
+          <span>${ok ? "✓ " : ""}${echap(nom)}</span><span class="qliste__niv">Niv. ${niv}</span></button></li>`;
       }).join("")}</ul>`;
   }
 
@@ -176,6 +177,8 @@
       fait.classList.toggle("btn--accent", oui);
       fait.setAttribute("aria-pressed", oui);
       fait.textContent = oui ? "✓ Quête terminée" : "Marquer comme terminée";
+      // Appli : une quête validée ramène directement à la liste (ou à l'étape).
+      if (oui && vue.apresFait) { if (vue.liste) rendreListe(vue); else vue.apresFait(); }
       return true;
     }
     if (ev.target.closest("[data-quete-retour]") && vue.liste) { rendreListe(vue); return true; }
