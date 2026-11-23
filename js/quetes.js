@@ -78,7 +78,7 @@
     const etapes = q.steps.map((s, i) => {
       const objectifs = s.objectives.map((o) => {
         const pos = o.map ? [o.map.posX, o.map.posY] : o.coords ? [o.coords.x, o.coords.y] : null;
-        const txt = remplacer(o.text?.fr || "", d).trim();
+        const txt = remplacer(nettoyer(o.text?.fr || ""), d).trim();
         if (!txt) return "";
         return `<li><span>${txt}${pos ? " " + coord(pos[0], pos[1]) : ""}</span></li>`;
       }).join("");
@@ -92,7 +92,7 @@
       ]).filter(Boolean);
       return `<li class="qetape">
         <div class="qetape__tete"><span class="qetape__num">${i + 1}</span><b>${echap(s.name?.fr || "Étape")}</b></div>
-        ${s.description?.fr ? `<p class="qetape__desc">${echap(s.description.fr)}</p>` : ""}
+        ${s.description?.fr ? `<p class="qetape__desc">${echap(nettoyer(s.description.fr))}</p>` : ""}
         ${objectifs ? `<ul class="qetape__obj">${objectifs}</ul>` : ""}
         ${rec.length ? `<div class="qetape__rec">Récompenses : ${[...new Set(rec)].join(", ")}</div>` : ""}
       </li>`;
@@ -128,6 +128,11 @@
       <a class="btn btn--small btn--ghost" href="https://www.dofuspourlesnoobs.com/apps/search?q=${encodeURIComponent(nom)}" target="_blank" rel="noopener">Soluce DPLN ↗</a>
       <a class="btn btn--small btn--ghost" href="https://dofusdb.fr/fr/database/quest/${q.id}" target="_blank" rel="noopener">DofusDB ↗</a>
     </div>`;
+  }
+
+  // Textes du jeu : « {{ui,…::mini-carte}} » → « mini-carte », balises HTML retirées.
+  function nettoyer(t) {
+    return String(t).replace(/\{\{[^{}]*?::([^{}]*?)\}\}/g, "$1").replace(/\{\{[^{}]*\}\}/g, "").replace(/<[^>]+>/g, "").replace(/\s{2,}/g, " ").trim();
   }
 
   function rendreListe(vue) {
