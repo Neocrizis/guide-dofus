@@ -132,13 +132,15 @@
 
   function rendreListe(vue) {
     const { titre, ids } = vue.liste;
+    const G = window.GuideDofus;
+    const faites = G ? { ...(G.quetesGuide?.() || {}), ...(G.etat().quetes || {}) } : {};
     vue.el.innerHTML = `
       ${vue.haut || ""}
       <h2 class="quete__titre">${echap(titre)}</h2>
       <p class="dialog__hint">Ce succès regroupe ${ids.length} quête${ids.length > 1 ? "s" : ""}. Choisis-en une pour voir son détail.</p>
       <ul class="qliste">${ids.map((id) => {
         const [nom, niv] = DATA.quetes[id] || ["Quête " + id, "?"];
-        const ok = !!window.GuideDofus?.etat().quetes?.[id];
+        const ok = !!faites[id];
         return `<li><button type="button" class="qliste__btn${ok ? " qliste__btn--ok" : ""}" data-quete-id="${id}">
           <span>${ok ? "✓ " : ""}${echap(nom)}</span><span class="qliste__niv">Niv. ${niv}</span></button></li>`;
       }).join("")}</ul>`;

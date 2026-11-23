@@ -711,3 +711,8 @@ html.mode-ov dialog { max-width: calc(100vw - 24px); }
 /* Appli : clic au travers actif (Ctrl+Maj+T pour revenir). */
 html.ov-travers .ov__barre-titre::after { content: " · clic au travers (Ctrl+Maj+T)"; text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--texte-3); }
 html.ov-travers .ov__nav, html.ov-travers .ov__opacite, html.ov-travers .ov__compte { opacity: .35; }
+
+/* Liste des quêtes d'un succès : quêtes terminées rayées */
+.qliste__btn--ok { opacity: .6; }
+.qliste__btn--ok > span:first-child { text-decoration: line-through; text-decoration-thickness: 2px; }
+.qliste__btn--ok .qliste__niv { text-decoration: none; }
