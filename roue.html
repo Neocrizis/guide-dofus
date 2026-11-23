@@ -54,7 +54,7 @@
     const ROUE = "https://roue-dofus.neocrizis.workers.dev";
     let theme = "";
     try { theme = localStorage.getItem("guide-dofus:theme") || ""; } catch {}
-    document.getElementById("roue-de-la-chance").src = ROUE + "/?masquer=historique&style=guide" + (theme ? "&theme=" + encodeURIComponent(theme) : "");
+    document.getElementById("roue-de-la-chance").src = ROUE + "/?masquer=historique,stats&style=guide" + (theme ? "&theme=" + encodeURIComponent(theme) : "");
     // La roue envoie sa hauteur : le cadre s'ajuste, sans double barre de défilement.
     // Seuls les messages venant de la roue sont pris en compte.
     addEventListener("message", (e) => {
