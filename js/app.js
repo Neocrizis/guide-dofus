@@ -407,6 +407,7 @@
       location.hash = "guide"; return;
     }
     if (t.closest("[data-ov-compte]")) { $("#compte-btn").click(); return; }
+    if (t.matches("[data-prevoir-suite]")) { majPrefsOv({ prevoirSuite: t.checked }); rendreOverlay(); return; }
     if (t.closest("[data-ov-recharger]")) { const u = new URL(location.href); u.searchParams.set("r", Date.now()); location.replace(u); return; }
     if (t.closest("[data-ov-menu]")) { reglagesOuverts = !reglagesOuverts; doc.querySelector(".ov__reglages")?.toggleAttribute("hidden", !reglagesOuverts); return; }
     const taille = t.closest("[data-ov-taille]");
@@ -617,6 +618,41 @@
     appliquerOpacite(document);
   });
 
+  // « À prévoir » : objets et monstres demandés par les quêtes de l'étape (et des suivantes si choisi).
+  function idsEtape(e) {
+    const ids = [];
+    const ajouter = (s) => String(s).split("\n").forEach((l) => (window.Quetes?.idsPour(l) || []).forEach((id) => ids.push(id)));
+    [e, ...zonesGlaces(e)].forEach((x) => x.succes.forEach((s, k) => { if (!etat.succes[`${x.id}|${k}`]) ajouter(s); }));
+    return ids;
+  }
+  const cachePrevoir = new Map();
+  function blocPrevoir(e, i) {
+    if (!window.Quetes?.aPrevoir) return "";
+    const p = prefsOv();
+    const n = p.prevoirSuite ? 3 : 1;
+    const sel = etapes.slice(i, i + n).filter((x) => !etat.faites[x.id] || x === e);
+    const cle = sel.map((x) => x.id).join(",") + "|" + JSON.stringify([etat.quetes || {}, etat.qobj || {}]).length;
+    return `<details class="section prevoir" data-prevoir="${echap(cle)}" ${p.prevoir ? "open" : ""}>
+      <summary class="section__label">À prévoir</summary>
+      <label class="prevoir__portee"><input type="checkbox" data-prevoir-suite ${p.prevoirSuite ? "checked" : ""}> inclure les 2 étapes suivantes</label>
+      <div class="prevoir__contenu" data-prevoir-ids="${sel.flatMap(idsEtape).join(",")}">${cachePrevoir.get(cle) || `<p class="prevoir__vide">Chargement…</p>`}</div>
+    </details>`;
+  }
+  async function chargerPrevoir(doc) {
+    const d = doc?.querySelector("[data-prevoir]");
+    if (!d || !d.open) return;
+    const cle = d.dataset.prevoir;
+    if (cachePrevoir.has(cle)) return;
+    const c = d.querySelector(".prevoir__contenu");
+    const ids = (c.dataset.prevoirIds || "").split(",").filter(Boolean).map(Number);
+    let html;
+    try { html = ids.length ? await window.Quetes.aPrevoir(ids) : `<p class="prevoir__vide">Aucune quête à préparer pour cette étape.</p>`; }
+    catch { html = `<p class="prevoir__vide">Impossible de charger la liste (DofusDB injoignable).</p>`; }
+    cachePrevoir.set(cle, html);
+    const actuel = doc.querySelector(`[data-prevoir="${CSS.escape(cle)}"] .prevoir__contenu`);
+    if (actuel) actuel.innerHTML = html;
+  }
+
   function rendreOverlay() {
     const doc = overlayDoc();
     if (!doc) return;
@@ -639,6 +675,7 @@
       <div class="ov__card card">
         <h1 class="ov__title">${echap(e.titre)}</h1>
         ${contenuEtape(e, true)}
+        ${blocPrevoir(e, i)}
       </div>
       <div class="ov__nav">
         <button type="button" class="btn" data-action="precedente" ${i === 0 ? "disabled" : ""} title="Étape précédente">←</button>
@@ -646,6 +683,9 @@
         <button type="button" class="btn" data-action="suivante" ${i === etapes.length - 1 ? "disabled" : ""} title="Étape suivante">→</button>
       </div>`;
     if (memeEtape) racine.querySelector(".ov__card").scrollTop = scroll;
+    const d = racine.querySelector("[data-prevoir]");
+    d?.addEventListener("toggle", () => { majPrefsOv({ prevoir: d.open }); chargerPrevoir(doc); });
+    chargerPrevoir(doc);
   }
 
   function preparerOverlay(win) {
@@ -1032,7 +1072,7 @@
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
     // Design propre à l'appli (n'affecte pas le site).
-    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=6">`);
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=7">`);
     appliquerPrefsOv();
     // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
     const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };

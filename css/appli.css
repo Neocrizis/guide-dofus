@@ -116,3 +116,6 @@ html.ov-travers .ov-poignee { display: none; }
 /* Lignes d'objectif grisables */
 html.mode-ov .qetapes__aide { color: var(--d-texte-3); font-size: 11px; }
 html.mode-ov .qobj[data-qobj]:hover { background: rgba(255, 255, 255, .07); }
+html.mode-ov .prevoir > summary { color: #fff; }
+html.mode-ov .prevoir__n { color: var(--d-jaune); }
+html.mode-ov .prevoir__titre { color: var(--d-texte-2); }

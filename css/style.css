@@ -739,3 +739,20 @@ html.ov-travers .ov__nav, html.ov-travers .ov__opacite, html.ov-travers .ov__com
 .qetape--faite .qetape__tete b { text-decoration: line-through; opacity: .5; }
 .qetape--faite .qetape__num { filter: grayscale(1); opacity: .5; }
 .qetape--faite .qetape__desc { display: none; }
+
+/* « À prévoir » (overlay) : objets et monstres demandés par les prochaines quêtes */
+.prevoir > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }
+.prevoir > summary::-webkit-details-marker { display: none; }
+.prevoir > summary::after { content: "▸"; margin-left: auto; transition: transform .2s; }
+.prevoir[open] > summary::after { transform: rotate(90deg); }
+.prevoir__portee { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--texte-3); margin: 6px 0; cursor: pointer; }
+.prevoir__portee input { accent-color: var(--accent); }
+.prevoir__bloc + .prevoir__bloc { margin-top: 10px; }
+.prevoir__titre { display: block; font-size: 12px; font-weight: 700; color: var(--texte-2); margin-bottom: 4px; }
+.prevoir__liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.prevoir__ligne { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 8px; font-size: 13px; }
+.prevoir__ligne img { width: 28px; height: 28px; object-fit: contain; }
+.prevoir__ico { width: 28px; text-align: center; opacity: .6; }
+.prevoir__nom { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prevoir__n { color: var(--accent); }
+.prevoir__vide { font-size: 12px; color: var(--texte-3); margin: 4px 0; }
