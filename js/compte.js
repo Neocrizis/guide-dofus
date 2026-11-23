@@ -116,6 +116,13 @@
     if (!user && utilisateur) { utilisateur = null; pret = false; majInterface(); }
   });
 
+  // Retour d'une connexion échouée (ex. Google) : on affiche l'erreur et on nettoie l'adresse.
+  const params = new URLSearchParams(location.search || location.hash.slice(1));
+  if (params.get("error_description")) {
+    app.toast("Connexion impossible : " + params.get("error_description"));
+    history.replaceState(null, "", location.pathname);
+  }
+
   bouton.hidden = false;
   majInterface();
 })();
