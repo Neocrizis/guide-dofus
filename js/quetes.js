@@ -66,7 +66,8 @@
     });
   }
 
-  function rendreQuete(d, retour) {
+  function rendreQuete(vue, d) {
+    const retour = !!vue.liste;
     const { q } = d;
     const prerequis = (q.need?.quests || []).map((id) => DATA.quetes[id]?.[0] || null).filter(Boolean);
     const depart = q.startPosition?.[0];
@@ -91,7 +92,8 @@
         ${rec.length ? `<div class="qetape__rec">Récompenses : ${[...new Set(rec)].join(", ")}</div>` : ""}
       </li>`;
     }).join("");
-    corps.innerHTML = `
+    vue.el.innerHTML = `
+      ${vue.haut || ""}
       ${retour ? `<button type="button" class="btn btn--ghost btn--small" data-quete-retour>← Retour à la liste</button>` : ""}
       <h2 class="quete__titre">${echap(q.name?.fr)}</h2>
       <div class="quete__infos">
@@ -111,8 +113,10 @@
       <p class="quete__source">Données du jeu via DofusDB. Clique sur une position pour copier la commande /travel.</p>`;
   }
 
-  function rendreListe(titre, ids) {
-    corps.innerHTML = `
+  function rendreListe(vue) {
+    const { titre, ids } = vue.liste;
+    vue.el.innerHTML = `
+      ${vue.haut || ""}
       <h2 class="quete__titre">${echap(titre)}</h2>
       <p class="dialog__hint">Ce succès regroupe ${ids.length} quête${ids.length > 1 ? "s" : ""}. Choisis-en une pour voir son détail.</p>
       <ul class="qliste">${ids.map((id) => {
@@ -122,32 +126,45 @@
       }).join("")}</ul>`;
   }
 
-  let liste = null; // { titre, ids } quand on vient d'un succès
-  async function afficherQuete(id) {
-    corps.innerHTML = `<p class="dialog__hint">Chargement de la quête…</p>`;
+  async function afficherQuete(vue, id) {
+    vue.el.innerHTML = `${vue.haut || ""}<p class="dialog__hint">Chargement de la quête…</p>`;
     try {
-      rendreQuete(await chargerQuete(id), !!liste);
+      const d = await chargerQuete(id);
+      if (vue.el.isConnected) rendreQuete(vue, d);
     } catch {
-      corps.innerHTML = `<p class="dialog__hint">Impossible de charger cette quête pour le moment. Vérifie ta connexion et réessaie.</p>
-        ${liste ? `<button type="button" class="btn btn--small" data-quete-retour>← Retour</button>` : ""}`;
+      vue.el.innerHTML = `${vue.haut || ""}<p class="dialog__hint">Impossible de charger cette quête pour le moment. Vérifie ta connexion et réessaie.</p>
+        ${vue.liste ? `<button type="button" class="btn btn--small" data-quete-retour>← Retour à la liste</button>` : ""}`;
     }
-    corps.scrollTop = 0;
+    vue.el.scrollTop = 0;
   }
 
-  function ouvrir(texte) {
+  // Affiche une quête (ou la liste des quêtes d'un succès) dans un conteneur :
+  // la fenêtre de la page, ou la carte de l'overlay.
+  function montrer(vue, texte) {
     const ids = idsPour(texte);
-    if (!ids) return;
-    if (!dialogue.open) dialogue.showModal();
-    if (ids.length === 1) { liste = null; afficherQuete(ids[0]); }
-    else { liste = { titre: texte.replace(/^[^:]+ : /, ""), ids }; rendreListe(liste.titre, ids); }
+    if (!ids) return false;
+    if (ids.length === 1) { vue.liste = null; afficherQuete(vue, ids[0]); }
+    else { vue.liste = { titre: texte.replace(/^[^:]+ : /, ""), ids }; rendreListe(vue); }
+    return true;
+  }
+  // Clics à l'intérieur d'une vue (choix d'une quête, retour à la liste).
+  function gererClic(vue, ev) {
+    const q = ev.target.closest("[data-quete-id]");
+    if (q) { afficherQuete(vue, +q.dataset.queteId); return true; }
+    if (ev.target.closest("[data-quete-retour]") && vue.liste) { rendreListe(vue); return true; }
+    return false;
   }
 
+  const vuePage = { el: corps, liste: null };
+  function ouvrir(texte) {
+    if (!idsPour(texte)) return;
+    if (!dialogue.open) dialogue.showModal();
+    montrer(vuePage, texte);
+  }
   dialogue.addEventListener("click", (ev) => {
-    const q = ev.target.closest("[data-quete-id]");
-    if (q) { afficherQuete(+q.dataset.queteId); return; }
-    if (ev.target.closest("[data-quete-retour]") && liste) { rendreListe(liste.titre, liste.ids); return; }
+    if (gererClic(vuePage, ev)) return;
     if (ev.target.closest("#quete-fermer") || ev.target === dialogue) dialogue.close();
   });
 
-  window.Quetes = { idsPour, ouvrir };
+  window.Quetes = { idsPour, ouvrir, montrer, gererClic };
 })();

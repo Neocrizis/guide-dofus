@@ -274,8 +274,17 @@
     if (t.matches("[data-faite], [data-succes], [data-archi]")) return; // géré par "change"
     const suivre = t.closest("[data-suivre]");
     if (suivre) { etat.courante = suivre.dataset.suivre; sauver(); toutRendre(); toast("Étape affichée dans l'overlay"); return; }
+    if (doc !== document && ovQuete) {
+      if (t.closest("[data-ov-retour]")) { fermerQueteOverlay(); return; }
+      if (window.Quetes.gererClic(ovQuete, ev)) return;
+    }
     const quete = t.closest("[data-quete]");
-    if (quete) { ev.preventDefault(); window.Quetes?.ouvrir(quete.dataset.quete); return; }
+    if (quete) {
+      ev.preventDefault();
+      if (doc !== document) ouvrirQueteOverlay(quete.dataset.quete);
+      else window.Quetes?.ouvrir(quete.dataset.quete);
+      return;
+    }
     const chap = t.closest("[data-chapitre]");
     if (chap) { ev.preventDefault(); doc.getElementById(chap.dataset.chapitre)?.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
     const continuer = t.closest("[data-continuer]");
@@ -426,9 +435,28 @@
   let overlay = null; // fenêtre PiP (ou popup de secours)
   const overlayDoc = () => (overlay && !overlay.closed ? overlay.document : null);
 
+  // Détail d'une quête affiché dans l'overlay, à la place de l'étape.
+  let ovQuete = null;
+  function ouvrirQueteOverlay(texte) {
+    const doc = overlayDoc();
+    if (!doc || !window.Quetes) return;
+    const racine = doc.getElementById("ov");
+    racine.dataset.id = "";
+    racine.innerHTML = `
+      <div class="ov__top"><button type="button" class="btn btn--small" data-ov-retour>← Retour à l'étape</button></div>
+      <div class="ov__card card ov__quete"></div>`;
+    ovQuete = { el: racine.querySelector(".ov__quete"), liste: null };
+    window.Quetes.montrer(ovQuete, texte);
+  }
+  function fermerQueteOverlay() {
+    ovQuete = null;
+    rendreOverlay();
+  }
+
   function rendreOverlay() {
     const doc = overlayDoc();
     if (!doc) return;
+    if (ovQuete) return; // on garde le détail affiché jusqu'au retour
     const e = courante();
     const i = index(e.id);
     const total = etapes.filter((x) => etat.faites[x.id]).length;
@@ -471,10 +499,12 @@
     doc.addEventListener("click", (ev) => gererClic(ev, doc));
     doc.addEventListener("change", gererChangement);
     doc.addEventListener("keydown", (ev) => {
+      if (ovQuete && (ev.key === "Escape" || ev.key === "Backspace")) { fermerQueteOverlay(); return; }
+      if (ovQuete) return;
       if (ev.key === "ArrowRight") aller(1);
       if (ev.key === "ArrowLeft") aller(-1);
     });
-    win.addEventListener("pagehide", () => { overlay = null; });
+    win.addEventListener("pagehide", () => { overlay = null; ovQuete = null; });
     rendreOverlay();
   }
 

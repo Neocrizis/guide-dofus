@@ -441,7 +441,8 @@ a.btn { text-decoration: none; }
   color: var(--accent); font-size: 12px; font-weight: 600; cursor: pointer;
 }
 .quete-btn:hover { background: var(--accent-soft); }
-.ov .quete-btns { display: none; }
+.ov__quete .quete__titre { font-size: 19px; }
+.ov__quete .qetape__desc, .ov__quete .qetape__obj, .ov__quete .qetape__rec { margin-left: 0; }
 .dialog--quete { width: min(720px, calc(100vw - 32px)); max-height: 85vh; }
 #quete-corps { overflow-y: auto; }
 .quete__titre { margin: 8px 0 8px; font-size: 24px; }
