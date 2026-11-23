@@ -49,7 +49,7 @@
       noms("npcs", [...trouve("npc"), depart?.npcId || 0]),
       noms("monsters", trouve("monster")),
       noms("items", [...trouve("item"), ...objetsRecompense]),
-      depart?.mapId ? json(`${API}/maps/${depart.mapId}`).catch(() => null) : null,
+      depart?.mapId ? json(`${API}/map-positions/${depart.mapId}`).catch(() => null) : null,
     ]);
     let zone = "";
     if (carte?.subAreaId) {
@@ -102,7 +102,7 @@
       </div>
       ${pnjDepart || d.carte ? `<div class="quete__depart">
         <span class="section__label">Départ</span>
-        <p>${pnjDepart ? `Parler à <b>${echap(pnjDepart)}</b>` : "Lancement"}${d.zone ? ` · ${echap(d.zone)}` : ""}
+        <p>${pnjDepart ? `Parler à <b>${echap(pnjDepart)}</b>` : "Lancement"}${d.carte?.name?.fr ? ` · ${echap(d.carte.name.fr)}` : ""}${d.zone ? ` · ${echap(d.zone)}` : ""}
         ${d.carte ? coord(d.carte.posX, d.carte.posY) : ""}</p>
       </div>` : ""}
       ${prerequis.length ? `<div class="quete__depart"><span class="section__label">Prérequis</span><p>${prerequis.map(echap).join(", ")}</p></div>` : ""}
