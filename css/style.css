@@ -338,7 +338,7 @@ b { font-weight: 600; }
 .dash-entete__sous { margin: 0; color: var(--texte-2); }
 .dash-entete__actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-.dash-tuiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 6px; }
+.dash-tuiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 6px; }
 .tuile { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
 .tuile + .tuile { border-left: 1px solid var(--bord); }
 .tuile__icone { width: 42px; height: 42px; flex: none; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }

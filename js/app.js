@@ -652,7 +652,7 @@
     const [gP, gG, gA] = ["progression", "glaces", "avis"].map((id) => GUIDES.find((g) => g.id === id));
     const bP = bilan(etat, gP), bG = bilan(etat, gG), bA = bilan(etat, gA), bR = bilanArchis(etat);
     const niv = niveauNum(etat);
-    const parts = [pct(bP.etapesFaites, bP.etapes), pct(bP.itemsFaits, bP.items), pct(bG.itemsFaits, bG.items), pct(bA.itemsFaits, bA.items), pct(bR.archisPris, bR.archis)];
+    const parts = [pct(bP.etapesFaites, bP.etapes), pct(bP.itemsFaits, bP.items), pct(bA.itemsFaits, bA.items), pct(bR.archisPris, bR.archis)];
     const global = Math.round(parts.reduce((a, b) => a + b, 0) / parts.length);
     const connecte = $("#compte-btn").classList.contains("is-connecte");
     const compteVisible = !$("#compte-btn").hidden;
@@ -715,7 +715,6 @@
         <div class="card dash-tuiles">
           ${tuile("Étapes du guide", bP.etapesFaites, bP.etapes, ICONES.etapes)}
           ${tuile("Succès et quêtes", bP.itemsFaits, bP.items, ICONES.succes)}
-          ${tuile("Dofus des Glaces", bG.itemsFaits, bG.items, ICONES.glaces)}
           ${tuile("Avis de recherche", bA.itemsFaits, bA.items, ICONES.avis)}
           ${tuile("Archimonstres", bR.archisPris, bR.archis, ICONES.archis)}
         </div>
@@ -731,7 +730,6 @@
                 ${barre("Niveau", niv, 200)}
                 ${barre("Guide de progression", bP.etapesFaites, bP.etapes)}
                 ${barre("Succès et quêtes", bP.itemsFaits, bP.items)}
-                ${barre("Dofus des Glaces", bG.itemsFaits, bG.items)}
                 ${barre("Avis de recherche", bA.itemsFaits, bA.items)}
                 ${barre("Archimonstres", bR.archisPris, bR.archis)}
               </div>
