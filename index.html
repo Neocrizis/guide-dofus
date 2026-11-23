@@ -7,9 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=34">
+  <link rel="stylesheet" href="css/style.css?v=35">
   <script>
-    try { const t = localStorage.getItem("guide-dofus:theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+    try { const t = localStorage.getItem("guide-dofus:theme") ?? (/[?&]mode=overlay/.test(location.search) ? "vanilla" : ""); if (t) document.documentElement.dataset.theme = t; } catch {}
   </script>
 </head>
 <body>
@@ -153,7 +153,8 @@
     <label class="compte-theme">
       <span class="section__label">Thème du site</span>
         <select id="theme" class="select" aria-label="Thème de couleur">
-          <option value="">Ocre (Nuit dorée)</option>
+          <option value="vanilla">Vanilla</option>
+          <option value="">Ocre</option>
           <option value="emeraude">Émeraude</option>
           <option value="pourpre">Pourpre</option>
           <option value="turquoise">Turquoise</option>

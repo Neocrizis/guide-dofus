@@ -1,17 +1,27 @@
 /* Design de l'appli Windows « Dofus Guide » (page ?mode=overlay) : chargé uniquement par l'appli,
    inspiré des panneaux de Dofus 3 (« Quêtes suivies »). N'affecte pas le site. */
 html.mode-ov {
-  --d-fond: 44, 46, 76;            /* bleu ardoise des panneaux du jeu */
   --d-texte: #f2f2f5;
   --d-texte-2: #c9cad8;
   --d-texte-3: #9a9cb3;
-  --d-jaune: #f5e14a;              /* objets / mots-clés du jeu */
-  --d-orange: #f0a93b;
+  /* Couleurs du panneau selon le thème : fond (triplet RVB), accent et mots-clés. Ocre par défaut. */
+  --d-fond: 27, 33, 54;
+  --d-orange: var(--accent);
+  --d-jaune: var(--accent-hover);
+  --d-bouton: var(--accent);
   --d-sep: rgba(255, 255, 255, .09);
   --ov-taille: 1;
   font-family: "Segoe UI", Tahoma, system-ui, sans-serif;
 }
 html.mode-ov body { font-family: inherit; font-size: calc(14px * var(--ov-taille)); color: var(--d-texte); }
+
+/* Fond du panneau par thème */
+html.mode-ov[data-theme="vanilla"] { --d-fond: 44, 46, 76; --d-jaune: #f5e14a; --d-bouton: linear-gradient(#f6b955, #e0922c); }
+html.mode-ov[data-theme="emeraude"] { --d-fond: 20, 40, 31; }
+html.mode-ov[data-theme="pourpre"] { --d-fond: 42, 21, 31; }
+html.mode-ov[data-theme="turquoise"] { --d-fond: 19, 37, 45; }
+html.mode-ov[data-theme="ivoire"] { --d-fond: 38, 36, 32; }
+html.mode-ov[data-theme="ebene"] { --d-fond: 20, 19, 27; }
 
 /* Panneau */
 html.mode-ov .ov {
@@ -75,7 +85,7 @@ html.mode-ov .section.glaces { background: none; border: 0; border-top: 1px soli
 html.mode-ov .ov > .ov__nav { padding: 6px 8px 8px; gap: 6px; border-top: 1px solid var(--d-sep); }
 html.mode-ov .ov__nav .btn { padding: 5px 8px; font-size: calc(13px * var(--ov-taille)); border-radius: 3px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .12); color: var(--d-texte); text-shadow: none; }
 html.mode-ov .ov__nav .btn:hover { background: rgba(255, 255, 255, .16); transform: none; }
-html.mode-ov .ov__nav .btn--accent { background: linear-gradient(#f6b955, #e0922c); border-color: #f8c977; color: #2a1a05; font-weight: 700; }
+html.mode-ov .ov__nav .btn--accent { background: var(--d-bouton); border-color: var(--accent-hover); color: var(--sur-accent); font-weight: 700; }
 html.mode-ov .ov__nav .btn--accent::before { display: none; }
 
 /* Défilement discret */

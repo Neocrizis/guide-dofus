@@ -1,5 +1,5 @@
 :root {
-  /* Palette « nuit et kamas » : fond bleu nuit, accent or ambré. */
+  /* Thème Ocre (par défaut) : fond bleu nuit, accent or ambré. */
   --accent: #f2b84b;
   --accent-hover: #ffcd70;
   --sur-accent: #2b1c02;
@@ -72,6 +72,18 @@
     radial-gradient(ellipse 45% 40% at 10% 60%, rgba(140, 130, 110, .16) 0%, rgba(140, 130, 110, 0) 70%),
     radial-gradient(ellipse 50% 40% at 85% 85%, rgba(220, 210, 190, .10) 0%, rgba(220, 210, 190, 0) 72%),
     #1a1916;
+}
+/* Vanilla : inspiré des panneaux du jeu (bleu ardoise, orange et jaune) */
+:root[data-theme="vanilla"] {
+  --accent: #f0a93b; --accent-hover: #f5e14a; --sur-accent: #2a1a05;
+  --accent-soft: rgba(240, 169, 59, .14); --accent-glow: rgba(240, 169, 59, .40);
+  --fond: #1f2036; --fond-menu: #2c2e4c; --fond-toast: #191a2c;
+  --bord: rgba(255, 255, 255, .10);
+  --fond-site:
+    radial-gradient(ellipse 55% 45% at 75% 10%, rgba(70, 74, 130, .35) 0%, rgba(70, 74, 130, 0) 70%),
+    radial-gradient(ellipse 45% 40% at 10% 60%, rgba(50, 54, 100, .30) 0%, rgba(50, 54, 100, 0) 70%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(240, 169, 59, .08) 0%, rgba(240, 169, 59, 0) 72%),
+    #1f2036;
 }
 /* Ébène : noir profond et reflets violets */
 :root[data-theme="ebene"] {
