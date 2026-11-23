@@ -700,3 +700,7 @@ html.mode-ov, html.mode-ov body { background: transparent !important; overflow: 
 html.mode-ov body > *:not(#ov):not(#toast):not(dialog) { display: none !important; }
 html.mode-ov .ov { height: calc(100vh - 2px); }
 html.mode-ov .ov__barre { cursor: move; }
+.ov__compte { margin-left: auto; background: none; border: 0; cursor: pointer; font-size: 14px; padding: 2px 4px; border-radius: 6px; opacity: .8; }
+.ov__compte:hover { opacity: 1; background: rgba(255,255,255,.08); }
+.ov__compte + .ov__opacite { margin-left: 4px; }
+html.mode-ov dialog { max-width: calc(100vw - 24px); }

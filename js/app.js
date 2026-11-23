@@ -388,6 +388,7 @@
       chargerGuide(continuer.dataset.continuer); sauver(); toutRendre();
       location.hash = "guide"; return;
     }
+    if (t.closest("[data-ov-compte]")) { $("#compte-btn").click(); return; }
     const jouerDash = t.closest("[data-dash-perso]");
     if (jouerDash) { changerPerso(jouerDash.dataset.dashPerso); return; }
     const dashAction = t.closest("[data-dash]");
@@ -557,6 +558,7 @@
     return `<div class="ov__barre" data-tauri-drag-region>
       <img class="ov__barre-ico" src="${new URL("img/outils/quest.webp", location.href)}" alt="" data-tauri-drag-region>
       <span class="ov__barre-titre" data-tauri-drag-region>Journal de quêtes</span>
+      ${MODE_OV ? `<button type="button" class="ov__compte" data-ov-compte title="Mon compte (synchronisation avec le site)">👤</button>` : ""}
       ${MODE_OV ? `<label class="ov__opacite" title="Transparence du fond"><span aria-hidden="true">◐</span><input type="range" min="0" max="100" value="${opaciteOv()}" data-ov-opacite aria-label="Opacité du fond"></label>` : ""}
     </div>`;
   }
@@ -963,6 +965,16 @@
       compte.persos = nouveau.persos.map((p) => nouveauPerso(p.nom, p.classe, p));
       const actif = compte.persos.find((p) => p.id === nouveau.actif) || compte.persos[0];
       changerPerso(actif.id);
+    },
+    // Progression reçue d'un autre appareil : on remplace sans réenregistrer (pas de ping-pong) ni message.
+    synchroniser(nouveau) {
+      compte.persos = nouveau.persos.map((p) => nouveauPerso(p.nom, p.classe, p));
+      etat = compte.persos.find((p) => p.id === etat.id) || compte.persos.find((p) => p.id === nouveau.actif) || compte.persos[0];
+      compte.actif = etat.id;
+      G = ONGLETS.find((g) => g.id === etat.guide) || GUIDES[0];
+      chargerGuide(G.id);
+      try { localStorage.setItem(CLE, JSON.stringify(compte)); } catch { /* stockage indisponible */ }
+      rendrePersos(); toutRendre();
     },
     toast,
     etat: () => etat,

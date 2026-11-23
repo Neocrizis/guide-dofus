@@ -10,7 +10,17 @@
     return;
   }
 
-  const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+  // Dans l'appli Windows (?mode=overlay), la connexion se fait dans le navigateur du PC, qui renvoie
+  // vers l'appli par le lien guidedofus://auth?code=… (flux PKCE) : l'appli appelle alors GuideDofusAuth.
+  const APPLI = new URLSearchParams(location.search).get("mode") === "overlay";
+  const RETOUR = APPLI ? "guidedofus://auth" : location.origin + location.pathname;
+  const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, APPLI ? { auth: { flowType: "pkce" } } : undefined);
+  window.GuideDofusAuth = async (lien) => {
+    const code = new URL(lien).searchParams.get("code");
+    if (!code) return;
+    const { error } = await sb.auth.exchangeCodeForSession(code);
+    window.GuideDofus.toast(error ? "Connexion impossible : " + error.message : "Connecté à ton compte");
+  };
   const app = window.GuideDofus;
   const dialogue = document.getElementById("compte-dialog");
   const vueConnexion = document.getElementById("compte-connexion");
@@ -38,14 +48,41 @@
 
   function afficherSync(texte) { etatSync.textContent = texte; }
 
+  // Dernière version connue en ligne (texte JSON) : évite de renvoyer ce qu'on vient de recevoir.
+  let dernier = "";
   async function envoyer() {
     if (!utilisateur || !pret) return;
+    const data = app.compte();
+    const texte = JSON.stringify(data.persos);
+    if (texte === dernier) return;
     afficherSync("Synchronisation…");
     const { error } = await sb.from("comptes").upsert({
-      user_id: utilisateur.id, data: app.compte(), updated_at: new Date().toISOString(),
+      user_id: utilisateur.id, data, updated_at: new Date().toISOString(),
     });
+    if (!error) dernier = texte;
     afficherSync(error ? "Échec de la synchronisation, nouvel essai à la prochaine modification." : "Progression synchronisée.");
   }
+
+  // Récupère les changements faits ailleurs (site, autre onglet, appli Windows) toutes les 10 s
+  // tant que la page est visible, et dès qu'on revient dessus.
+  let tirage = false;
+  async function tirer() {
+    if (!utilisateur || !pret || tirage || document.hidden) return;
+    tirage = true;
+    try {
+      const { data } = await sb.from("comptes").select("data").eq("user_id", utilisateur.id).maybeSingle();
+      const distant = data?.data;
+      if (!distant?.persos?.length || JSON.stringify(distant.persos) === dernier) return;
+      const local = app.compte();
+      const fusion = fusionner(local, distant);
+      dernier = JSON.stringify(distant.persos);
+      if (JSON.stringify(fusion.persos) !== JSON.stringify(local.persos)) app.synchroniser(fusion);
+      if (JSON.stringify(fusion.persos) !== dernier) envoyer();
+    } finally { tirage = false; }
+  }
+  setInterval(tirer, 10000);
+  document.addEventListener("visibilitychange", tirer);
+  window.addEventListener("focus", tirer);
 
   async function demarrer(user) {
     utilisateur = user;
@@ -55,6 +92,7 @@
     const { data, error } = await sb.from("comptes").select("data").eq("user_id", user.id).maybeSingle();
     if (error) { afficherSync("Impossible de lire ton compte : " + error.message); return; }
     if (data?.data?.persos?.length) {
+      dernier = JSON.stringify(data.data.persos);
       app.remplacer(fusionner(app.compte(), data.data));
       app.toast("Personnages récupérés depuis ton compte");
     }
@@ -83,7 +121,7 @@
   document.getElementById("compte-google").addEventListener("click", async () => {
     const { error } = await sb.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: location.origin + location.pathname },
+      options: { redirectTo: RETOUR },
     });
     if (error) document.getElementById("compte-message").textContent = "Connexion Google impossible : " + error.message;
   });
@@ -95,11 +133,11 @@
     msg.textContent = "Envoi du lien…";
     const { error } = await sb.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: location.origin + location.pathname },
+      options: { emailRedirectTo: RETOUR },
     });
     msg.textContent = error
       ? "L'envoi a échoué : " + error.message
-      : `Lien envoyé à ${email}. Ouvre-le sur cet appareil pour te connecter.`;
+      : APPLI ? `Lien envoyé à ${email}. Ouvre-le sur ce PC : il te ramènera dans l'appli.` : `Lien envoyé à ${email}. Ouvre-le sur cet appareil pour te connecter.`;
   });
 
   document.getElementById("compte-deconnexion").addEventListener("click", async () => {
