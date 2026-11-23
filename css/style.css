@@ -619,7 +619,11 @@ a.btn { text-decoration: none; }
 .pastille { font: inherit; font-size: 13px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--bord, rgba(255,255,255,.15)); background: transparent; color: var(--texte-2, inherit); cursor: pointer; }
 .apparence__ligne[aria-label="Visage"] .pastille { min-width: 32px; padding: 4px 6px; }
 .pastille.is-on { background: var(--accent); color: var(--sur-accent); border-color: var(--accent); }
-.apparence__couleurs { display: flex; gap: 6px; }
+.apparence__couleurs { display: flex; flex-direction: column; gap: 6px; }
+.apparence__couleur { display: grid; grid-template-columns: 30px 1fr 84px; align-items: center; gap: 8px; font-size: 12px; text-align: left; color: var(--texte-2); }
+.apparence__hex { width: 100%; box-sizing: border-box; font: 600 12px/1 ui-monospace, Consolas, monospace; padding: 6px 7px; border-radius: 8px; border: 1px solid var(--bord); background: rgba(0,0,0,.25); color: var(--texte); text-transform: uppercase; }
+.apparence__hex:focus { outline: none; border-color: var(--accent); }
+.apparence__hex.is-invalide { border-color: #d0574f; }
 .apparence__couleurs input[type="color"] { width: 30px; height: 30px; padding: 0; border: 2px solid var(--bloc); border-radius: 50%; background: none; cursor: pointer; overflow: hidden; }
 .apparence__couleurs input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
 .apparence__couleurs input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }

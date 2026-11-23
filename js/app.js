@@ -93,7 +93,9 @@
           ${c[sexe].tetes.map((_, i) => { const nom = c[sexe].tetesNoms?.[i] || ""; let n = 0; for (let j = 0; j <= i; j++) if (!c[sexe].tetesNoms?.[j]) n++; return `<button type="button" class="pastille ${i === (l.tete || 0) ? "is-on" : ""}" data-look="tete" data-val="${i}" aria-pressed="${i === (l.tete || 0)}" aria-label="Visage ${nom || n}" title="Visage ${nom || n}">${nom || n}</button>`; }).join("")}
         </div>
         <div class="apparence__couleurs">
-          ${look.couleurs.map((n, i) => `<label title="${NOMS_COULEURS[i]}"><input type="color" value="${hex(n)}" data-look-couleur="${i}" aria-label="${NOMS_COULEURS[i]}"></label>`).join("")}
+          ${look.couleurs.map((n, i) => `<div class="apparence__couleur"><input type="color" value="${hex(n)}" data-look-couleur="${i}" aria-label="${NOMS_COULEURS[i]}" title="${NOMS_COULEURS[i]}">
+            <span>${NOMS_COULEURS[i]}</span>
+            <input class="apparence__hex" type="text" value="${hex(n).toUpperCase()}" maxlength="7" spellcheck="false" data-look-hex="${i}" aria-label="${NOMS_COULEURS[i]} (code hexadécimal)"></div>`).join("")}
         </div>
         <button type="button" class="btn btn--small btn--ghost" data-look="defaut">Couleurs par défaut</button>
       </div>
@@ -124,12 +126,28 @@
     sauver(); rendreAccueil();
     document.querySelector(".apparence")?.setAttribute("open", "");
   });
+  // Code hexadécimal tapé à la main (comme dans le jeu) : appliqué dès qu'il est complet (#RRGGBB ou RRGGBB).
+  document.addEventListener("input", (ev) => {
+    const i = ev.target.dataset?.lookHex;
+    if (i == null) return;
+    const m = ev.target.value.trim().match(/^#?([0-9a-f]{6})$/i);
+    ev.target.classList.toggle("is-invalide", !m && ev.target.value.trim() !== "");
+    if (!m) return;
+    const l = (etat.look = etat.look || {});
+    l.couleurs = lookPerso(etat).couleurs;
+    l.couleurs[+i] = parseInt(m[1], 16);
+    const pastille = document.querySelector(`[data-look-couleur="${i}"]`);
+    if (pastille) pastille.value = "#" + m[1].toLowerCase();
+    sauver(); montrerRendu();
+  });
   document.addEventListener("input", (ev) => {
     const i = ev.target.dataset?.lookCouleur;
     if (i == null) return;
     const l = (etat.look = etat.look || {});
     l.couleurs = lookPerso(etat).couleurs;
     l.couleurs[+i] = parseInt(ev.target.value.slice(1), 16);
+    const champ = document.querySelector(`[data-look-hex="${i}"]`);
+    if (champ) champ.value = ev.target.value.toUpperCase();
     montrerRendu();
   });
   document.addEventListener("change", (ev) => { if (ev.target.dataset?.lookCouleur != null) { sauver(); rendreAccueil(); document.querySelector(".apparence")?.setAttribute("open", ""); } });
