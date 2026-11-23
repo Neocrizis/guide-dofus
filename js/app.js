@@ -407,6 +407,7 @@
       location.hash = "guide"; return;
     }
     if (t.closest("[data-ov-compte]")) { $("#compte-btn").click(); return; }
+    if (t.closest("[data-ov-recharger]")) { const u = new URL(location.href); u.searchParams.set("r", Date.now()); location.replace(u); return; }
     if (t.closest("[data-ov-menu]")) { reglagesOuverts = !reglagesOuverts; doc.querySelector(".ov__reglages")?.toggleAttribute("hidden", !reglagesOuverts); return; }
     const taille = t.closest("[data-ov-taille]");
     if (taille) { majPrefsOv({ taille: Math.min(150, Math.max(70, prefsOv().taille + 10 * +taille.dataset.ovTaille)) }); return; }
@@ -581,6 +582,7 @@
       <img class="ov__barre-ico" src="${new URL("img/outils/quest.webp", location.href)}" alt="" data-tauri-drag-region>
       <span class="ov__barre-titre" data-tauri-drag-region>Dofus Guide</span>
       ${MODE_OV ? `<button type="button" class="ov__compte" data-ov-compte title="Mon compte (synchronisation avec le site)" aria-label="Mon compte"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 21c0-4.4 4-7 9-7s9 2.6 9 7z"/></svg></button>
+      <button type="button" class="ov__menu-btn ov__recharger" data-ov-recharger title="Recharger le guide" aria-label="Recharger le guide"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg></button>
       <button type="button" class="ov__menu-btn" data-ov-menu title="Réglages" aria-label="Réglages">⋮</button>` : ""}
     </div>
     ${MODE_OV ? `<div class="ov__reglages" ${reglagesOuverts ? "" : "hidden"}>
