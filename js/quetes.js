@@ -96,15 +96,18 @@
     const prerequis = (q.need?.quests || []).map((id) => DATA.quetes[id]?.[0] || null).filter(Boolean);
     const depart = q.startPosition?.[0];
     const pnjDepart = depart && d.pnj[depart.npcId];
-    const etapesFaites = window.GuideDofus?.etat().qetapes?.[q.id] || {};
-    const enCours = q.steps.findIndex((_, i) => !etapesFaites[i]);
+    const G = window.GuideDofus;
+    const grises = G?.etat().qobj?.[q.id] || {};
     const etapes = q.steps.map((s, i) => {
-      const objectifs = s.objectives.map((o) => {
+      let nObj = 0, nGris = 0;
+      const objectifs = s.objectives.map((o, j) => {
         const pos = o.map ? [o.map.posX, o.map.posY] : o.coords ? [o.coords.x, o.coords.y] : null;
         const txt = remplacer(nettoyer(o.text?.fr || ""), d).trim();
         if (!txt) return "";
         const dejaCarte = /\{map,\d+/.test(o.text?.fr || "");
-        return `<li><span>${txt}${pos && !dejaCarte ? " " + coord(pos[0], pos[1]) : ""}</span></li>`;
+        const gris = !!grises[`${i}.${j}`];
+        nObj++; if (gris) nGris++;
+        return `<li class="qobj${gris ? " qobj--faite" : ""}"${G ? ` data-qobj="${q.id}|${i}.${j}" title="Cliquer pour griser / dégriser"` : ""}><span>${txt}${pos && !dejaCarte ? " " + coord(pos[0], pos[1]) : ""}</span></li>`;
       }).join("");
       const rec = s.rewards.flatMap((r) => [
         r.experienceRatio > 0 ? "Expérience" : null,
@@ -114,9 +117,9 @@
         ...(r.emotesReward || []).length ? ["Émote"] : [],
         ...(r.spellsReward || []).length ? ["Sort"] : [],
       ]).filter(Boolean);
-      const ok = !!etapesFaites[i];
-      return `<li class="qetape${ok ? " qetape--faite" : ""}${i === enCours ? " qetape--courante" : ""}">
-        <div class="qetape__tete"${window.GuideDofus ? ` data-qetape="${q.id}|${i}" role="button" tabindex="0" aria-pressed="${ok}" title="Cliquer pour griser / dégriser l'étape"` : ""}><span class="qetape__num">${ok ? "✓" : i + 1}</span><b>${echap(s.name?.fr || "Étape")}</b></div>
+      const ok = nObj > 0 && nGris === nObj;
+      return `<li class="qetape${ok ? " qetape--faite" : ""}">
+        <div class="qetape__tete"><span class="qetape__num">${i + 1}</span><b>${echap(s.name?.fr || "Étape")}</b></div>
         ${s.description?.fr ? `<p class="qetape__desc">${echap(nettoyer(s.description.fr))}</p>` : ""}
         ${objectifs ? `<ul class="qetape__obj">${objectifs}</ul>` : ""}
         ${rec.length ? `<div class="qetape__rec">Récompenses : ${[...new Set(rec)].join(", ")}</div>` : ""}
@@ -138,7 +141,7 @@
         ${d.carte ? coord(d.carte.posX, d.carte.posY) : ""}</p>
       </div>` : ""}
       ${prerequis.length ? `<div class="quete__depart"><span class="section__label">Prérequis</span><p>${prerequis.map(echap).join(", ")}</p></div>` : ""}
-      <span class="section__label">Étapes${window.GuideDofus ? ` <small class="qetapes__aide">clique sur une étape pour la griser</small>` : ""}</span>
+      <span class="section__label">Étapes${window.GuideDofus ? ` <small class="qetapes__aide">clique sur une ligne pour la griser</small>` : ""}</span>
       <ol class="qetapes">${etapes}</ol>
       ${liens(q)}
       <p class="quete__source">Clique sur une position pour copier la commande /travel.</p>`;
@@ -197,34 +200,28 @@
     else { vue.liste = { titre: texte.replace(/^[^:]+ : /, ""), ids }; rendreListe(vue); }
     return true;
   }
-  // Étape de quête cliquée : grisée (ou dégrisée), l'étape suivante passe en évidence. La quête ne se valide qu'avec « Marquer comme terminée ».
-  function cocherEtape(vue, c) {
+  // Ligne d'objectif cliquée : grisée (ou dégrisée). Étape entièrement grisée → étape grisée.
+  // La quête ne se valide qu'avec « Marquer comme terminée ».
+  function griserObjectif(vue, li) {
     const G = window.GuideDofus;
-    const [qid, i] = c.dataset.qetape.split("|").map(Number);
+    const [qid, cle] = li.dataset.qobj.split("|");
     const etat = G.etat();
-    const faites = ((etat.qetapes ??= {})[qid] ??= {});
-    const oui = !faites[i];
-    if (oui) faites[i] = 1; else delete faites[i];
-    if (!Object.keys(faites).length) delete etat.qetapes[qid];
-    const items = [...vue.el.querySelectorAll(".qetape")];
-    items.forEach((li, j) => {
-      li.classList.toggle("qetape--faite", !!faites[j]);
-      const t = li.querySelector("[data-qetape]");
-      t?.setAttribute("aria-pressed", !!faites[j]);
-      const n = li.querySelector(".qetape__num"); if (n) n.textContent = faites[j] ? "✓" : j + 1;
-    });
-    const enCours = items.findIndex((_, j) => !faites[j]);
-    items.forEach((li, j) => li.classList.toggle("qetape--courante", j === enCours));
+    const grises = ((etat.qobj ??= {})[qid] ??= {});
+    if (grises[cle]) delete grises[cle]; else grises[cle] = 1;
+    if (!Object.keys(grises).length) delete etat.qobj[qid];
+    li.classList.toggle("qobj--faite", !!grises[cle]);
+    const etape = li.closest(".qetape");
+    const lignes = [...etape.querySelectorAll("[data-qobj]")];
+    etape.classList.toggle("qetape--faite", lignes.every((x) => x.classList.contains("qobj--faite")));
     G.sauver();
-    if (enCours > 0 && oui) items[enCours].scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
 
   // Clics à l'intérieur d'une vue (choix d'une quête, retour à la liste).
   function gererClic(vue, ev) {
     const q = ev.target.closest("[data-quete-id]");
     if (q) { afficherQuete(vue, +q.dataset.queteId); return true; }
-    const caseEtape = ev.target.closest("[data-qetape]");
-    if (caseEtape && window.GuideDofus) { cocherEtape(vue, caseEtape); return true; }
+    const ligne = ev.target.closest("[data-qobj]");
+    if (ligne && window.GuideDofus && !ev.target.closest("[data-travel], a, button")) { griserObjectif(vue, ligne); return true; }
     const fait = ev.target.closest("[data-quete-fait]");
     if (fait && window.GuideDofus) {
       const id = +fait.dataset.queteFait;

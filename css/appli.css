@@ -103,6 +103,6 @@ html.ov-travers .ov-poignee { display: none; }
 /* Liste des quêtes d'un succès : quêtes déjà terminées en retrait */
 
 
-/* Étapes de quête : case à cocher, étape en cours en orange */
-html.mode-ov .qetape--courante { border-color: var(--d-orange); box-shadow: inset 3px 0 0 var(--d-orange); }
+/* Lignes d'objectif grisables */
 html.mode-ov .qetapes__aide { color: var(--d-texte-3); font-size: 11px; }
+html.mode-ov .qobj[data-qobj]:hover { background: rgba(255, 255, 255, .07); }
