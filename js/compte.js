@@ -68,6 +68,7 @@
     vueConnexion.hidden = !!utilisateur;
     vueConnecte.hidden = !utilisateur;
     if (utilisateur) document.getElementById("compte-email").textContent = utilisateur.email || "";
+    window.dispatchEvent(new CustomEvent("guide:compte")); // met à jour le tableau de bord
   }
 
   // Envoi groupé : on attend 1,5 s sans modification avant d'enregistrer en ligne.

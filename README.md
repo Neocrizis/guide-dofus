@@ -13,7 +13,7 @@ L'application utilise le **Guide de Progression Optimisée de Skyzio** (onglet �
 ## Utilisation
 
 1. Ouvre `index.html` dans Chrome ou Edge (double-clic suffit).
-2. Choisis ta classe en haut à droite pour voir les conseils qui la concernent.
+2. Le **tableau de bord** s'affiche à l'arrivée : ton personnage, ta progression dans les 3 guides, l'activité récente et un bouton pour reprendre où tu en étais. Choisis ta classe dans **Personnages** pour voir les conseils qui la concernent.
 3. Clique sur **Ouvrir l'overlay** : une petite fenêtre reste au-dessus du jeu avec l'étape en cours.
 4. Dans l'overlay, coche les succès, puis **Terminée ✓** pour passer à l'étape suivante (ou les flèches ← → du clavier).
 5. Clique sur une position comme `[2,-15]` pour copier la commande `/travel 2,-15`, à coller dans le chat du jeu.
