@@ -2,22 +2,37 @@
   "use strict";
 
   const GUIDES = window.GUIDES;
-  const CLE = "guide-dofus:progression";
+  const CLE_ANCIENNE = "guide-dofus:progression"; // une seule progression (avant les personnages)
+  const CLE = "guide-dofus:personnages";
 
-  // ---------- État sauvegardé dans le navigateur ----------
+  // ---------- Personnages sauvegardés dans le navigateur ----------
+  // Chaque personnage a son nom, sa classe et sa propre progression.
   // Les identifiants d'étapes sont uniques entre les guides (e…, g…, a…),
   // donc « faites » et « succes » sont communs ; seule l'étape en cours dépend du guide.
-  const etat = Object.assign(
-    { faites: {}, succes: {}, courante: GUIDES[0].etapes[0].id, courantes: {}, guide: GUIDES[0].id, classe: "" },
-    lire()
-  );
+  const nouvelId = () => "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  function nouveauPerso(nom, classe = "", base = {}) {
+    return Object.assign(
+      { id: nouvelId(), nom, classe, niveau: "", faites: {}, succes: {}, courante: GUIDES[0].etapes[0].id, courantes: {}, guide: GUIDES[0].id },
+      base, { nom: base.nom || nom }
+    );
+  }
+  function lireJSON(cle) {
+    try { return JSON.parse(localStorage.getItem(cle)); } catch { return null; }
+  }
+  const compte = lireJSON(CLE) || (() => {
+    const ancien = lireJSON(CLE_ANCIENNE);
+    const p = nouveauPerso("Mon personnage", ancien?.classe || "", ancien || {});
+    return { persos: [p], actif: p.id };
+  })();
+  if (!compte.persos?.length) { const p = nouveauPerso("Mon personnage"); compte.persos = [p]; compte.actif = p.id; }
+  let etat = compte.persos.find((p) => p.id === compte.actif) || compte.persos[0];
   let G = GUIDES.find((g) => g.id === etat.guide) || GUIDES[0];
   let etapes = G.etapes;
-  function lire() {
-    try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch { return {}; }
-  }
   function sauver() {
-    try { localStorage.setItem(CLE, JSON.stringify(etat)); } catch { /* stockage indisponible */ }
+    compte.actif = etat.id;
+    etat.maj = Date.now();
+    try { localStorage.setItem(CLE, JSON.stringify(compte)); } catch { /* stockage indisponible */ }
+    window.dispatchEvent(new CustomEvent("guide:sauve")); // synchronisation en ligne (js/compte.js)
   }
 
   const index = (id) => etapes.findIndex((e) => e.id === id);
@@ -230,9 +245,96 @@
     appliquerTheme(ev.target.value);
     try { localStorage.setItem("guide-dofus:theme", ev.target.value); } catch { /* stockage indisponible */ }
   });
-  $("#classe").addEventListener("change", (ev) => { etat.classe = ev.target.value; sauver(); toutRendre(); });
+  $("#classe").addEventListener("change", (ev) => { etat.classe = ev.target.value; sauver(); rendrePersos(); toutRendre(); });
+
+  // ---------- Gestion des personnages ----------
+  const dialogue = $("#persos-dialog");
+  function rendrePersos() {
+    $("#perso").innerHTML = compte.persos.map((p) =>
+      `<option value="${p.id}" ${p.id === etat.id ? "selected" : ""}>${echap(p.nom)}${p.classe ? " · " + echap(p.classe) : ""}</option>`).join("");
+    $("#classe").value = etat.classe;
+    const options = (c) => `<option value="">Classe…</option>` + GUIDES[0].classes.map((k) => `<option ${k === c ? "selected" : ""}>${echap(k)}</option>`).join("");
+    $("#persos-liste").innerHTML = compte.persos.map((p) => {
+      const nb = Object.keys(p.faites).length;
+      return `<li class="perso ${p.id === etat.id ? "is-active" : ""}" data-perso="${p.id}">
+        <input class="input" data-champ="nom" value="${echap(p.nom)}" aria-label="Nom du personnage" maxlength="40">
+        <select class="select" data-champ="classe" aria-label="Classe">${options(p.classe)}</select>
+        <input class="input perso__niv" data-champ="niveau" value="${echap(p.niveau || "")}" placeholder="Niv." inputmode="numeric" maxlength="3" aria-label="Niveau">
+        <span class="perso__stat">${nb} étape${nb > 1 ? "s" : ""}</span>
+        <button type="button" class="btn btn--small" data-jouer="${p.id}" ${p.id === etat.id ? "disabled" : ""}>${p.id === etat.id ? "Actif" : "Jouer"}</button>
+        <button type="button" class="btn btn--small btn--ghost" data-supprimer="${p.id}" ${compte.persos.length < 2 ? "disabled" : ""} title="Supprimer">✕</button>
+      </li>`;
+    }).join("");
+  }
+  function changerPerso(id) {
+    const p = compte.persos.find((x) => x.id === id);
+    if (!p) return;
+    etat = p;
+    G = GUIDES.find((g) => g.id === etat.guide) || GUIDES[0];
+    ouvertes.clear(); ouvertes.add(etat.courante);
+    chargerGuide(G.id); sauver(); rendrePersos(); toutRendre();
+    toast(`Personnage : ${p.nom}`);
+  }
+  $("#perso").addEventListener("change", (ev) => changerPerso(ev.target.value));
+  $("#gerer-persos").addEventListener("click", () => { rendrePersos(); dialogue.showModal(); });
+  $("#persos-fermer").addEventListener("click", () => dialogue.close());
+  $("#perso-ajouter").addEventListener("click", () => {
+    const p = nouveauPerso(`Personnage ${compte.persos.length + 1}`);
+    compte.persos.push(p); sauver(); rendrePersos();
+    dialogue.querySelector(`[data-perso="${p.id}"] [data-champ="nom"]`)?.select();
+  });
+  $("#persos-liste").addEventListener("change", (ev) => {
+    const champ = ev.target.dataset.champ;
+    const p = compte.persos.find((x) => x.id === ev.target.closest("[data-perso]")?.dataset.perso);
+    if (!champ || !p) return;
+    p[champ] = ev.target.value.trim() || (champ === "nom" ? "Sans nom" : "");
+    sauver(); rendrePersos(); toutRendre();
+  });
+  let aSupprimer = null;
+  $("#persos-liste").addEventListener("click", (ev) => {
+    const jouer = ev.target.closest("[data-jouer]");
+    if (jouer) { changerPerso(jouer.dataset.jouer); return; }
+    const sup = ev.target.closest("[data-supprimer]");
+    if (!sup) return;
+    // Double clic de confirmation (pas de fenêtre de confirmation)
+    if (aSupprimer !== sup.dataset.supprimer) {
+      aSupprimer = sup.dataset.supprimer;
+      sup.textContent = "Supprimer ?"; sup.classList.add("btn--danger");
+      return;
+    }
+    compte.persos = compte.persos.filter((x) => x.id !== aSupprimer);
+    if (etat.id === aSupprimer) changerPerso(compte.persos[0].id);
+    aSupprimer = null; sauver(); rendrePersos();
+  });
+  // Export / import : un fichier pour passer d'un appareil à l'autre.
+  $("#persos-exporter").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify({ format: "guide-dofus", version: 1, ...compte }, null, 1)], { type: "application/json" });
+    const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: "guide-dofus-personnages.json" });
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  $("#persos-importer").addEventListener("change", async (ev) => {
+    const f = ev.target.files[0]; ev.target.value = "";
+    if (!f) return;
+    try {
+      const data = JSON.parse(await f.text());
+      if (data.format !== "guide-dofus" || !Array.isArray(data.persos)) throw new Error("format");
+      let n = 0;
+      data.persos.forEach((p) => {
+        if (!p || typeof p.nom !== "string") return;
+        const i = compte.persos.findIndex((x) => x.id === p.id);
+        const propre = nouveauPerso(p.nom, p.classe, p);
+        if (i >= 0) compte.persos[i] = propre; else compte.persos.push(propre);
+        n++;
+      });
+      changerPerso(compte.persos.some((x) => x.id === etat.id) ? etat.id : compte.persos[0].id);
+      toast(`${n} personnage${n > 1 ? "s" : ""} importé${n > 1 ? "s" : ""}`);
+    } catch {
+      toast("Ce fichier n'est pas une sauvegarde du Guide Dofus");
+    }
+  });
   $("#reinitialiser").addEventListener("click", () => {
-    if (!confirm("Effacer toute ta progression ?")) return;
+    if (!confirm(`Effacer toute la progression de ${etat.nom} ?`)) return;
     etat.faites = {}; etat.succes = {}; etat.courantes = {}; etat.courante = etapes[0].id;
     sauver(); toutRendre();
   });
@@ -316,7 +418,20 @@
     rendreOverlay();
   }
 
+  // Petite interface pour js/compte.js (comptes en ligne).
+  window.GuideDofus = {
+    compte: () => JSON.parse(JSON.stringify(compte)),
+    remplacer(nouveau) {
+      compte.persos = nouveau.persos.map((p) => nouveauPerso(p.nom, p.classe, p));
+      const actif = compte.persos.find((p) => p.id === nouveau.actif) || compte.persos[0];
+      changerPerso(actif.id);
+    },
+    toast,
+  };
+
   chargerGuide(etat.guide);
+  rendrePersos();
+  try { localStorage.setItem(CLE, JSON.stringify(compte)); } catch { /* stockage indisponible */ }
   toutRendre();
   requestAnimationFrame(() => {
     const el = document.querySelector(".step.is-current");

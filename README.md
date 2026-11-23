@@ -34,3 +34,14 @@ L'API Document Picture-in-Picture est disponible dans les navigateurs basés sur
 ## Documentation
 
 - [Document Picture-in-Picture API (MDN)](https://developer.mozilla.org/fr/docs/Web/API/Document_Picture-in-Picture_API)
+
+## Personnages et comptes en ligne
+
+- **Personnages** : bouton « Personnages » en haut. Chaque personnage a son nom, sa classe, son niveau et sa propre progression. Export/import d'un fichier pour passer d'un appareil à l'autre sans compte.
+- **Comptes en ligne** (optionnel) : connexion par lien envoyé par e-mail, progression synchronisée entre appareils, via [Supabase](https://supabase.com) (offre gratuite).
+  1. Crée un projet Supabase.
+  2. Dans *SQL Editor*, exécute `supabase/schema.sql`.
+  3. Dans *Authentication > URL Configuration*, mets l'adresse du site en *Site URL* et dans *Redirect URLs*.
+  4. Copie la *Project URL* et la clé *anon public* dans `js/config.js`. Ne mets jamais la clé *service_role* dans le site.
+
+  Tant que `js/config.js` est vide, le bouton de connexion est masqué et tout reste dans le navigateur.
