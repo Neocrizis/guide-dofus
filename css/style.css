@@ -370,7 +370,7 @@ b { font-weight: 600; }
 .activite__texte small { display: block; font-weight: 400; color: var(--texte-3); font-size: 12px; }
 .activite__date { font-size: 12px; color: var(--texte-3); white-space: nowrap; }
 
-.reprendres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.reprendres { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .reprendre {
   display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 14px; text-align: left; cursor: pointer;
   border: 1px solid var(--bord); background: var(--bloc); transition: background .15s, border-color .15s;

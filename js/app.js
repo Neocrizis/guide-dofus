@@ -2,6 +2,8 @@
   "use strict";
 
   const GUIDES = window.GUIDES;
+  // Le Dofus des Glaces est intégré aux étapes Frigost du guide : pas d'onglet à part.
+  const ONGLETS = GUIDES.filter((g) => g.id !== "glaces");
   const CLE_ANCIENNE = "guide-dofus:progression"; // une seule progression (avant les personnages)
   const CLE = "guide-dofus:personnages";
 
@@ -26,7 +28,15 @@
   })();
   if (!compte.persos?.length) { const p = nouveauPerso("Mon personnage"); compte.persos = [p]; compte.actif = p.id; }
   let etat = compte.persos.find((p) => p.id === compte.actif) || compte.persos[0];
-  let G = GUIDES.find((g) => g.id === etat.guide) || GUIDES[0];
+  // Ancien onglet Dofus des Glaces ouvert : on revient au guide principal, à sa dernière étape.
+  compte.persos.forEach((p) => {
+    if (ONGLETS.some((g) => g.id === p.guide)) return;
+    p.courantes = p.courantes || {};
+    p.courantes[p.guide] = p.courante;
+    p.guide = GUIDES[0].id;
+    p.courante = p.courantes[p.guide] || GUIDES[0].etapes[0].id;
+  });
+  let G = ONGLETS.find((g) => g.id === etat.guide) || GUIDES[0];
   let etapes = G.etapes;
   function sauver() {
     compte.actif = etat.id;
@@ -64,7 +74,7 @@
     }).join("")}</ul>`;
   }
   // Quêtes du Dofus des Glaces affichées dans les étapes Frigost du guide de progression.
-  // Mêmes cases que l'onglet « Dofus des Glaces » : cocher ici coche là-bas aussi.
+  // Les cases gardent les identifiants du guide « glaces » (g1…g11), comptés sur le tableau de bord.
   const GLACES_DANS_ETAPE = {
     e63: ["g1", "g2"], e74: ["g3", "g4"], e79: ["g5"], e81: ["g6"], e93: ["g7"],
     e100: ["g8"], e108: ["g9"], e109: ["g10"], e115: ["g11"],
@@ -106,7 +116,7 @@
   // Prépare la page pour le guide choisi (onglets en haut).
   function chargerGuide(id) {
     etat.courantes[G.id] = etat.courante;
-    G = GUIDES.find((g) => g.id === id) || GUIDES[0];
+    G = ONGLETS.find((g) => g.id === id) || GUIDES[0];
     etapes = G.etapes;
     etat.guide = G.id;
     etat.courante = etat.courantes[G.id] && index(etat.courantes[G.id]) >= 0 ? etat.courantes[G.id] : etapes[0].id;
@@ -123,7 +133,7 @@
     $("#titre-guide").textContent = G.titre;
     $("#sous-titre").textContent = `${G.description} Par ${G.auteur} · version du jeu ${G.version} · ${etapes.length} étapes.`;
     $("#nb-total").textContent = etapes.length;
-    $("#guides").innerHTML = GUIDES.map((g) =>
+    $("#guides").innerHTML = ONGLETS.map((g) =>
       `<button type="button" class="tab ${g.id === G.id ? "is-active" : ""}" data-guide="${g.id}">${echap(g.titre)}</button>`).join("");
     $("#recherche").value = "";
   }
@@ -329,7 +339,7 @@
     const p = compte.persos.find((x) => x.id === id);
     if (!p) return;
     etat = p;
-    G = GUIDES.find((g) => g.id === etat.guide) || GUIDES[0];
+    G = ONGLETS.find((g) => g.id === etat.guide) || GUIDES[0];
     ouvertes.clear(); ouvertes.add(etat.courante);
     chargerGuide(G.id); sauver(); rendrePersos(); toutRendre();
     toast(`Personnage : ${p.nom}`);
@@ -529,7 +539,7 @@
     const compteVisible = !$("#compte-btn").hidden;
     const journal = (etat.journal || []).slice(0, 6);
 
-    const reprendre = [gP, gG, gA].map((g) => {
+    const reprendre = [gP, gA].map((g) => {
       const id = etat.guide === g.id ? etat.courante : etat.courantes[g.id];
       const e = g.etapes.find((x) => x.id === id) || g.etapes.find((x) => !etat.faites[x.id]) || g.etapes[0];
       const b = bilan(etat, g);
