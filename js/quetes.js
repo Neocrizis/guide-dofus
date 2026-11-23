@@ -75,7 +75,9 @@
     const etapes = q.steps.map((s, i) => {
       const objectifs = s.objectives.map((o) => {
         const pos = o.map ? [o.map.posX, o.map.posY] : o.coords ? [o.coords.x, o.coords.y] : null;
-        return `<li><span>${remplacer(o.text?.fr || "", d)}</span>${pos ? coord(pos[0], pos[1]) : ""}</li>`;
+        const txt = remplacer(o.text?.fr || "", d).trim();
+        if (!txt) return "";
+        return `<li><span>${txt}${pos ? " " + coord(pos[0], pos[1]) : ""}</span></li>`;
       }).join("");
       const rec = s.rewards.flatMap((r) => [
         r.experienceRatio > 0 ? "Expérience" : null,

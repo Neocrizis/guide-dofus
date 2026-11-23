@@ -458,7 +458,7 @@ a.btn { text-decoration: none; }
 }
 .qetape__desc { margin: 6px 0 0 34px; color: var(--texte-3); font-size: 13px; font-style: italic; }
 .qetape__obj { margin: 8px 0 0 34px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--texte-2); }
-.qetape__obj li { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.qetape__obj li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; align-items: baseline; }
 .qetape__obj li::before { content: "›"; color: var(--accent); font-weight: 700; }
 .qetape__obj b { color: var(--texte); }
 .qetape__rec { margin: 8px 0 0 34px; font-size: 13px; color: var(--accent); }
