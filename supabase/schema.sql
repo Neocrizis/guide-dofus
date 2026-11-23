@@ -15,3 +15,6 @@ create policy "création de son compte" on public.comptes
   for insert with check (auth.uid() = user_id);
 create policy "mise à jour de son compte" on public.comptes
   for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Accès via l'API pour les utilisateurs connectés (les règles ci-dessus limitent à leur propre ligne).
+grant select, insert, update on public.comptes to authenticated;
