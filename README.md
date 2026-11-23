@@ -26,6 +26,11 @@ Deux guides sont disponibles via les onglets : Progression Optimisée et Avis de
 - `data/guide.js` : le guide converti depuis le fichier Excel.
 - `tools/convertir_guide.py` : régénère `data/guide.js` quand le guide Excel est mis à jour :
   `python3 tools/convertir_guide.py "Guide de Progression Optimisée - Skyzio.xlsx"` (nécessite `pip install openpyxl`).
+- `js/rendu-perso.js` + `data/persos/` : le personnage animé du tableau de bord (WebGL). Les maillages, textures et la
+  respiration (`pose.json`) sont tirés des fichiers de Dofus 3 ; `classes.json` liste corps, 4 visages et couleurs par classe.
+- `tools/export-skins.py` : régénère `data/persos/` à partir des fichiers `skins_assets_skin_<id>.bundle` du jeu
+  (`Dofus_Data/StreamingAssets/Content/Characters/Skins/`, nécessite `pip install UnityPy Pillow`).
+  `tools/export-brut.py` exporte un skin ou une animation complète pour explorer de nouvelles poses.
 
 ## Compatibilité
 

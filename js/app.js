@@ -38,6 +38,71 @@
   });
   let G = ONGLETS.find((g) => g.id === etat.guide) || GUIDES[0];
   let etapes = G.etapes;
+  // ---------- Personnage animé (rendu maison à partir des fichiers du jeu) ----------
+  let CATALOGUE = null;
+  window.RenduPerso?.catalogue().then((c) => { CATALOGUE = c; rendreAccueil(); }).catch(() => {});
+  const classeCat = (p) => CATALOGUE?.find((c) => c.nom === p.classe);
+  // Apparence complète du personnage : corps, tête et couleurs (celles de la classe par défaut).
+  function lookPerso(p) {
+    const c = classeCat(p);
+    if (!c) return null;
+    const l = p.look || {}, g = c[l.sexe === "f" ? "f" : "m"];
+    return { corps: g.corps, tete: g.tetes[Math.min(l.tete || 0, g.tetes.length - 1)], couleurs: g.couleurs.map((d, i) => l.couleurs?.[i] ?? d) };
+  }
+  const hex = (n) => "#" + n.toString(16).padStart(6, "0");
+  const NOMS_COULEURS = ["Peau", "Cheveux", "Couleur 3", "Couleur 4", "Couleur 5", "Couleur 6"];
+  function apparence(p) {
+    const c = classeCat(p), l = p.look || {}, sexe = l.sexe === "f" ? "f" : "m", look = lookPerso(p);
+    return `<details class="apparence">
+      <summary class="btn btn--small btn--ghost">Personnaliser</summary>
+      <div class="apparence__corps">
+        <div class="apparence__ligne" role="group" aria-label="Sexe">
+          ${[["m", "Mâle"], ["f", "Femelle"]].map(([k, t]) => `<button type="button" class="pastille ${k === sexe ? "is-on" : ""}" data-look="sexe" data-val="${k}" aria-pressed="${k === sexe}">${t}</button>`).join("")}
+        </div>
+        <div class="apparence__ligne" role="group" aria-label="Visage">
+          ${c[sexe].tetes.map((_, i) => `<button type="button" class="pastille ${i === (l.tete || 0) ? "is-on" : ""}" data-look="tete" data-val="${i}" aria-pressed="${i === (l.tete || 0)}">Visage ${i + 1}</button>`).join("")}
+        </div>
+        <div class="apparence__couleurs">
+          ${look.couleurs.map((n, i) => `<label title="${NOMS_COULEURS[i]}"><input type="color" value="${hex(n)}" data-look-couleur="${i}" aria-label="${NOMS_COULEURS[i]}"></label>`).join("")}
+        </div>
+        <button type="button" class="btn btn--small btn--ghost" data-look="defaut">Couleurs par défaut</button>
+      </div>
+    </details>`;
+  }
+  // Un seul canvas, déplacé dans le tableau de bord à chaque rendu : l'animation ne repart pas de zéro.
+  const toile = document.createElement("canvas");
+  toile.width = 240; toile.height = 300;
+  let lookAffiche = "";
+  function montrerRendu(force) {
+    const place = document.querySelector("[data-rendu-perso]");
+    const look = lookPerso(etat);
+    if (!place || !look) return;
+    place.appendChild(toile);
+    const cle = JSON.stringify(look);
+    if (cle === lookAffiche && !force) return;
+    lookAffiche = cle;
+    window.RenduPerso.dessiner(toile, look).catch(() => { place.replaceWith(Object.assign(document.createElement("div"), { className: "dash-perso__embleme", textContent: initiales(etat.classe) })); });
+  }
+  document.addEventListener("click", (ev) => {
+    const b = ev.target.closest("[data-look]");
+    if (!b) return;
+    const l = (etat.look = etat.look || {});
+    if (b.dataset.look === "sexe") { l.sexe = b.dataset.val; l.tete = 0; }
+    else if (b.dataset.look === "tete") l.tete = +b.dataset.val;
+    else delete l.couleurs;
+    sauver(); rendreAccueil();
+    document.querySelector(".apparence")?.setAttribute("open", "");
+  });
+  document.addEventListener("input", (ev) => {
+    const i = ev.target.dataset?.lookCouleur;
+    if (i == null) return;
+    const l = (etat.look = etat.look || {});
+    l.couleurs = lookPerso(etat).couleurs;
+    l.couleurs[+i] = parseInt(ev.target.value.slice(1), 16);
+    montrerRendu();
+  });
+  document.addEventListener("change", (ev) => { if (ev.target.dataset?.lookCouleur != null) { sauver(); rendreAccueil(); document.querySelector(".apparence")?.setAttribute("open", ""); } });
+
   function sauver() {
     compte.actif = etat.id;
     etat.maj = Date.now();
@@ -371,7 +436,7 @@
   // ---------- Gestion des personnages ----------
   const dialogue = $("#persos-dialog");
   function rendrePersos() {
-    const options = (c) => `<option value="">Classe…</option>` + GUIDES[0].classes.map((k) => `<option ${k === c ? "selected" : ""}>${echap(k)}</option>`).join("");
+    const options = (c) => `<option value="">Classe…</option>` + [...GUIDES[0].classes, "Forgelance"].map((k) => `<option ${k === c ? "selected" : ""}>${echap(k)}</option>`).join("");
     $("#persos-liste").innerHTML = compte.persos.map((p) => {
       const nb = Object.keys(p.faites).length;
       return `<li class="perso ${p.id === etat.id ? "is-active" : ""}" data-perso="${p.id}">
@@ -702,9 +767,11 @@
       <aside class="dash__cote">
         <div class="card dash-perso">
           ${etat.photo ? `<img class="dash-perso__photo" src="${echap(etat.photo)}" alt="Portrait de ${echap(etat.nom)}">`
+            : lookPerso(etat) ? `<div class="dash-perso__rendu" data-rendu-perso role="img" aria-label="${echap(etat.nom)}, ${echap(etat.classe)}"></div>`
             : `<div class="dash-perso__embleme">${echap(initiales(etat.classe))}</div>`}
           <div class="dash-perso__classe">${echap(etat.classe || "Classe non choisie")}</div>
           <div class="dash-perso__niveau">Niveau <b>${niv || "?"}</b></div>
+          ${!etat.photo && lookPerso(etat) ? apparence(etat) : ""}
           <div class="dash-perso__photo-actions">
             <label class="btn btn--small btn--ghost">${etat.photo ? "Changer la photo" : "Ajouter une photo"}
               <input type="file" accept="image/*" data-photo hidden></label>
@@ -781,8 +848,9 @@
           <div class="dash__label">Reprendre où tu en étais</div>
           <div class="reprendres">${reprendre}</div>
         </div>
-      </div>`;
+      </div>`;    montrerRendu();
   }
+
 
   // Deux pages : tableau de bord (par défaut) et guides (#guide).
   const PAGES = ["dofus", "almanax", "encyclopedie"];
