@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lecteur de guide – Guide Dofus</title>
+  <meta name="description" content="Ouvre un guide détaillé (fichier JSON au format Ganymède) et suis-le étape par étape.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=38">
+  <link rel="stylesheet" href="css/lecteur.css?v=1">
+  <script>
+    try { const t = localStorage.getItem("guide-dofus:theme") ?? (/[?&]mode=overlay/.test(location.search) ? "vanilla" : ""); if (t) document.documentElement.dataset.theme = t; } catch {}
+  </script>
+</head>
+<body class="lecteur-page">
+  <header class="nav" data-hors-overlay>
+    <div class="nav__left">
+      <a class="nav__brand" href="./"><span class="nav__dot"></span>Guide Dofus</a>
+    </div>
+    <div class="nav__actions">
+      <a class="btn btn--small btn--ghost" href="./#guide">← Retour aux guides</a>
+    </div>
+  </header>
+
+  <main class="lecteur">
+    <section class="lecteur__accueil card" id="accueil">
+      <h1>Lecteur de guide détaillé</h1>
+      <p>Ouvre un guide au format Ganymède (fichier <code>.json</code>) pour le suivre étape par étape : positions, trajets, ressources à préparer, quêtes à lancer et à valider, monstres et captures d'écran.</p>
+      <p class="lecteur__note">Le fichier reste sur ton ordinateur : rien n'est envoyé ni publié. Les guides téléchargés par l'appli Ganymède se trouvent dans <code>%APPDATA%\com.ganymede.ganymede-app\guides</code>.</p>
+      <label class="btn btn--accent lecteur__fichier">Ouvrir un fichier de guide…<input type="file" id="fichier" accept=".json,application/json" multiple hidden></label>
+      <div id="biblio" class="lecteur__biblio"></div>
+    </section>
+
+    <section class="lecteur__guide" id="guide" hidden>
+      <div class="lecteur__entete card">
+        <div class="lecteur__titre">
+          <button type="button" class="btn btn--small btn--ghost" id="fermer" title="Choisir un autre guide">☰</button>
+          <h2 id="nom-guide"></h2>
+        </div>
+        <div class="lecteur__nav">
+          <button type="button" class="btn btn--small" id="prec" aria-label="Étape précédente">◀</button>
+          <label class="lecteur__num">Étape <input type="number" id="num" min="1" value="1"> / <span id="total"></span></label>
+          <button type="button" class="btn btn--small btn--accent" id="suiv" aria-label="Étape suivante">▶</button>
+        </div>
+        <div class="lecteur__barre"><span id="barre"></span></div>
+      </div>
+
+      <article class="lecteur__etape card" id="etape">
+        <div class="lecteur__pos" id="pos"></div>
+        <div class="lecteur__texte" id="texte"></div>
+      </article>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/lecteur.js?v=1"></script>
+</body>
+</html>
