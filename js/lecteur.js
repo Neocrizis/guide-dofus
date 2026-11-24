@@ -17,7 +17,8 @@
 
   // ---------- Nettoyage du HTML (le fichier vient de l'extérieur) ----------
   const BALISES = new Set(["P", "BR", "SPAN", "DIV", "UL", "OL", "LI", "STRONG", "B", "EM", "I", "U", "S", "IMG", "LABEL", "INPUT", "H1", "H2", "H3", "H4", "BLOCKQUOTE", "A", "HR", "TABLE", "TBODY", "TR", "TD", "TH"]);
-  const IMAGES_OK = /^https:\/\/(api\.dofusdb\.fr|ganymede-app\.com|ganymede-dofus\.com)\//;
+  // Aucune ressource n'est chargée depuis les serveurs de Ganymède : seules les images DofusDB passent.
+  const IMAGES_OK = /^https:\/\/api\.dofusdb\.fr\//;
   const COULEURS = { "255, 255, 0": "jaune", "98, 172, 255": "bleu", "250, 0, 0": "rouge", "5, 160, 69": "vert", "216, 27, 67": "rouge" };
   function nettoyer(html) {
     const doc = new DOMParser().parseFromString(`<div>${html || ""}</div>`, "text/html");
@@ -28,7 +29,12 @@
         const garde = {};
         const typ = c.getAttribute("data-type");
         if (typ) garde["data-type"] = typ;
-        if (c.tagName === "IMG") { const s = c.getAttribute("src") || ""; if (IMAGES_OK.test(s)) { garde.src = s; garde.loading = "lazy"; garde.alt = c.getAttribute("alt") || ""; } else { c.remove(); return; } if (c.classList.contains("img-large")) garde.class = "img-large"; }
+        if (c.tagName === "IMG") { const s = c.getAttribute("src") || ""; if (!IMAGES_OK.test(s)) {
+            // Capture hébergée ailleurs : simple mention à la place de l'image.
+            if (c.classList.contains("img-large")) { const m = doc.createElement("p"); m.className = "capture-absente"; m.textContent = "📷 Capture d'écran (non affichée)"; c.replaceWith(m); } else c.remove();
+            return;
+          }
+          garde.src = s; garde.loading = "lazy"; garde.alt = c.getAttribute("alt") || ""; if (c.classList.contains("img-large")) garde.class = "img-large"; }
         if (c.tagName === "INPUT") { if (c.getAttribute("type") !== "checkbox") { c.remove(); return; } garde.type = "checkbox"; }
         if (c.tagName === "A") { const h = c.getAttribute("href") || ""; if (/^https:\/\//.test(h)) { garde.href = h; garde.target = "_blank"; garde.rel = "noopener"; } }
         if (typ === "quest-block") { garde["data-statut"] = c.getAttribute("status") || ""; garde["data-quete"] = c.getAttribute("questname") || ""; }
@@ -37,6 +43,7 @@
         const style = c.getAttribute("style") || "";
         const m = style.match(/color:\s*rgb\(([^)]+)\)/);
         if (m && COULEURS[m[1].trim()]) garde["data-couleur"] = COULEURS[m[1].trim()];
+        if (c.className === "capture-absente") garde.class = "capture-absente";
         [...c.attributes].forEach((a) => c.removeAttribute(a.name));
         Object.entries(garde).forEach(([k, v]) => c.setAttribute(k, v));
         parcourir(c);
@@ -57,6 +64,7 @@
       t.textContent = STATUTS[s] || "Quête";
       b.prepend(t);
     });
+    racine.querySelectorAll('[data-type="guide-step"]').forEach((t) => { const i = document.createElement("img"); i.src = "img/outils/quest.webp"; i.alt = ""; t.prepend(i); });
     racine.querySelectorAll('[data-type="custom-tag"]').forEach((t) => {
       const type = t.getAttribute("data-tag");
       const id = t.getAttribute("data-dofusdb");
@@ -124,6 +132,7 @@
     n = Math.min(etat[G.id].etape || 0, G.steps.length - 1);
     $("accueil").hidden = true; $("guide").hidden = false;
     $("nom-guide").textContent = G.name;
+    $("auteur").textContent = G.auteur ? `${G.auteur} · via Ganymède` : "";
     $("total").textContent = G.steps.length;
     $("num").max = G.steps.length;
     rendreEtape();
@@ -158,6 +167,7 @@
   }
 
   // ---------- Fichiers ----------
+  const texteSeul = (html) => (new DOMParser().parseFromString(String(html || ""), "text/html").body.textContent || "").trim().slice(0, 200);
   function valide(g) { return g && (typeof g.id === "number" || typeof g.id === "string") && Array.isArray(g.steps) && g.steps.every((s) => s && typeof s === "object"); }
   $("fichier").addEventListener("change", async (ev) => {
     let dernier = null;
@@ -165,7 +175,7 @@
       try {
         const g = JSON.parse(await f.text());
         if (!valide(g)) { toast(`${f.name} : format de guide non reconnu`); continue; }
-        guides[g.id] = { id: String(g.id), name: String(g.name || f.name), steps: g.steps.map((s) => ({ name: s.name || null, map: s.map || null, pos_x: Number.isFinite(+s.pos_x) && s.pos_x !== null ? +s.pos_x : null, pos_y: Number.isFinite(+s.pos_y) && s.pos_y !== null ? +s.pos_y : null, web_text: String(s.web_text || "") })) };
+        guides[g.id] = { id: String(g.id), name: String(g.name || f.name), auteur: texteSeul(g.description), steps: g.steps.map((s) => ({ name: s.name || null, map: s.map || null, pos_x: Number.isFinite(+s.pos_x) && s.pos_x !== null ? +s.pos_x : null, pos_y: Number.isFinite(+s.pos_y) && s.pos_y !== null ? +s.pos_y : null, web_text: String(s.web_text || "") })) };
         dernier = String(g.id);
       } catch { toast(`${f.name} : fichier illisible`); }
     }

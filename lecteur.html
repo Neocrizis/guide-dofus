@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=38">
-  <link rel="stylesheet" href="css/lecteur.css?v=1">
+  <link rel="stylesheet" href="css/lecteur.css?v=2">
   <script>
     try { const t = localStorage.getItem("guide-dofus:theme") ?? (/[?&]mode=overlay/.test(location.search) ? "vanilla" : ""); if (t) document.documentElement.dataset.theme = t; } catch {}
   </script>
@@ -39,6 +39,7 @@
           <button type="button" class="btn btn--small btn--ghost" id="fermer" title="Choisir un autre guide">☰</button>
           <h2 id="nom-guide"></h2>
         </div>
+        <p class="lecteur__auteur" id="auteur"></p>
         <div class="lecteur__nav">
           <button type="button" class="btn btn--small" id="prec" aria-label="Étape précédente">◀</button>
           <label class="lecteur__num">Étape <input type="number" id="num" min="1" value="1"> / <span id="total"></span></label>
@@ -55,6 +56,6 @@
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="js/lecteur.js?v=1"></script>
+  <script src="js/lecteur.js?v=2"></script>
 </body>
 </html>
