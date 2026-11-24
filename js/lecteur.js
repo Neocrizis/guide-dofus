@@ -18,7 +18,7 @@
   // ---------- Nettoyage du HTML (le fichier vient de l'extérieur) ----------
   const BALISES = new Set(["P", "BR", "SPAN", "DIV", "UL", "OL", "LI", "STRONG", "B", "EM", "I", "U", "S", "IMG", "LABEL", "INPUT", "H1", "H2", "H3", "H4", "BLOCKQUOTE", "A", "HR", "TABLE", "TBODY", "TR", "TD", "TH"]);
   // Images autorisées : DofusDB (icônes) et Ganymède (captures d'écran des guides).
-  const IMAGES_OK = /^https:\/\/(api\.dofusdb\.fr|ganymede-app\.com|ganymede-dofus\.com)\//;
+  const IMAGES_OK = /^(https:\/\/(api\.dofusdb\.fr|ganymede-app\.com|ganymede-dofus\.com)\/|img\/guides\/[\w-]+\/[\w-]+\.(webp|png|jpg)$)/;
   const COULEURS = { "255, 255, 0": "jaune", "98, 172, 255": "bleu", "250, 0, 0": "rouge", "5, 160, 69": "vert", "216, 27, 67": "rouge" };
   function nettoyer(html) {
     const doc = new DOMParser().parseFromString(`<div>${html || ""}</div>`, "text/html");
@@ -111,8 +111,35 @@
   }
 
   // ---------- Affichage ----------
+  // Guides intégrés au site (hébergés dans le dépôt, avec l'accord de leur auteur).
+  let integres = [];
+  const integresPret = fetch("data/guides-detailles/index.json").then((r) => r.ok ? r.json() : []).then((l) => { integres = Array.isArray(l) ? l : []; }).catch(() => {});
+
+  function rendreIntegres() {
+    const zone = $("integres"); zone.innerHTML = "";
+    integres.forEach((g) => {
+      const e = etat[g.id];
+      const b = document.createElement("button"); b.type = "button"; b.className = "integre card"; b.dataset.integre = g.id;
+      const t = document.createElement("b"); t.textContent = g.name;
+      const a = document.createElement("small"); a.textContent = `${g.auteur} · ${g.source} · ${g.etapes} étapes${e ? ` · étape ${e.etape + 1}` : ""}`;
+      b.append(t, a); zone.append(b);
+    });
+  }
+
+  async function ouvrirIntegre(id) {
+    const g = integres.find((x) => x.id === id); if (!g) return;
+    if (!guides[id] || !guides[id].integre) {
+      try {
+        const d = await (await fetch(g.fichier)).json();
+        guides[id] = { id, integre: true, name: d.name, auteur: d.auteur, source: d.source, source_url: d.source_url, licence: d.licence, steps: d.steps };
+      } catch { toast("Impossible de charger ce guide"); return; }
+    }
+    ouvrir(id);
+  }
+
   function rendreBiblio() {
-    const liste = Object.values(guides);
+    rendreIntegres();
+    const liste = Object.values(guides).filter((g) => !g.integre);
     $("biblio").innerHTML = "";
     if (!liste.length) return;
     const h = document.createElement("h3"); h.textContent = "Mes guides ouverts"; $("biblio").append(h);
@@ -132,7 +159,7 @@
     n = Math.min(etat[G.id].etape || 0, G.steps.length - 1);
     $("accueil").hidden = true; $("guide").hidden = false;
     $("nom-guide").textContent = G.name;
-    $("auteur").textContent = G.auteur ? `${G.auteur} · via Ganymède` : "";
+    $("auteur").textContent = G.auteur ? `${G.auteur} · ${G.source || "via Ganymède"}${G.licence ? ` · ${G.licence}` : ""}` : "";
     $("total").textContent = G.steps.length;
     $("num").max = G.steps.length;
     rendreEtape();
@@ -180,7 +207,7 @@
       } catch { toast(`${f.name} : fichier illisible`); }
     }
     ev.target.value = "";
-    if (!ecrire(CLE_GUIDES, guides)) toast("Guide ouvert, mais trop gros pour être retenu après fermeture");
+    if (!ecrire(CLE_GUIDES, Object.fromEntries(Object.entries(guides).filter(([, g]) => !g.integre)))) toast("Guide ouvert, mais trop gros pour être retenu après fermeture");
     rendreBiblio();
     if (dernier) ouvrir(dernier);
   });
@@ -191,7 +218,8 @@
     if (!t) return;
     if (t.dataset.travel) { copier(t.dataset.travel); return; }
     if (t.dataset.ouvrir) { ouvrir(t.dataset.ouvrir); return; }
-    if (t.dataset.retirer) { delete guides[t.dataset.retirer]; ecrire(CLE_GUIDES, guides); rendreBiblio(); return; }
+    if (t.dataset.integre) { ouvrirIntegre(t.dataset.integre); return; }
+    if (t.dataset.retirer) { delete guides[t.dataset.retirer]; ecrire(CLE_GUIDES, Object.fromEntries(Object.entries(guides).filter(([, g]) => !g.integre))); rendreBiblio(); return; }
     if (t.id === "prec") aller(n - 1);
     if (t.id === "suiv") aller(n + 1);
     if (t.id === "fermer") { $("guide").hidden = true; $("accueil").hidden = false; rendreBiblio(); }
@@ -212,6 +240,10 @@
   });
 
   rendreBiblio();
-  const dernierOuvert = new URLSearchParams(location.search).get("guide");
-  if (dernierOuvert && guides[dernierOuvert]) ouvrir(dernierOuvert);
+  integresPret.then(() => {
+    rendreIntegres();
+    const demande = new URLSearchParams(location.search).get("guide");
+    if (demande && integres.some((g) => g.id === demande)) ouvrirIntegre(demande);
+    else if (demande && guides[demande]) ouvrir(demande);
+  });
 })();

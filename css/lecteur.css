@@ -80,3 +80,8 @@
 .lecteur__auteur { margin: 4px 0 0 44px; font-size: 12px; color: var(--texte-3); }
 .lecteur__auteur:empty { display: none; }
 .lecteur__texte .capture-absente { margin: 8px 0; padding: 8px 12px; border: 1px dashed var(--bord); border-radius: 10px; color: var(--texte-3); font-size: 13px; }
+.lecteur__soustitre { margin: 18px 0 8px; font-size: 15px; color: var(--texte-2); }
+.lecteur__integres { display: grid; gap: 10px; }
+.integre { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; text-align: left; font: inherit; color: var(--texte); cursor: pointer; }
+.integre:hover { border-color: var(--accent); }
+.integre small { color: var(--texte-3); font-size: 12px; }
