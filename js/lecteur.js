@@ -17,8 +17,8 @@
 
   // ---------- Nettoyage du HTML (le fichier vient de l'extérieur) ----------
   const BALISES = new Set(["P", "BR", "SPAN", "DIV", "UL", "OL", "LI", "STRONG", "B", "EM", "I", "U", "S", "IMG", "LABEL", "INPUT", "H1", "H2", "H3", "H4", "BLOCKQUOTE", "A", "HR", "TABLE", "TBODY", "TR", "TD", "TH"]);
-  // Aucune ressource n'est chargée depuis les serveurs de Ganymède : seules les images DofusDB passent.
-  const IMAGES_OK = /^https:\/\/api\.dofusdb\.fr\//;
+  // Images autorisées : DofusDB (icônes) et Ganymède (captures d'écran des guides).
+  const IMAGES_OK = /^https:\/\/(api\.dofusdb\.fr|ganymede-app\.com|ganymede-dofus\.com)\//;
   const COULEURS = { "255, 255, 0": "jaune", "98, 172, 255": "bleu", "250, 0, 0": "rouge", "5, 160, 69": "vert", "216, 27, 67": "rouge" };
   function nettoyer(html) {
     const doc = new DOMParser().parseFromString(`<div>${html || ""}</div>`, "text/html");
@@ -64,7 +64,7 @@
       t.textContent = STATUTS[s] || "Quête";
       b.prepend(t);
     });
-    racine.querySelectorAll('[data-type="guide-step"]').forEach((t) => { const i = document.createElement("img"); i.src = "img/outils/quest.webp"; i.alt = ""; t.prepend(i); });
+    racine.querySelectorAll('[data-type="guide-step"]').forEach((t) => { if (t.querySelector("img")) return; const i = document.createElement("img"); i.src = "img/outils/quest.webp"; i.alt = ""; t.prepend(i); });
     racine.querySelectorAll('[data-type="custom-tag"]').forEach((t) => {
       const type = t.getAttribute("data-tag");
       const id = t.getAttribute("data-dofusdb");
