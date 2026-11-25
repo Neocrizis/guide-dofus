@@ -245,9 +245,7 @@
     }
     const s = guide.steps[n - 1] || {};
     const doc = document.implementation.createHTMLDocument("");
-    const pos = doc.createElement("div"); pos.className = "parcours__pos";
-    if (s.pos_x != null && s.pos_y != null) pos.append(GD.boutonPos(s.pos_x, s.pos_y, "", doc));
-    if (s.map) { const m = doc.createElement("span"); m.className = "parcours__map"; m.textContent = s.map; pos.append(m); }
+    const aPos = s.pos_x != null && s.pos_y != null;
     const corps = GD.enrichir(GD.nettoyer(s.web_text), { cle: (i) => `${l.guide}|${n}|${i}`, coches: etat.cochesG || {}, guide: l.guide });
     // « Étape 8 » du même guide : saut direct à la carte correspondante si elle fait partie du parcours.
     corps.querySelectorAll(`[data-type="guide-step"][data-vers="${l.guide}"]`).forEach((t) => {
@@ -265,10 +263,31 @@
         ${ov ? "" : fleche(1, k === cartes.length - 1)}
       </div>
       <div class="parcours__barre"><span style="width:${((k + 1) / cartes.length) * 100}%"></span></div>
-      ${pos.childNodes.length ? pos.outerHTML : ""}
+      ${aPos || s.map ? `<div class="parcours__lieu">
+        ${aPos ? `<button type="button" class="parcours__dest" data-travel="/travel ${s.pos_x},${s.pos_y}" title="Copier /travel ${s.pos_x},${s.pos_y}"><span>Destination</span><b>[${s.pos_x},${s.pos_y}]</b><small>/travel</small></button>` : ""}
+        ${aPos ? zaapHTML(s) : ""}
+        ${s.map && s.map !== "Douze" ? `<span class="parcours__monde">${echap(s.map)}</span>` : ""}
+      </div>` : ""}
       <div class="gd-texte">${corps.innerHTML}</div>
       <small class="parcours__credit">Parcours : ${echap(l.auteur)} (Ganymède), repris avec son accord · <a href="lecteur.html?guide=${encodeURIComponent(l.guide)}&etape=${n}${MODE_OV ? "&mode=overlay" : ""}">guide complet</a></small>
     </div>`;
+  }
+  // Zaap le plus proche de la destination (data/zaaps.js), dans le même monde. Clic : copie le nom à coller
+  // dans la recherche du zaap.
+  const MONDES = { Douze: 1, Incarnam: 2, Harebourg: 12, Crocuzko: 22 };
+  function zaapHTML(s) {
+    const monde = MONDES[s.map || "Douze"];
+    if (!monde || !window.ZAAPS) return "";
+    let best = null;
+    window.ZAAPS.forEach(([nom, x, y, m]) => {
+      if (m !== monde) return;
+      const d = Math.abs(x - s.pos_x) + Math.abs(y - s.pos_y);
+      if (!best || d < best.d) best = { nom, x, y, d };
+    });
+    if (!best) return "";
+    const dist = best.d === 0 ? "sur place" : best.d === 1 ? "à 1 carte" : `à ${best.d} cartes`;
+    return `<button type="button" class="parcours__zaap" data-copier="${echap(best.nom)}" title="Copier « ${echap(best.nom)} » pour la recherche du zaap">
+      <span>Zaap le plus proche</span><b>${echap(best.nom)}</b><small>[${best.x},${best.y}] · ${dist}</small></button>`;
   }
   // Avance d'une carte ; au bout du parcours, passe à l'étape voisine (overlay).
   function avancerCarte(e, delta, deborder) {
@@ -462,6 +481,8 @@
     const t = ev.target;
     const travel = t.closest("[data-travel]");
     if (travel) { ev.stopPropagation(); copier(travel.dataset.travel, doc); return; }
+    const aCopier = t.closest("[data-copier]");
+    if (aCopier) { ev.stopPropagation(); copier(aCopier.dataset.copier, doc); return; }
     if (t.matches("[data-faite], [data-succes], [data-archi]")) return; // géré par "change"
     const suivre = t.closest("[data-suivre]");
     if (suivre) { etat.courante = suivre.dataset.suivre; sauver(); toutRendre(); toast("Étape affichée dans l'overlay"); return; }
@@ -1134,7 +1155,7 @@
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
     // Design propre à l'appli (n'affecte pas le site).
-    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=9">`);
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=10">`);
     appliquerPrefsOv();
     // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
     const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };

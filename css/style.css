@@ -800,18 +800,38 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 
 /* Parcours détaillé dans une étape du guide : une carte à la fois, ← → pour avancer. */
 .parcours { margin-top: 4px; }
-.parcours__tete { display: flex; align-items: center; gap: 8px; padding: 6px 0 10px; }
+.parcours__tete { display: flex; align-items: center; gap: 10px; padding: 4px 0 8px; }
+.parcours__tete .btn { width: 36px; height: 36px; padding: 0; border-radius: 50%; display: grid; place-items: center; }
 .parcours__info { flex: 1; min-width: 0; display: flex; flex-direction: column; text-align: center; }
-.parcours__info b { font-size: 14px; }
+.parcours__info b { font-size: 14px; font-variant-numeric: tabular-nums; }
 .parcours__info small { color: var(--texte-3); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.parcours__barre { height: 3px; border-radius: 3px; background: var(--bloc); margin: 0 0 10px; overflow: hidden; }
-.parcours__barre span { display: block; height: 100%; background: var(--accent); }
-.parcours__pos { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
-.parcours__pos .pos { font-size: 15px; padding: 4px 10px; }
-.parcours__map { color: var(--texte-3); font-size: 13px; }
-.parcours__credit { display: block; margin-top: 10px; color: var(--texte-3); font-size: 11px; }
+.parcours__barre { height: 4px; border-radius: 4px; background: var(--bloc); margin: 0 0 12px; overflow: hidden; }
+.parcours__barre span { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); transition: width .25s ease; }
+.parcours__lieu { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.parcours__dest, .parcours__zaap { display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto; column-gap: 8px; align-items: baseline; text-align: left; padding: 8px 12px; border-radius: 12px; font: inherit; cursor: pointer; transition: transform .15s, box-shadow .15s, border-color .15s; }
+.parcours__dest span, .parcours__zaap span { grid-column: 1 / -1; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+.parcours__dest b, .parcours__zaap b { font-size: 15px; }
+.parcours__dest small, .parcours__zaap small { font-size: 12px; opacity: .75; }
+.parcours__dest { border: 0; background: var(--accent); color: var(--sur-accent); box-shadow: 0 4px 14px var(--accent-glow); }
+.parcours__dest:hover { transform: translateY(-1px); background: var(--accent-hover); }
+.parcours__zaap { grid-template-columns: auto 1fr; flex: 1; min-width: 180px; border: 1px solid var(--bord); background: var(--bloc); color: var(--texte); }
+.parcours__zaap:hover { border-color: var(--accent); transform: translateY(-1px); }
+.parcours__zaap span::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: #7cb9ff; box-shadow: 0 0 8px #7cb9ff; vertical-align: 1px; }
+.parcours__monde { align-self: center; padding: 3px 10px; border-radius: 999px; background: var(--bloc-2); color: var(--texte-2); font-size: 12px; font-weight: 600; }
+.parcours__credit { display: block; margin-top: 12px; color: var(--texte-3); font-size: 11px; }
 .parcours__credit a { color: inherit; }
 .parcours--attente { color: var(--texte-3); font-size: 13px; padding: 8px 0; }
+/* Contenu modernisé : blocs de quête en cartes, cases en lignes, captures arrondies */
+.parcours .gd-texte [data-type="quest-block"] { position: relative; border-left: 0; padding: 12px 14px 12px 18px; border-radius: 14px; background: linear-gradient(135deg, var(--bloc-2), var(--bloc)); box-shadow: inset 0 0 0 1px var(--bord); overflow: hidden; }
+.parcours .gd-texte [data-type="quest-block"]::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--qb, var(--texte-3)); }
+.parcours .gd-texte [data-statut="setup"] { --qb: #c58cff; }
+.parcours .gd-texte [data-statut="start"] { --qb: #7cb9ff; }
+.parcours .gd-texte [data-statut="in_progress"] { --qb: var(--accent); }
+.parcours .gd-texte [data-statut="end"] { --qb: #4fd18b; }
+.parcours .gd-texte .qb__statut { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--qb, #888) 18%, transparent); color: var(--qb) !important; }
+.parcours .gd-texte li[data-type="taskItem"] { padding: 6px 8px; margin: 0 -8px; border-radius: 8px; transition: background .15s; }
+.parcours .gd-texte li[data-type="taskItem"]:hover { background: var(--bloc); }
+.parcours .gd-texte img.img-large { border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, .35); }
 
 /* Overlay du navigateur (Picture-in-Picture) : résumé Skyzio repliable sous le parcours */
 .ov__resume { margin-top: 10px; border-top: 1px solid var(--bord); padding-top: 8px; }
