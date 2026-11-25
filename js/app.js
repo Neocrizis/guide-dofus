@@ -214,9 +214,15 @@
   // L'étape Skyzio donne l'ordre ; le parcours donne le chemin carte par carte (data/guides-detailles/liens.js).
   // etat.cartes[étape] = carte affichée, etat.cochesG["guide|n|i"] = cases cochées dans le parcours.
   const GD = window.GuideDetaille;
+  // Passages de l'étape (data/guide-complet.js) ; ceux de l'autre cité sont masqués une fois la cité choisie.
+  function liensEtape(e) {
+    const liens = e.liens || (G.id === "progression" && (window.LIENS_DETAILLES || {})[e.id]) || [];
+    return liens.filter((l) => !l.camp || !etat.alignement || l.camp === etat.alignement);
+  }
+  const nomGuide = (l) => { const a = (window.GUIDE_AUTEURS || {})[l.guide] || l; return { nom: GD.sansGP(a.nom), auteur: (a.auteur || "").replace(/^Guide de /, "") }; };
   function cartesEtape(e) {
-    const liens = G.id === "progression" && (window.LIENS_DETAILLES || {})[e.id];
-    if (!liens || !GD) return [];
+    const liens = liensEtape(e);
+    if (!liens.length || !GD) return [];
     return liens.flatMap((l) => Array.from({ length: l.a - l.de + 1 }, (_, j) => ({ l, n: l.de + j })));
   }
   const carteCourante = (e, cartes = cartesEtape(e)) => Math.min(cartes.length - 1, Math.max(0, (etat.cartes || {})[e.id] || 0));
@@ -236,6 +242,7 @@
   function parcoursHTML(e, charger, ov) {
     const cartes = cartesEtape(e);
     if (!cartes.length) return "";
+    if (!charger) return `<div class="parcours parcours--attente"></div>`; // étape repliée : rendue à l'ouverture
     const k = carteCourante(e, cartes);
     const { l, n } = cartes[k];
     const guide = GD.charge(l.guide);
@@ -245,7 +252,7 @@
     }
     const s = guide.steps[n - 1] || {};
     const doc = document.implementation.createHTMLDocument("");
-    const aPos = s.pos_x != null && s.pos_y != null;
+    const aPos = !!s.map && s.pos_x != null && s.pos_y != null; // sans carte : étape d'explication, pas de position
     const corps = GD.enrichir(GD.nettoyer(s.web_text), { cle: (i) => `${l.guide}|${n}|${i}`, coches: etat.cochesG || {}, guide: l.guide });
     // Lignes cochables d'un clic (rayées) : blocs de quête et paragraphes hors listes de tâches.
     const cochesG = etat.cochesG || {};
@@ -267,8 +274,11 @@
       c.closest("label")?.remove();
     });
     // « Étape 8 » du même guide : saut direct à la carte correspondante si elle fait partie du parcours.
-    corps.querySelectorAll(`[data-type="guide-step"][data-vers="${l.guide}"]`).forEach((t) => {
-      const cible = cartes.findIndex((c) => c.l.guide === l.guide && c.n === +t.getAttribute("data-etape"));
+    // Renvoi vers un autre guide (texte du guide complet) : saut à son premier passage dans l'étape.
+    corps.querySelectorAll('[data-type="guide-step"][data-vers]').forEach((t) => {
+      const vers = t.getAttribute("data-vers");
+      let cible = cartes.findIndex((c) => c.l.guide === vers && c.n === +t.getAttribute("data-etape"));
+      if (cible < 0 && vers !== l.guide) cible = cartes.findIndex((c) => c.l.guide === vers);
       if (cible < 0) return;
       const b = doc.createElement("button"); b.type = "button"; b.setAttribute("data-type", "guide-step");
       b.dataset.carteAller = cible; b.dataset.carteEtape = e.id; b.append(...t.childNodes); t.replaceWith(b);
@@ -323,10 +333,11 @@
 
   // Crédit des auteurs du parcours (accord de l'équipe Ganymède), affiché discrètement dans le résumé.
   function creditParcours(e) {
-    const liens = G.id === "progression" && (window.LIENS_DETAILLES || {})[e.id];
-    if (!liens) return "";
-    const noms = [...new Set(liens.map((l) => `${l.nom} · ${l.auteur.replace(/^Guide de /, "")}`))];
-    return `<p class="parcours__credit">Parcours : ${noms.map(echap).join(", ")} (Ganymède), repris avec leur accord · <a href="lecteur.html?guide=${encodeURIComponent(liens[0].guide)}&etape=${liens[0].de}${MODE_OV ? "&mode=overlay" : ""}">guide complet</a></p>`;
+    const liens = liensEtape(e);
+    if (!liens.length) return "";
+    const noms = [...new Set(liens.map((l) => { const g = nomGuide(l); return `${g.nom} · ${g.auteur}`; }))];
+    const l = liens[1] || liens[0];
+    return `<p class="parcours__credit">Guides : ${noms.map(echap).join(", ")} (Ganymède), repris avec leur accord · <a href="lecteur.html?guide=${encodeURIComponent(l.guide)}&etape=${l.de}${MODE_OV ? "&mode=overlay" : ""}">ouvrir dans le lecteur</a></p>`;
   }
   // Avance d'une carte ; au bout du parcours, passe à l'étape voisine (overlay).
   function avancerCarte(e, delta, deborder) {
@@ -339,6 +350,12 @@
     if (delta < 0) { const p = etapes[i]; const n = cartesEtape(p).length; if (n) definirCarte(p, n - 1); }
     else definirCarte(etapes[i], 0);
     aller(delta);
+  }
+  // Étapes d'alignement : on choisit Bonta ou Brâkmar une fois (etat.alignement), l'autre parcours est masqué.
+  function choixCite(e) {
+    if (!(e.liens || []).some((l) => l.camp)) return "";
+    const b = (c, nom) => `<button type="button" class="cite__btn ${etat.alignement === c ? "is-on" : ""}" data-camp="${c}">${nom}</button>`;
+    return `<div class="cite"><span>${etat.alignement ? "Ta cité" : "Choisis ta cité"}</span>${b("bonta", "Bonta")}${b("brakmar", "Brâkmar")}</div>`;
   }
   function contenuEtape(e, compact) {
     const conseilClasse = etat.classe && e.classes && e.classes[etat.classe];
@@ -358,8 +375,9 @@
       compact ? "" : section("Équipements", e.equipements ? paragraphes(e.equipements) : ""),
       compact ? "" : section("Idoles", e.idoles ? paragraphes(e.idoles) : ""),
     ].join("");
-    const parcours = parcoursHTML(e, compact || ouvertes.has(e.id), compact);
+    const parcours = choixCite(e) + parcoursHTML(e, compact || ouvertes.has(e.id), compact);
     if (!parcours) return resume;
+    if (!resume.trim()) return compact ? parcours : section("Parcours détaillé", parcours) + creditParcours(e);
     // Dans l'appli, le parcours prend la place ; le résumé Skyzio reste à un clic.
     const credit = creditParcours(e);
     if (compact) return `${parcours}<details class="ov__resume"><summary>Résumé de l'étape</summary>${resume}</details>`;
@@ -521,6 +539,8 @@
     const t = ev.target;
     const travel = t.closest("[data-travel]");
     if (travel) { ev.stopPropagation(); copier(travel.dataset.travel, doc); return; }
+    const camp = t.closest("[data-camp]");
+    if (camp) { etat.alignement = etat.alignement === camp.dataset.camp ? null : camp.dataset.camp; sauver(); rendrePage(); rendreOverlay(); return; }
     const aCopier = t.closest("[data-copier]");
     if (aCopier) { ev.stopPropagation(); copier(aCopier.dataset.copier, doc); return; }
     if (t.matches("[data-faite], [data-succes], [data-archi]")) return; // géré par "change"

@@ -13,6 +13,8 @@
   // Chemins absolus : le contenu peut être affiché dans une autre fenêtre (overlay Picture-in-Picture).
   const abs = (src) => (/^https:/.test(src) ? src : new URL(src, location.href).href);
 
+  // Les noms de guides Ganymède commencent par « [GP12] » : on l'enlève à l'affichage.
+  const sansGP = (s) => String(s || "").replace(/\[GP\d*\]\s*|\s*\(NEW\)/g, "").trim();
   function nettoyer(html) {
     const doc = new DOMParser().parseFromString(`<div>${html || ""}</div>`, "text/html");
     const racine = doc.body.firstElementChild;
@@ -51,6 +53,8 @@
         parcourir(c);
       });
     })(racine);
+    const marche = doc.createTreeWalker(racine, NodeFilter.SHOW_TEXT);
+    while (marche.nextNode()) if (/\[GP\d*\]/.test(marche.currentNode.nodeValue)) marche.currentNode.nodeValue = marche.currentNode.nodeValue.replace(/\[GP\d*\]\s*/g, "");
     return racine;
   }
 
@@ -132,16 +136,16 @@
   // Guides intégrés : liste (index.json) et contenu, chargés une seule fois.
   let index = null;
   const cache = {};
-  const liste = () => (index ??= fetch("data/guides-detailles/index.json").then((r) => (r.ok ? r.json() : [])).then((l) => (Array.isArray(l) ? l : [])).catch(() => []));
+  const liste = () => (index ??= fetch("data/guides-detailles/index.json").then((r) => (r.ok ? r.json() : [])).then((l) => (Array.isArray(l) ? l.map((g) => ({ ...g, name: sansGP(g.name) })) : [])).catch(() => []));
   function charger(id) {
     return (cache[id] ??= liste().then((l) => {
       const g = l.find((x) => x.id === id);
       if (!g) throw new Error("guide inconnu");
-      return fetch(g.fichier).then((r) => r.json()).then((d) => ({ ...g, ...d, id }));
+      return fetch(g.fichier).then((r) => r.json()).then((d) => ({ ...g, ...d, name: sansGP(d.name || g.name), id }));
     }).catch((err) => { delete cache[id]; throw err; }));
   }
   const charge = (id) => cache[id]?.valeur;
   function chargerEtNoter(id) { return charger(id).then((g) => { cache[id].valeur = g; return g; }); }
 
-  window.GuideDetaille = { nettoyer, enrichir, boutonPos, liste, charger: chargerEtNoter, charge, STATUTS };
+  window.GuideDetaille = { sansGP, nettoyer, enrichir, boutonPos, liste, charger: chargerEtNoter, charge, STATUTS };
 })();
