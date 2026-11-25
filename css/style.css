@@ -853,3 +853,8 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 .ov .gd-texte { font-size: 14px; }
 .gd-texte button[data-type="guide-step"] { font: inherit; border: 0; cursor: pointer; }
 .gd-texte button[data-type="guide-step"]:hover { background: var(--bloc-survol); }
+/* Barre d'avancement du guide dans l'overlay (à la place de « Étape x / n ») */
+.ov__progres { flex: 1; min-width: 80px; display: flex; align-items: center; gap: 8px; margin-left: 4px; }
+.ov__progres-barre { flex: 1; height: 6px; border-radius: 999px; background: var(--bloc); overflow: hidden; }
+.ov__progres-barre span { display: block; height: 100%; min-width: 6px; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); box-shadow: 0 0 10px var(--accent-glow); transition: width .3s ease; }
+.ov__progres b { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--texte-2); }

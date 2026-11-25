@@ -145,3 +145,8 @@ html.mode-ov .ov > .ov__nav { border-top: 0; gap: 8px; padding: 8px 10px 10px; }
 html.mode-ov .ov__nav .btn { border-radius: 999px; border: 0; background: rgba(255, 255, 255, .07); }
 html.mode-ov .ov__nav .btn--accent { border: 0; box-shadow: 0 4px 14px rgba(0, 0, 0, .3); }
 html.mode-ov .ov > .bar, html.mode-ov .ov > .bar .bar__fill { border-radius: 999px; }
+html.mode-ov .ov > .ov__top { padding-bottom: 4px; }
+html.mode-ov .ov__progres-barre { background: rgba(255, 255, 255, .08); }
+html.mode-ov .ov__progres-barre span { background: linear-gradient(90deg, var(--d-orange), var(--d-jaune)); }
+html.mode-ov .ov__progres b { font-size: calc(11.5px * var(--ov-taille)); color: var(--d-texte-2); }
+html.mode-ov .ov__nav .btn.btn--accent { background: var(--d-bouton); color: var(--sur-accent); font-weight: 700; }

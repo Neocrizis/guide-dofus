@@ -748,6 +748,8 @@
     const scroll = racine.querySelector(".ov__card")?.scrollTop || 0;
     const cartes = cartesEtape(e);
     const k = cartes.length ? carteCourante(e, cartes) : 0;
+    // Avancement dans le guide : étapes passées + part de la carte en cours dans l'étape.
+    const avance = Math.min(100, ((i + (cartes.length ? k / cartes.length : 0)) / etapes.length) * 100);
     const cleVue = `${e.id}|${k}|${cartes.length && GD.charge(cartes[k].l.guide) ? 1 : 0}`;
     const memeEtape = racine.dataset.id === cleVue;
     if (racine.dataset.id?.split("|")[0] !== e.id) resumeOuvert = false;
@@ -757,9 +759,11 @@
       <div class="ov__top">
         <span class="pill pill--accent">${echap(e.niveau === "" ? G.titre : e.niveau === "0" ? "Préambule" : "Niv. " + e.niveau)}</span>
         ${etat.faites[e.id] ? `<span class="pill">Terminée</span>` : ""}
-        <span class="ov__count">Étape ${i + 1} / ${etapes.length}</span>
+        <div class="ov__progres" title="Étape ${i + 1} / ${etapes.length} · ${total} terminée${total > 1 ? "s" : ""}">
+          <div class="ov__progres-barre"><span style="width:${avance}%"></span></div>
+          <b>${Math.floor(avance)} %</b>
+        </div>
       </div>
-      <div class="bar"><div class="bar__fill" style="width:${(total / etapes.length) * 100}%"></div></div>
       <div class="ov__card card">
         <h1 class="ov__title">${echap(e.titre)}</h1>
         ${contenuEtape(e, true)}
@@ -1159,7 +1163,7 @@
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
     // Design propre à l'appli (n'affecte pas le site).
-    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=12">`);
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=14">`);
     appliquerPrefsOv();
     // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
     const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };
