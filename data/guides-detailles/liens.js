@@ -41,7 +41,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-375",
    "nom": "[GP12] Royaume d'Amakna",
    "auteur": "Guide de Mazette",
-   "de": 2,
+   "de": 5,
    "a": 28
   }
  ],
@@ -50,17 +50,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-430",
    "nom": "[GP23] Justiciers et plus",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 40
-  }
- ],
- "e10": [
-  {
-   "guide": "gany-430",
-   "nom": "[GP23] Justiciers et plus",
-   "auteur": "Guide de Mazette",
-   "de": 43,
-   "a": 43
+   "de": 2,
+   "a": 6
   }
  ],
  "e11": [
@@ -69,21 +60,7 @@ window.LIENS_DETAILLES = {
    "nom": "[GP5] Sufokia",
    "auteur": "Guide de Mazette",
    "de": 2,
-   "a": 39
-  },
-  {
-   "guide": "gany-183",
-   "nom": "[GP6] OTOMAÏ 1",
-   "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 4
-  },
-  {
-   "guide": "gany-104",
-   "nom": "[GP7] Ocre d'Ambre",
-   "auteur": "Guide de Supa",
-   "de": 1,
-   "a": 3
+   "a": 28
   }
  ],
  "e14": [
@@ -91,8 +68,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-3",
    "nom": "[GP4] Mais où sont les dofus ?",
    "auteur": "Guide de Pynx",
-   "de": 1,
-   "a": 27
+   "de": 16,
+   "a": 26
   }
  ],
  "e15": [
@@ -101,7 +78,7 @@ window.LIENS_DETAILLES = {
    "nom": "[GP16] Sidimote 1 : Les landes mortes",
    "auteur": "Guide de Mazette",
    "de": 2,
-   "a": 25
+   "a": 14
   }
  ],
  "e16": [
@@ -109,7 +86,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-28",
    "nom": "[GP10] Gobelins et Bworks",
    "auteur": "Guide de l'équipe Ganymède",
-   "de": 2,
+   "de": 5,
    "a": 34
   }
  ],
@@ -118,8 +95,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-305",
    "nom": "[GP15] Cania 1 : Caniablanca",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 60
+   "de": 3,
+   "a": 53
   }
  ],
  "e20": [
@@ -136,22 +113,17 @@ window.LIENS_DETAILLES = {
    "guide": "gany-310",
    "nom": "[GP5] Sufokia",
    "auteur": "Guide de Mazette",
-   "de": 2,
+   "de": 9,
    "a": 28
-  },
+  }
+ ],
+ "e22": [
   {
-   "guide": "gany-183",
-   "nom": "[GP6] OTOMAÏ 1",
+   "guide": "gany-182",
+   "nom": "[GP8] DOFUS OCRE",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 4
-  },
-  {
-   "guide": "gany-104",
-   "nom": "[GP7] Ocre d'Ambre",
-   "auteur": "Guide de Supa",
    "de": 1,
-   "a": 3
+   "a": 12
   }
  ],
  "e23": [
@@ -159,22 +131,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-104",
    "nom": "[GP7] Ocre d'Ambre",
    "auteur": "Guide de Supa",
-   "de": 1,
-   "a": 30
-  },
-  {
-   "guide": "gany-606",
-   "nom": "[GP38] Forêt Maléfique et ses secrets",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 27
-  },
-  {
-   "guide": "gany-2042",
-   "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 86
+   "de": 4,
+   "a": 11
   }
  ],
  "e24": [
@@ -182,22 +140,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-104",
    "nom": "[GP7] Ocre d'Ambre",
    "auteur": "Guide de Supa",
-   "de": 1,
-   "a": 30
-  },
-  {
-   "guide": "gany-606",
-   "nom": "[GP38] Forêt Maléfique et ses secrets",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 27
-  },
-  {
-   "guide": "gany-2042",
-   "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 86
+   "de": 9,
+   "a": 11
   }
  ],
  "e26": [
@@ -214,7 +158,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-24",
    "nom": "[GP13] 100% WABBIT + DOFUS CAWOTTE",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 47,
    "a": 63
   }
  ],
@@ -223,7 +167,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-310",
    "nom": "[GP5] Sufokia",
    "auteur": "Guide de Mazette",
-   "de": 2,
+   "de": 28,
    "a": 39
   }
  ],
@@ -241,7 +185,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-306",
    "nom": "[GP16] Sidimote 1 : Les landes mortes",
    "auteur": "Guide de Mazette",
-   "de": 2,
+   "de": 15,
    "a": 25
   }
  ],
@@ -250,14 +194,14 @@ window.LIENS_DETAILLES = {
    "guide": "gany-65",
    "nom": "[GP17] Saharach 1",
    "auteur": "Guide de Pynx",
-   "de": 1,
-   "a": 76
+   "de": 56,
+   "a": 73
   },
   {
    "guide": "gany-291",
    "nom": "[GP32] Saharach 2",
    "auteur": "Guide de Pynx",
-   "de": 2,
+   "de": 3,
    "a": 61
   }
  ],
@@ -266,7 +210,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-24",
    "nom": "[GP13] 100% WABBIT + DOFUS CAWOTTE",
    "auteur": "Guide de Fladam",
-   "de": 1,
+   "de": 63,
    "a": 64
   }
  ],
@@ -275,7 +219,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-375",
    "nom": "[GP12] Royaume d'Amakna",
    "auteur": "Guide de Mazette",
-   "de": 2,
+   "de": 32,
    "a": 65
   }
  ],
@@ -293,8 +237,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-30",
    "nom": "[GP14] 100% MOON + DOKOKO",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 49
+   "de": 10,
+   "a": 44
   }
  ],
  "e39": [
@@ -302,7 +246,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-307",
    "nom": "[GP22] Sidimote 2 : Hurlements de rire",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 54
   }
  ],
@@ -311,22 +255,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-104",
    "nom": "[GP7] Ocre d'Ambre",
    "auteur": "Guide de Supa",
-   "de": 1,
-   "a": 30
-  },
-  {
-   "guide": "gany-606",
-   "nom": "[GP38] Forêt Maléfique et ses secrets",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 27
-  },
-  {
-   "guide": "gany-2042",
-   "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 86
+   "de": 11,
+   "a": 15
   }
  ],
  "e42": [
@@ -335,7 +265,7 @@ window.LIENS_DETAILLES = {
    "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
    "auteur": "Guide de Fladam",
    "de": 3,
-   "a": 112
+   "a": 25
   }
  ],
  "e43": [
@@ -343,7 +273,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-305",
    "nom": "[GP15] Cania 1 : Caniablanca",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 53,
    "a": 60
   }
  ],
@@ -353,14 +283,7 @@ window.LIENS_DETAILLES = {
    "nom": "[GP20] DOFUS DES VEILLEURS",
    "auteur": "Guide de Fladam",
    "de": 2,
-   "a": 41
-  },
-  {
-   "guide": "gany-538",
-   "nom": "[GP26] Ecaflipus 1",
-   "auteur": "Guide de Fle et mis en page par Mazette",
-   "de": 1,
-   "a": 35
+   "a": 27
   }
  ],
  "e45": [
@@ -377,7 +300,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-375",
    "nom": "[GP12] Royaume d'Amakna",
    "auteur": "Guide de Mazette",
-   "de": 2,
+   "de": 6,
    "a": 31
   }
  ],
@@ -395,22 +318,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-88",
    "nom": "[GP34] DOMAKURO",
    "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 120
-  },
-  {
-   "guide": "gany-428",
-   "nom": "[GP35] Pandala 1 : Village + 100%",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 177
-  },
-  {
-   "guide": "gany-3",
-   "nom": "[GP4] Mais où sont les dofus ?",
-   "auteur": "Guide de Pynx",
-   "de": 2,
-   "a": 9
+   "de": 14,
+   "a": 30
   }
  ],
  "e51": [
@@ -418,8 +327,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-430",
    "nom": "[GP23] Justiciers et plus",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 40
+   "de": 6,
+   "a": 19
   }
  ],
  "e52": [
@@ -436,15 +345,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-431",
    "nom": "[GP21] Enutrosor 1",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 29
-  },
-  {
-   "guide": "gany-658",
-   "nom": "[GP51] DOFUS IVOIRE",
-   "auteur": "Guide de Fladam",
-   "de": 37,
-   "a": 37
   }
  ],
  "e54": [
@@ -452,7 +354,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-62",
    "nom": "[GP20] DOFUS DES VEILLEURS",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 27,
    "a": 88
   }
  ],
@@ -461,7 +363,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1714",
    "nom": "[GP66] Eliocalypse Résonance",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 101
   }
  ],
@@ -470,7 +372,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-308",
    "nom": "[GP25] Bonta & Brakmar : Frères ennemis",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 54
   }
  ],
@@ -479,7 +381,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-426",
    "nom": "[GP29] Cania 2 : Ça en valait la plaine + Dotruche",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 44
   }
  ],
@@ -488,7 +390,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-538",
    "nom": "[GP26] Ecaflipus 1",
    "auteur": "Guide de Fle et mis en page par Mazette",
-   "de": 1,
+   "de": 2,
    "a": 48
   }
  ],
@@ -497,22 +399,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-104",
    "nom": "[GP7] Ocre d'Ambre",
    "auteur": "Guide de Supa",
-   "de": 1,
-   "a": 30
-  },
-  {
-   "guide": "gany-606",
-   "nom": "[GP38] Forêt Maléfique et ses secrets",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 27
-  },
-  {
-   "guide": "gany-2042",
-   "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 86
+   "de": 15,
+   "a": 21
   }
  ],
  "e61": [
@@ -520,36 +408,15 @@ window.LIENS_DETAILLES = {
    "guide": "gany-428",
    "nom": "[GP35] Pandala 1 : Village + 100%",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 212
+   "de": 123,
+   "a": 156
   },
   {
    "guide": "gany-88",
    "nom": "[GP34] DOMAKURO",
    "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 120
-  },
-  {
-   "guide": "gany-2017",
-   "nom": "[GP70] APRES LA PLUIE",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 57
-  },
-  {
-   "guide": "gany-3",
-   "nom": "[GP4] Mais où sont les dofus ?",
-   "auteur": "Guide de Pynx",
-   "de": 2,
-   "a": 9
-  },
-  {
-   "guide": "gany-2050",
-   "nom": "[GP69] PANDALA 3",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 119
+   "de": 30,
+   "a": 40
   }
  ],
  "e62": [
@@ -557,45 +424,17 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1954",
    "nom": "[GP28] DOFUS POURPRE",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 45
+   "de": 3,
+   "a": 14
   }
  ],
  "e63": [
   {
-   "guide": "gany-3238",
-   "nom": "[GP89] 100% FRIGOST",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 275
-  },
-  {
    "guide": "gany-98",
    "nom": "[GP30] DDG-FRIGOST 1",
    "auteur": "Guide de Fladam",
-   "de": 4,
-   "a": 181
-  },
-  {
-   "guide": "gany-112",
-   "nom": "[GP43] DDG-FRIGOST 2",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 83
-  },
-  {
-   "guide": "gany-113",
-   "nom": "[GP50] DDG-FRIGOST 3",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 117
-  },
-  {
-   "guide": "gany-430",
-   "nom": "[GP23] Justiciers et plus",
-   "auteur": "Guide de Mazette",
-   "de": 23,
-   "a": 24
+   "de": 7,
+   "a": 66
   }
  ],
  "e65": [
@@ -603,8 +442,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1954",
    "nom": "[GP28] DOFUS POURPRE",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 45
+   "de": 14,
+   "a": 41
   }
  ],
  "e66": [
@@ -612,8 +451,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-427",
    "nom": "[GP59] La Fratrie des Oubliés",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 87
+   "de": 2,
+   "a": 49
   }
  ],
  "e67": [
@@ -621,7 +460,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-434",
    "nom": "[GP27] Xélorium 1",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 27
   }
  ],
@@ -630,8 +469,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-705",
    "nom": "[GP61] Dofus Ébène",
    "auteur": "Guide de Mazette",
-   "de": 2,
-   "a": 142
+   "de": 3,
+   "a": 32
   }
  ],
  "e69": [
@@ -639,8 +478,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-480",
    "nom": "[GP31] Srambad 1",
    "auteur": "Guide de Azyk0s puis complété et mis en page par Mazette",
-   "de": 1,
-   "a": 29
+   "de": 22,
+   "a": 27
   }
  ],
  "e70": [
@@ -648,7 +487,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1954",
    "nom": "[GP28] DOFUS POURPRE",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 42,
    "a": 45
   }
  ],
@@ -657,8 +496,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-426",
    "nom": "[GP29] Cania 2 : Ça en valait la plaine + Dotruche",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 44
+   "de": 2,
+   "a": 31
   }
  ],
  "e72": [
@@ -666,15 +505,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-291",
    "nom": "[GP32] Saharach 2",
    "auteur": "Guide de Pynx",
-   "de": 2,
-   "a": 74
-  },
-  {
-   "guide": "gany-65",
-   "nom": "[GP17] Saharach 1",
-   "auteur": "Guide de Pynx",
-   "de": 1,
-   "a": 73
+   "de": 3,
+   "a": 61
   }
  ],
  "e73": [
@@ -682,22 +514,15 @@ window.LIENS_DETAILLES = {
    "guide": "gany-428",
    "nom": "[GP35] Pandala 1 : Village + 100%",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 177
+   "de": 2,
+   "a": 71
   },
   {
    "guide": "gany-88",
    "nom": "[GP34] DOMAKURO",
    "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 120
-  },
-  {
-   "guide": "gany-3",
-   "nom": "[GP4] Mais où sont les dofus ?",
-   "auteur": "Guide de Pynx",
-   "de": 2,
-   "a": 9
+   "de": 40,
+   "a": 102
   }
  ],
  "e74": [
@@ -705,29 +530,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-98",
    "nom": "[GP30] DDG-FRIGOST 1",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 181
-  },
-  {
-   "guide": "gany-112",
-   "nom": "[GP43] DDG-FRIGOST 2",
-   "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 97
-  },
-  {
-   "guide": "gany-3238",
-   "nom": "[GP89] 100% FRIGOST",
-   "auteur": "Guide de Fladam",
-   "de": 131,
-   "a": 263
-  },
-  {
-   "guide": "gany-113",
-   "nom": "[GP50] DDG-FRIGOST 3",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 117
+   "de": 67,
+   "a": 90
   }
  ],
  "e76": [
@@ -736,7 +540,7 @@ window.LIENS_DETAILLES = {
    "nom": "[GP33] DOFUS TURQUOISE",
    "auteur": "Guide de Fladam",
    "de": 2,
-   "a": 87
+   "a": 44
   }
  ],
  "e77": [
@@ -744,8 +548,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2042",
    "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
    "auteur": "Guide de Fladam",
-   "de": 3,
-   "a": 112
+   "de": 26,
+   "a": 36
   }
  ],
  "e78": [
@@ -753,22 +557,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-88",
    "nom": "[GP34] DOMAKURO",
    "auteur": "Guide de Fladam",
-   "de": 1,
+   "de": 102,
    "a": 120
-  },
-  {
-   "guide": "gany-428",
-   "nom": "[GP35] Pandala 1 : Village + 100%",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 177
-  },
-  {
-   "guide": "gany-3",
-   "nom": "[GP4] Mais où sont les dofus ?",
-   "auteur": "Guide de Pynx",
-   "de": 2,
-   "a": 9
   }
  ],
  "e79": [
@@ -776,15 +566,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-98",
    "nom": "[GP30] DDG-FRIGOST 1",
    "auteur": "Guide de Fladam",
-   "de": 9,
-   "a": 179
-  },
-  {
-   "guide": "gany-112",
-   "nom": "[GP43] DDG-FRIGOST 2",
-   "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 78
+   "de": 102,
+   "a": 108
   }
  ],
  "e80": [
@@ -792,8 +575,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-131",
    "nom": "[GP33] DOFUS TURQUOISE",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 87
+   "de": 44,
+   "a": 66
   }
  ],
  "e81": [
@@ -801,15 +584,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-98",
    "nom": "[GP30] DDG-FRIGOST 1",
    "auteur": "Guide de Fladam",
-   "de": 9,
-   "a": 179
-  },
-  {
-   "guide": "gany-112",
-   "nom": "[GP43] DDG-FRIGOST 2",
-   "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 78
+   "de": 110,
+   "a": 128
   }
  ],
  "e83": [
@@ -817,7 +593,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-606",
    "nom": "[GP38] Forêt Maléfique et ses secrets",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 36
   }
  ],
@@ -826,15 +602,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-602",
    "nom": "[GP36] Otomaï 3",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 13
-  },
-  {
-   "guide": "gany-183",
-   "nom": "[GP6] OTOMAÏ 1",
-   "auteur": "Guide de Fladam",
-   "de": 5,
-   "a": 7
   }
  ],
  "e85": [
@@ -842,8 +611,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-131",
    "nom": "[GP33] DOFUS TURQUOISE",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 87
+   "de": 66,
+   "a": 76
   }
  ],
  "e86": [
@@ -851,7 +620,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-736",
    "nom": "[GP39] Cania 3 : La voyageuse imprudente",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 79
   }
  ],
@@ -860,7 +629,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-432",
    "nom": "[GP37] Enutrosor 2",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 50
   }
  ],
@@ -869,7 +638,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-701",
    "nom": "[GP40] Ecaflipus 2",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 91
   }
  ],
@@ -885,7 +654,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-603",
    "nom": "[GP42] Pandala 2 : Grobe + 100%",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 50,
    "a": 59
   }
  ],
@@ -894,8 +663,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1237",
    "nom": "[GP55] Saharach 3",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 71
+   "de": 3,
+   "a": 41
   }
  ],
  "e92": [
@@ -903,31 +672,17 @@ window.LIENS_DETAILLES = {
    "guide": "gany-435",
    "nom": "[GP44] Xélorium 2",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 61
   }
  ],
  "e93": [
   {
-   "guide": "gany-98",
-   "nom": "[GP30] DDG-FRIGOST 1",
-   "auteur": "Guide de Fladam",
-   "de": 3,
-   "a": 179
-  },
-  {
    "guide": "gany-112",
    "nom": "[GP43] DDG-FRIGOST 2",
    "auteur": "Guide de Fladam",
    "de": 2,
-   "a": 100
-  },
-  {
-   "guide": "gany-113",
-   "nom": "[GP50] DDG-FRIGOST 3",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 118
+   "a": 31
   }
  ],
  "e94": [
@@ -935,39 +690,18 @@ window.LIENS_DETAILLES = {
    "guide": "gany-104",
    "nom": "[GP7] Ocre d'Ambre",
    "auteur": "Guide de Supa",
-   "de": 1,
-   "a": 30
+   "de": 21,
+   "a": 28
   },
   {
    "guide": "gany-606",
    "nom": "[GP38] Forêt Maléfique et ses secrets",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 19,
    "a": 27
-  },
-  {
-   "guide": "gany-2042",
-   "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 86
   }
  ],
  "e95": [
-  {
-   "guide": "gany-603",
-   "nom": "[GP42] Pandala 2 : Grobe + 100%",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 59
-  },
-  {
-   "guide": "gany-2050",
-   "nom": "[GP69] PANDALA 3",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 59
-  },
   {
    "guide": "gany-189",
    "nom": "[GP41] DORIGAMI",
@@ -976,11 +710,11 @@ window.LIENS_DETAILLES = {
    "a": 64
   },
   {
-   "guide": "gany-2017",
-   "nom": "[GP70] APRES LA PLUIE",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 56
+   "guide": "gany-603",
+   "nom": "[GP42] Pandala 2 : Grobe + 100%",
+   "auteur": "Guide de Mazette",
+   "de": 2,
+   "a": 49
   }
  ],
  "e96": [
@@ -988,22 +722,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-104",
    "nom": "[GP7] Ocre d'Ambre",
    "auteur": "Guide de Supa",
-   "de": 1,
+   "de": 28,
    "a": 30
-  },
-  {
-   "guide": "gany-606",
-   "nom": "[GP38] Forêt Maléfique et ses secrets",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 27
-  },
-  {
-   "guide": "gany-2042",
-   "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
-   "auteur": "Guide de Fladam",
-   "de": 1,
-   "a": 86
   }
  ],
  "e97": [
@@ -1011,7 +731,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-481",
    "nom": "[GP47] Srambad 2",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 71
   }
  ],
@@ -1020,8 +740,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2042",
    "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
    "auteur": "Guide de Fladam",
-   "de": 3,
-   "a": 112
+   "de": 36,
+   "a": 48
   }
  ],
  "e101": [
@@ -1029,8 +749,17 @@ window.LIENS_DETAILLES = {
    "guide": "gany-131",
    "nom": "[GP33] DOFUS TURQUOISE",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 66,
    "a": 87
+  }
+ ],
+ "e102": [
+  {
+   "guide": "gany-182",
+   "nom": "[GP8] DOFUS OCRE",
+   "auteur": "Guide de Fladam",
+   "de": 13,
+   "a": 33
   }
  ],
  "e103": [
@@ -1039,14 +768,7 @@ window.LIENS_DETAILLES = {
    "nom": "[GP81] QUATRE SUR SIX",
    "auteur": "Guide de l'équipe Ganymède",
    "de": 2,
-   "a": 141
-  },
-  {
-   "guide": "gany-704",
-   "nom": "[GP67] Dofus Vulbis",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 38
+   "a": 30
   }
  ],
  "e104": [
@@ -1063,7 +785,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-604",
    "nom": "[GP46] Sidimote 4 : Les spores, c'est la santé",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 52
   }
  ],
@@ -1072,8 +794,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-430",
    "nom": "[GP23] Justiciers et plus",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 40
+   "de": 20,
+   "a": 30
   }
  ],
  "e107": [
@@ -1081,37 +803,34 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1755",
    "nom": "[GP81] QUATRE SUR SIX",
    "auteur": "Guide de l'équipe Ganymède",
-   "de": 2,
-   "a": 141
-  },
-  {
-   "guide": "gany-704",
-   "nom": "[GP67] Dofus Vulbis",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 38
+   "de": 30,
+   "a": 60
   }
  ],
- "e110": [
-  {
-   "guide": "gany-98",
-   "nom": "[GP30] DDG-FRIGOST 1",
-   "auteur": "Guide de Fladam",
-   "de": 7,
-   "a": 181
-  },
+ "e108": [
   {
    "guide": "gany-112",
    "nom": "[GP43] DDG-FRIGOST 2",
    "auteur": "Guide de Fladam",
-   "de": 43,
-   "a": 83
-  },
+   "de": 31,
+   "a": 59
+  }
+ ],
+ "e109": [
+  {
+   "guide": "gany-112",
+   "nom": "[GP43] DDG-FRIGOST 2",
+   "auteur": "Guide de Fladam",
+   "de": 60,
+   "a": 100
+  }
+ ],
+ "e110": [
   {
    "guide": "gany-113",
    "nom": "[GP50] DDG-FRIGOST 3",
    "auteur": "Guide de Fladam",
-   "de": 1,
+   "de": 96,
    "a": 117
   }
  ],
@@ -1138,8 +857,17 @@ window.LIENS_DETAILLES = {
    "guide": "gany-704",
    "nom": "[GP67] Dofus Vulbis",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 47
+  }
+ ],
+ "e115": [
+  {
+   "guide": "gany-113",
+   "nom": "[GP50] DDG-FRIGOST 3",
+   "auteur": "Guide de Fladam",
+   "de": 118,
+   "a": 119
   }
  ],
  "e116": [
@@ -1147,11 +875,18 @@ window.LIENS_DETAILLES = {
    "guide": "gany-430",
    "nom": "[GP23] Justiciers et plus",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 30,
    "a": 40
   }
  ],
- "e119": [
+ "e117": [
+  {
+   "guide": "gany-1729",
+   "nom": "[GP56] DOFUS ABYSSAL",
+   "auteur": "Guide de Fladam",
+   "de": 102,
+   "a": 144
+  },
   {
    "guide": "gany-2747",
    "nom": "[GP0] Guide complet Ganymède (NEW)",
@@ -1160,20 +895,22 @@ window.LIENS_DETAILLES = {
    "a": 127
   }
  ],
+ "e120": [
+  {
+   "guide": "gany-1729",
+   "nom": "[GP56] DOFUS ABYSSAL",
+   "auteur": "Guide de Fladam",
+   "de": 34,
+   "a": 85
+  }
+ ],
  "e121": [
   {
    "guide": "gany-1755",
    "nom": "[GP81] QUATRE SUR SIX",
    "auteur": "Guide de l'équipe Ganymède",
-   "de": 2,
+   "de": 60,
    "a": 141
-  },
-  {
-   "guide": "gany-704",
-   "nom": "[GP67] Dofus Vulbis",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 38
   }
  ],
  "e122": [
@@ -1181,7 +918,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-702",
    "nom": "[GP52] Ecaflipus 3",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 2,
    "a": 38
   }
  ],
@@ -1192,6 +929,24 @@ window.LIENS_DETAILLES = {
    "auteur": "Guide de Mazette",
    "de": 1,
    "a": 26
+  }
+ ],
+ "e124": [
+  {
+   "guide": "gany-433",
+   "nom": "[GP54] Enutrosor 3",
+   "auteur": "Guide de Mazette",
+   "de": 2,
+   "a": 64
+  }
+ ],
+ "e125": [
+  {
+   "guide": "gany-1237",
+   "nom": "[GP55] Saharach 3",
+   "auteur": "Guide de Mazette",
+   "de": 41,
+   "a": 67
   }
  ],
  "e126": [
@@ -1208,7 +963,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-658",
    "nom": "[GP51] DOFUS IVOIRE",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 3,
    "a": 118
   }
  ],
@@ -1217,8 +972,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2029",
    "nom": "[GP62] DOFUS FORGELAVE",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 35
+   "de": 5,
+   "a": 8
   }
  ],
  "e129": [
@@ -1226,15 +981,17 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2047",
    "nom": "[GP60] ROYAUME DES MARTEGEL",
    "auteur": "Guide de Fladam",
-   "de": 3,
-   "a": 72
-  },
+   "de": 6,
+   "a": 37
+  }
+ ],
+ "e130": [
   {
-   "guide": "gany-705",
-   "nom": "[GP61] Dofus Ébène",
+   "guide": "gany-482",
+   "nom": "[GP63] Srambad 3",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 92
+   "de": 70,
+   "a": 72
   }
  ],
  "e131": [
@@ -1242,8 +999,17 @@ window.LIENS_DETAILLES = {
    "guide": "gany-705",
    "nom": "[GP61] Dofus Ébène",
    "auteur": "Guide de Mazette",
-   "de": 2,
+   "de": 32,
    "a": 142
+  }
+ ],
+ "e132": [
+  {
+   "guide": "gany-1729",
+   "nom": "[GP56] DOFUS ABYSSAL",
+   "auteur": "Guide de Fladam",
+   "de": 144,
+   "a": 174
   }
  ],
  "e133": [
@@ -1251,15 +1017,26 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2047",
    "nom": "[GP60] ROYAUME DES MARTEGEL",
    "auteur": "Guide de Fladam",
-   "de": 3,
+   "de": 37,
    "a": 72
-  },
+  }
+ ],
+ "e134": [
   {
-   "guide": "gany-705",
-   "nom": "[GP61] Dofus Ébène",
+   "guide": "gany-2029",
+   "nom": "[GP62] DOFUS FORGELAVE",
+   "auteur": "Guide de Fladam",
+   "de": 36,
+   "a": 149
+  }
+ ],
+ "e135": [
+  {
+   "guide": "gany-479",
+   "nom": "[GP58] Xélorium 3",
    "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 92
+   "de": 2,
+   "a": 72
   }
  ],
  "e136": [
@@ -1280,20 +1057,13 @@ window.LIENS_DETAILLES = {
    "a": 6
   }
  ],
- "e139": [
+ "e138": [
   {
    "guide": "gany-2050",
    "nom": "[GP69] PANDALA 3",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 59
-  },
-  {
-   "guide": "gany-603",
-   "nom": "[GP42] Pandala 2 : Grobe + 100%",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 59
+   "de": 106,
+   "a": 119
   }
  ],
  "e140": [
@@ -1310,7 +1080,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2035",
    "nom": "[GP77] VALONIA 3",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 61,
    "a": 72
   }
  ],
@@ -1319,7 +1089,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2035",
    "nom": "[GP77] VALONIA 3",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 74,
    "a": 79
   }
  ],
@@ -1328,8 +1098,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1914",
    "nom": "[GP78] L'AVENIR DU FUTUR",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 54
+   "de": 21,
+   "a": 25
   }
  ],
  "e144": [
@@ -1373,7 +1143,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1914",
    "nom": "[GP78] L'AVENIR DU FUTUR",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 25,
    "a": 54
   }
  ],
@@ -1383,7 +1153,7 @@ window.LIENS_DETAILLES = {
    "nom": "[GP70] APRES LA PLUIE",
    "auteur": "Guide de Fladam",
    "de": 2,
-   "a": 69
+   "a": 4
   }
  ],
  "e150": [
@@ -1391,7 +1161,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1914",
    "nom": "[GP78] L'AVENIR DU FUTUR",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 25,
    "a": 54
   }
  ],
@@ -1410,7 +1180,7 @@ window.LIENS_DETAILLES = {
    "nom": "[GP72] ATOLL DES POSSEDES",
    "auteur": "Guide de Fladam",
    "de": 1,
-   "a": 41
+   "a": 38
   }
  ],
  "e153": [
@@ -1419,7 +1189,7 @@ window.LIENS_DETAILLES = {
    "nom": "[GP80] DOFUS DU CAUCHEMAR",
    "auteur": "Guide de Fladam",
    "de": 2,
-   "a": 55
+   "a": 25
   }
  ],
  "e154": [
@@ -1427,15 +1197,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2026",
    "nom": "[GP79] AURORE POURPRE",
    "auteur": "Guide de Fladam",
-   "de": 2,
-   "a": 65
-  },
-  {
-   "guide": "gany-2023",
-   "nom": "[GP80] DOFUS DU CAUCHEMAR",
-   "auteur": "Guide de Fladam",
-   "de": 5,
-   "a": 22
+   "de": 11,
+   "a": 11
   }
  ],
  "e155": [
@@ -1443,7 +1206,7 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2023",
    "nom": "[GP80] DOFUS DU CAUCHEMAR",
    "auteur": "Guide de Fladam",
-   "de": 2,
+   "de": 25,
    "a": 55
   }
  ],
@@ -1468,8 +1231,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-2042",
    "nom": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
    "auteur": "Guide de Fladam",
-   "de": 3,
-   "a": 112
+   "de": 49,
+   "a": 64
   }
  ],
  "e158": [
@@ -1477,24 +1240,8 @@ window.LIENS_DETAILLES = {
    "guide": "gany-1138",
    "nom": "[GP65] Crocuzko",
    "auteur": "Guide de Mazette",
-   "de": 1,
+   "de": 3,
    "a": 40
-  },
-  {
-   "guide": "gany-704",
-   "nom": "[GP67] Dofus Vulbis",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 22
-  }
- ],
- "e159": [
-  {
-   "guide": "gany-704",
-   "nom": "[GP67] Dofus Vulbis",
-   "auteur": "Guide de Mazette",
-   "de": 1,
-   "a": 47
   }
  ]
 };

@@ -874,3 +874,9 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 .pos--zaap::before { content: none; }
 .pos--zaap img { width: 18px; height: 18px; object-fit: contain; }
 .parcours .gd-texte .pos--zaap { color: #9ccaff; text-decoration-color: #9ccaff; }
+
+/* Choix de la cité (étapes d'alignement du guide complet) */
+.cite { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; font-size: 13px; color: var(--texte-2); }
+.cite__btn { font: inherit; padding: 5px 14px; border-radius: 999px; border: 1px solid color-mix(in srgb, currentColor 25%, transparent); background: transparent; color: var(--texte); cursor: pointer; }
+.cite__btn:hover { border-color: var(--accent); }
+.cite__btn.is-on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink, #1a1206); font-weight: 600; }
