@@ -6,7 +6,7 @@ donne, par étape du guide, le guide détaillé et la plage d'étapes à suivre.
 
 Usage : python3 tools/lier_guides_detailles.py
 """
-import json, re, pathlib
+import json, re, pathlib, unicodedata
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 
@@ -25,23 +25,52 @@ def main():
     for g in index:
         d = json.loads((RACINE / g["fichier"]).read_text(encoding="utf-8"))
         for i, s in enumerate(d["steps"], 1):
-            for q in set(re.findall(r'type="quest"[^>]*dofusdbid="(\d+)"', s.get("web_text") or "")):
+            qs = set(re.findall(r'type="quest"[^>]*dofusdbid="(\d+)"', s.get("web_text") or ""))
+            if len(qs) > 4:  # carte de sommaire (liste de toutes les quêtes du guide) : pas un passage
+                continue
+            for q in qs:
                 ou.setdefault(int(q), []).append((g["id"], i))
     infos = {g["id"]: g for g in index}
+    noms = {int(k): v[0] for k, v in charger_js("data/quetes.js", "QUETES")["quetes"].items()}
+    simple = lambda x: re.sub(r"[^a-z0-9]+", " ", unicodedata.normalize("NFD", x.lower()).encode("ascii", "ignore").decode()).strip()
+    deja = set()  # quêtes déjà prises par une étape précédente
+    derniere = {}  # guide détaillé -> dernière étape utilisée
     sortie = {}
     for e in guides[0]["etapes"]:
         ids = []
         for s in e.get("succes", []):
             ids += liens_quetes.get(s) or liens_quetes.get(re.sub(r"^[^:]+ : ", "", s)) or []
+        # Un succès regroupe parfois des quêtes de niveaux très différents (ex. « Ça va faire du vilain » : 10 à 200).
+        # Si le texte de l'étape nomme certaines de ces quêtes, on ne garde qu'elles ; sinon on retire celles
+        # déjà faites dans une étape précédente.
+        texte = " " + simple(" ".join([e.get("titre", "")] + e.get("details", []) + e.get("infos", []))) + " "
+        nommees = [q for q in ids if q in noms and f" {simple(noms[q])} " in texte]
+        ids = nommees or [q for q in ids if q not in deja]
+        deja.update(ids)
         par_guide = {}
         for q in ids:
             for gid, n in ou.get(q, []):
                 par_guide.setdefault(gid, []).append(n)
         res = []
         for gid, ns in sorted(par_guide.items(), key=lambda x: -len(x[1])):
-            if len(ns) < 3:  # trop peu de quêtes en commun : pas un vrai passage
+            ns = sorted(set(ns))
+            # Passages groupés : on coupe là où deux mentions sont à plus de 40 étapes l'une de l'autre,
+            # et on garde le groupe le plus fourni.
+            groupes, cur = [], [ns[0]]
+            for n in ns[1:]:
+                if n - cur[-1] > 40: groupes.append(cur); cur = [n]
+                else: cur.append(n)
+            groupes.append(cur)
+            g = max(groupes, key=len)
+            if len(g) < min(3, len(ids)) or (res and len(g) < 3):  # trop peu de mentions : pas un vrai passage
                 continue
-            res.append({"guide": gid, "nom": infos[gid]["name"], "auteur": infos[gid]["auteur"], "de": min(ns), "a": max(ns)})
+            res.append({"guide": gid, "nom": infos[gid]["name"], "auteur": infos[gid]["auteur"], "de": g[0], "a": g[-1]})
+        # Pas de recouvrement avec l'étape précédente dans le même guide : on reprend où elle s'arrêtait.
+        for r in res:
+            fin = derniere.get(r["guide"])
+            if fin and r["de"] < fin < r["a"]:
+                r["de"] = fin
+            derniere[r["guide"]] = max(r["a"], derniere.get(r["guide"], 0))
         if res:
             sortie[e["id"]] = res
     # Étapes successives dans le même guide : la suivante commence où la précédente s'arrête (pas de recouvrement).
