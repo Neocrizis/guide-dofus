@@ -116,3 +116,72 @@ html.ov-travers .ov-poignee { display: none; }
 /* Lignes d'objectif grisables */
 html.mode-ov .qetapes__aide { color: var(--d-texte-3); font-size: 11px; }
 html.mode-ov .qobj[data-qobj]:hover { background: rgba(255, 255, 255, .07); }
+
+/* Parcours détaillé (Ganymède) dans le journal : style épuré, sans cadres (voir css/style.css) */
+html.mode-ov .parcours__tete { padding: 0 0 6px; }
+html.mode-ov .parcours__info b { font-size: calc(13px * var(--ov-taille)); color: #fff; }
+html.mode-ov .parcours__info small { font-size: calc(11px * var(--ov-taille)); color: var(--d-texte-3); }
+html.mode-ov .parcours__barre { background: rgba(255, 255, 255, .08); margin-bottom: 10px; }
+html.mode-ov .parcours__barre span { background: linear-gradient(90deg, var(--d-orange), var(--d-jaune)); }
+html.mode-ov .parcours__lieu { margin-bottom: 10px; }
+html.mode-ov .parcours__dest, html.mode-ov .parcours__zaap { font-size: calc(12px * var(--ov-taille)); padding: 4px 12px 4px 9px; }
+html.mode-ov .parcours__dest small, html.mode-ov .parcours__zaap small, html.mode-ov .parcours__zaap em { font-size: calc(11px * var(--ov-taille)); }
+html.mode-ov .parcours__dest { background: var(--d-bouton); color: var(--sur-accent); }
+html.mode-ov .parcours__zaap { color: var(--d-texte); }
+html.mode-ov .parcours__monde { background: rgba(255, 255, 255, .08); color: var(--d-texte-2); }
+html.mode-ov .gd-texte { font-size: calc(13px * var(--ov-taille)); color: var(--d-texte-2); line-height: 1.45; }
+html.mode-ov .gd-texte p { margin: 0 0 4px; }
+html.mode-ov .parcours .gd-texte .qb__statut { font-size: calc(10px * var(--ov-taille)); }
+html.mode-ov .gd-texte [data-type="custom-tag"] img, html.mode-ov .gd-texte [data-type="guide-step"] img { width: 18px; height: 18px; }
+html.mode-ov .parcours .check { border-radius: 50%; }
+html.mode-ov .parcours .gd-texte img.img-large { border-radius: 10px; }
+html.mode-ov .parcours__credit { font-size: calc(10px * var(--ov-taille)); color: var(--d-texte-3); }
+html.mode-ov .ov__resume { border-top: 1px solid var(--d-sep); margin-top: 8px; padding-top: 6px; }
+html.mode-ov .ov__resume > summary { color: var(--d-jaune); font-size: calc(13px * var(--ov-taille)); }
+html.mode-ov .ov__resume .section:first-child { border-top: 0; }
+html.ov-compact .parcours__credit, html.ov-compact .parcours__barre, html.ov-compact .parcours__zaap small { display: none; }
+/* Boutons du bas arrondis, plus modernes */
+html.mode-ov .ov > .ov__nav { border-top: 0; gap: 8px; padding: 8px 10px 10px; }
+html.mode-ov .ov__nav .btn { border-radius: 999px; border: 0; background: rgba(255, 255, 255, .07); }
+html.mode-ov .ov__nav .btn--accent { border: 0; box-shadow: 0 4px 14px rgba(0, 0, 0, .3); }
+html.mode-ov .ov > .bar, html.mode-ov .ov > .bar .bar__fill { border-radius: 999px; }
+html.mode-ov .ov > .ov__top { padding-bottom: 4px; }
+html.mode-ov .ov__progres-barre { background: rgba(255, 255, 255, .08); }
+html.mode-ov .ov__progres-barre span { background: linear-gradient(90deg, var(--d-orange), var(--d-jaune)); }
+html.mode-ov .ov__progres b { font-size: calc(11.5px * var(--ov-taille)); color: var(--d-texte-2); }
+html.mode-ov .ov__nav .btn.btn--accent { background: var(--d-bouton); color: var(--sur-accent); font-weight: 700; }
+
+/* ===== Design 2 : panneau moderne (verre, halo, actions à icônes, barre du bas flottante) ===== */
+html.mode-ov .ov { position: relative; border-radius: 14px; border-color: rgba(255, 255, 255, .08); overflow: hidden;
+  background: radial-gradient(120% 60% at 50% -10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%), var(--ov-panneau);
+  backdrop-filter: blur(14px); }
+html.mode-ov .ov, html.mode-ov .ov * { text-shadow: none; }
+html.mode-ov .ov__barre { background: none; border-bottom: 0; padding: 8px 10px 4px 12px; }
+html.mode-ov .ov__barre-titre { letter-spacing: .12em; font-size: calc(11px * var(--ov-taille)); color: var(--d-texte-3); }
+html.mode-ov .ov__compte, html.mode-ov .ov__menu-btn { border-radius: 50%; width: 24px; height: 24px; display: grid; place-items: center; padding: 0; }
+html.mode-ov .ov > .ov__top { padding: 6px 14px 0; gap: 10px; }
+html.mode-ov .ov .ov__top .pill { padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--d-jaune); font-size: calc(11px * var(--ov-taille)); font-weight: 700; letter-spacing: .03em; }
+html.mode-ov .ov__progres-barre { height: 5px; }
+html.mode-ov .ov__card.card { padding: 10px 14px 90px; }
+html.mode-ov .ov__title { font-size: calc(19px * var(--ov-taille)); line-height: 1.2; letter-spacing: -.01em; margin-bottom: 10px; }
+html.mode-ov .parcours__tete { justify-content: flex-start; padding: 0 0 6px; }
+html.mode-ov .parcours__info { align-items: flex-start; text-align: left; }
+html.mode-ov .parcours__kicker { font-size: calc(11px * var(--ov-taille)); color: var(--d-texte-3); }
+html.mode-ov .parcours__kicker b { font-size: calc(15px * var(--ov-taille)); color: #fff; }
+html.mode-ov .parcours__info small { font-size: calc(11px * var(--ov-taille)); }
+html.mode-ov .parcours__barre { height: 3px; border-radius: 999px; margin-bottom: 12px; }
+html.mode-ov .parcours__actions { margin: 0 -6px 12px; }
+html.mode-ov .action { padding: 6px; border-radius: 12px; color: var(--d-texte); }
+html.mode-ov .action:hover { background: rgba(255, 255, 255, .06); }
+html.mode-ov .action__ico { width: 30px; height: 30px; }
+html.mode-ov .action--travel .action__ico { background: var(--d-bouton); }
+html.mode-ov .action__txt b { font-size: calc(13px * var(--ov-taille)); color: #fff; }
+html.mode-ov .action__txt small { font-size: calc(11px * var(--ov-taille)); color: var(--d-texte-3); }
+html.mode-ov .action__copie { color: var(--d-texte-3); }
+/* Barre du bas flottante */
+html.mode-ov .ov > .ov__nav { position: absolute; left: 12px; right: 12px; bottom: 12px; padding: 6px; gap: 6px; border-radius: 999px;
+  background: rgba(var(--d-fond), .78); backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(255, 255, 255, .07); display: flex; }
+html.mode-ov .ov__nav .btn { flex: none; width: 40px; height: 40px; padding: 0; display: grid; place-items: center; border-radius: 50%; background: rgba(255, 255, 255, .06); }
+html.mode-ov .ov__nav .btn.btn--accent { flex: 1; width: auto; border-radius: 999px; font-size: calc(14px * var(--ov-taille)); box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 35%, transparent); }
+html.mode-ov .ov__nav .btn:disabled { opacity: .35; }
+html.mode-ov .ov__resume > summary { padding: 6px 0; }
