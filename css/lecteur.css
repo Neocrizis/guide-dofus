@@ -68,7 +68,6 @@
 .lecteur__texte li.is-fait > div { opacity: .5; text-decoration: line-through; }
 
 /* Dans l'appli Windows (?mode=overlay) : pas d'en-tête de site, tout en compact. */
-.lecteur--overlay [data-hors-overlay] { display: none; }
 .lecteur--overlay .lecteur { width: calc(100% - 16px); margin: 8px auto; }
 .lecteur--overlay .lecteur__etape { padding: 12px 14px; }
 .lecteur--overlay .lecteur__texte { font-size: 14px; }
@@ -77,3 +76,15 @@
   .lecteur__etape { padding: 14px; }
   .lecteur__accueil { padding: 18px; }
 }
+.lecteur__auteur { margin: 4px 0 0 44px; font-size: 12px; color: var(--texte-3); }
+.lecteur__auteur:empty { display: none; }
+.lecteur__texte .capture-absente { margin: 8px 0; padding: 8px 12px; border: 1px dashed var(--bord); border-radius: 10px; color: var(--texte-3); font-size: 13px; }
+.lecteur__soustitre { margin: 18px 0 8px; font-size: 15px; color: var(--texte-2); }
+.lecteur__integres { display: grid; gap: 10px; }
+.integre { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; text-align: left; font: inherit; color: var(--texte); cursor: pointer; }
+.integre:hover { border-color: var(--accent); }
+.integre small { color: var(--texte-3); font-size: 12px; }
+.lecteur__filtre { width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--bord); background: var(--bloc); color: var(--texte); font: inherit; }
+.lecteur__integres { max-height: 420px; overflow-y: auto; padding-right: 4px; }
+.lecteur__texte button[data-type="guide-step"] { font: inherit; border: 0; cursor: pointer; }
+.lecteur__texte button[data-type="guide-step"]:hover { background: var(--bloc-survol); }

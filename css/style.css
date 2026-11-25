@@ -713,7 +713,7 @@ html { scroll-behavior: smooth; }
 
 /* Mode appli (?mode=overlay) : fenêtre transparente, seul le journal est affiché. */
 html.mode-ov, html.mode-ov body { background: transparent !important; overflow: hidden; }
-html.mode-ov body > *:not(#ov):not(#toast):not(dialog):not(.ov-poignee) { display: none !important; }
+html.mode-ov body > *:not(#ov):not(#toast):not(#ocr-note):not(dialog):not(.ov-poignee) { display: none !important; }
 html.mode-ov .ov { height: calc(100vh - 2px); }
 html.mode-ov .ov__barre { cursor: move; }
 .ov__compte { margin-left: auto; background: none; border: 0; cursor: pointer; font-size: 14px; padding: 2px 4px; border-radius: 6px; opacity: .8; }
@@ -745,3 +745,14 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 .btn--appli { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
 .btn--appli img { width: 18px; height: 18px; }
 @media (max-width: 700px) { .btn--appli { display: none; } }
+
+/* Lecture du chat (appli) : bandeau de coche automatique avec Annuler */
+.ocr-note { position: fixed; left: 50%; bottom: 16px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; display: flex; align-items: center; gap: 10px; max-width: calc(100% - 24px); padding: 8px 10px 8px 14px; border-radius: 12px; background: var(--fond-toast); border: 1px solid var(--accent); color: var(--texte); font-size: 13px; z-index: 60; transition: opacity .2s, transform .2s; }
+.ocr-note.is-visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.ocr-note span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Pas à pas détaillé : liens vers les guides Ganymède intégrés */
+.detailles { display: grid; gap: 6px; }
+.detaille { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 10px; background: var(--accent-soft); border: 1px solid var(--bord); color: var(--texte); text-decoration: none; }
+.detaille:hover { border-color: var(--accent); }
+.detaille small { color: var(--texte-3); font-size: 12px; }

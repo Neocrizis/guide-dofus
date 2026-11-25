@@ -1,0 +1,857 @@
+[
+ {
+  "id": "gany-2747",
+  "ordre": 1,
+  "name": "[GP0] Guide complet Ganymède (NEW)",
+  "auteur": "Guide de l'équipe Ganymède",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2747.json",
+  "etapes": 156
+ },
+ {
+  "id": "gany-2",
+  "ordre": 2,
+  "name": "[GP1] Incarnam Astrub",
+  "auteur": "Guide de Pynx",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2.json",
+  "etapes": 237
+ },
+ {
+  "id": "gany-374",
+  "ordre": 2,
+  "name": "[GP2] Krosmoz",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-374.json",
+  "etapes": 51
+ },
+ {
+  "id": "gany-484",
+  "ordre": 3,
+  "name": "[GP3] Dolmanax",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-484.json",
+  "etapes": 9
+ },
+ {
+  "id": "gany-3",
+  "ordre": 4,
+  "name": "[GP4] Mais où sont les dofus ?",
+  "auteur": "Guide de Pynx",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-3.json",
+  "etapes": 27
+ },
+ {
+  "id": "gany-310",
+  "ordre": 5,
+  "name": "[GP5] Sufokia",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-310.json",
+  "etapes": 39
+ },
+ {
+  "id": "gany-183",
+  "ordre": 6,
+  "name": "[GP6] OTOMAÏ 1",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-183.json",
+  "etapes": 7
+ },
+ {
+  "id": "gany-104",
+  "ordre": 7,
+  "name": "[GP7] Ocre d'Ambre",
+  "auteur": "Guide de Supa",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-104.json",
+  "etapes": 30
+ },
+ {
+  "id": "gany-182",
+  "ordre": 8,
+  "name": "[GP8] DOFUS OCRE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-182.json",
+  "etapes": 33
+ },
+ {
+  "id": "gany-516",
+  "ordre": 9,
+  "name": "[GP9] ALIGNEMENT BONTARIEN",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-516.json",
+  "etapes": 774
+ },
+ {
+  "id": "gany-773",
+  "ordre": 9,
+  "name": "[GP9] ALIGNEMENT BRÂKMARIEN",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-773.json",
+  "etapes": 696
+ },
+ {
+  "id": "gany-28",
+  "ordre": 10,
+  "name": "[GP10] Gobelins et Bworks",
+  "auteur": "Guide de l'équipe Ganymède",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-28.json",
+  "etapes": 34
+ },
+ {
+  "id": "gany-25",
+  "ordre": 11,
+  "name": "[GP11] Valonia 1 : Albuera",
+  "auteur": "Guide de Pynx",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-25.json",
+  "etapes": 30
+ },
+ {
+  "id": "gany-375",
+  "ordre": 12,
+  "name": "[GP12] Royaume d'Amakna",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-375.json",
+  "etapes": 65
+ },
+ {
+  "id": "gany-24",
+  "ordre": 13,
+  "name": "[GP13] 100% WABBIT + DOFUS CAWOTTE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-24.json",
+  "etapes": 64
+ },
+ {
+  "id": "gany-30",
+  "ordre": 14,
+  "name": "[GP14] 100% MOON + DOKOKO",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-30.json",
+  "etapes": 49
+ },
+ {
+  "id": "gany-305",
+  "ordre": 15,
+  "name": "[GP15] Cania 1 : Caniablanca",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-305.json",
+  "etapes": 60
+ },
+ {
+  "id": "gany-306",
+  "ordre": 16,
+  "name": "[GP16] Sidimote 1 : Les landes mortes",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-306.json",
+  "etapes": 25
+ },
+ {
+  "id": "gany-65",
+  "ordre": 17,
+  "name": "[GP17] Saharach 1",
+  "auteur": "Guide de Pynx",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-65.json",
+  "etapes": 76
+ },
+ {
+  "id": "gany-309",
+  "ordre": 18,
+  "name": "[GP18] Koalaks",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-309.json",
+  "etapes": 9
+ },
+ {
+  "id": "gany-66",
+  "ordre": 19,
+  "name": "[GP19] DOFUS EMERAUDE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-66.json",
+  "etapes": 52
+ },
+ {
+  "id": "gany-62",
+  "ordre": 20,
+  "name": "[GP20] DOFUS DES VEILLEURS",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-62.json",
+  "etapes": 88
+ },
+ {
+  "id": "gany-431",
+  "ordre": 21,
+  "name": "[GP21] Enutrosor 1",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-431.json",
+  "etapes": 29
+ },
+ {
+  "id": "gany-307",
+  "ordre": 22,
+  "name": "[GP22] Sidimote 2 : Hurlements de rire",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-307.json",
+  "etapes": 54
+ },
+ {
+  "id": "gany-430",
+  "ordre": 23,
+  "name": "[GP23] Justiciers et plus",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-430.json",
+  "etapes": 45
+ },
+ {
+  "id": "gany-186",
+  "ordre": 24,
+  "name": "[GP24] OTOMAÏ 2",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-186.json",
+  "etapes": 7
+ },
+ {
+  "id": "gany-308",
+  "ordre": 25,
+  "name": "[GP25] Bonta & Brakmar : Frères ennemis",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-308.json",
+  "etapes": 54
+ },
+ {
+  "id": "gany-538",
+  "ordre": 26,
+  "name": "[GP26] Ecaflipus 1",
+  "auteur": "Guide de Fle et mis en page par Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-538.json",
+  "etapes": 48
+ },
+ {
+  "id": "gany-434",
+  "ordre": 27,
+  "name": "[GP27] Xélorium 1",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-434.json",
+  "etapes": 27
+ },
+ {
+  "id": "gany-1954",
+  "ordre": 28,
+  "name": "[GP28] DOFUS POURPRE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1954.json",
+  "etapes": 45
+ },
+ {
+  "id": "gany-426",
+  "ordre": 29,
+  "name": "[GP29] Cania 2 : Ça en valait la plaine + Dotruche",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-426.json",
+  "etapes": 44
+ },
+ {
+  "id": "gany-98",
+  "ordre": 30,
+  "name": "[GP30] DDG-FRIGOST 1",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-98.json",
+  "etapes": 181
+ },
+ {
+  "id": "gany-480",
+  "ordre": 31,
+  "name": "[GP31] Srambad 1",
+  "auteur": "Guide de Azyk0s puis complété et mis en page par Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-480.json",
+  "etapes": 29
+ },
+ {
+  "id": "gany-291",
+  "ordre": 32,
+  "name": "[GP32] Saharach 2",
+  "auteur": "Guide de Pynx",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-291.json",
+  "etapes": 74
+ },
+ {
+  "id": "gany-131",
+  "ordre": 33,
+  "name": "[GP33] DOFUS TURQUOISE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-131.json",
+  "etapes": 87
+ },
+ {
+  "id": "gany-88",
+  "ordre": 34,
+  "name": "[GP34] DOMAKURO",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-88.json",
+  "etapes": 120
+ },
+ {
+  "id": "gany-428",
+  "ordre": 35,
+  "name": "[GP35] Pandala 1 : Village + 100%",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-428.json",
+  "etapes": 212
+ },
+ {
+  "id": "gany-602",
+  "ordre": 36,
+  "name": "[GP36] Otomaï 3",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-602.json",
+  "etapes": 13
+ },
+ {
+  "id": "gany-432",
+  "ordre": 37,
+  "name": "[GP37] Enutrosor 2",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-432.json",
+  "etapes": 50
+ },
+ {
+  "id": "gany-606",
+  "ordre": 38,
+  "name": "[GP38] Forêt Maléfique et ses secrets",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-606.json",
+  "etapes": 43
+ },
+ {
+  "id": "gany-736",
+  "ordre": 39,
+  "name": "[GP39] Cania 3 : La voyageuse imprudente",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-736.json",
+  "etapes": 79
+ },
+ {
+  "id": "gany-701",
+  "ordre": 40,
+  "name": "[GP40] Ecaflipus 2",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-701.json",
+  "etapes": 91
+ },
+ {
+  "id": "gany-189",
+  "ordre": 41,
+  "name": "[GP41] DORIGAMI",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-189.json",
+  "etapes": 64
+ },
+ {
+  "id": "gany-603",
+  "ordre": 42,
+  "name": "[GP42] Pandala 2 : Grobe + 100%",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-603.json",
+  "etapes": 59
+ },
+ {
+  "id": "gany-112",
+  "ordre": 43,
+  "name": "[GP43] DDG-FRIGOST 2",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-112.json",
+  "etapes": 101
+ },
+ {
+  "id": "gany-435",
+  "ordre": 44,
+  "name": "[GP44] Xélorium 2",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-435.json",
+  "etapes": 61
+ },
+ {
+  "id": "gany-429",
+  "ordre": 45,
+  "name": "[GP45] Sidimote 3 : Le double effet Gisgoul",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-429.json",
+  "etapes": 31
+ },
+ {
+  "id": "gany-604",
+  "ordre": 46,
+  "name": "[GP46] Sidimote 4 : Les spores, c'est la santé",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-604.json",
+  "etapes": 52
+ },
+ {
+  "id": "gany-481",
+  "ordre": 47,
+  "name": "[GP47] Srambad 2",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-481.json",
+  "etapes": 71
+ },
+ {
+  "id": "gany-354",
+  "ordre": 48,
+  "name": "[GP48] NIMOTOPIA",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-354.json",
+  "etapes": 67
+ },
+ {
+  "id": "gany-1140",
+  "ordre": 49,
+  "name": "[GP49] Valonia 2 : Ereboria",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1140.json",
+  "etapes": 32
+ },
+ {
+  "id": "gany-113",
+  "ordre": 50,
+  "name": "[GP50] DDG-FRIGOST 3",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-113.json",
+  "etapes": 121
+ },
+ {
+  "id": "gany-658",
+  "ordre": 51,
+  "name": "[GP51] DOFUS IVOIRE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-658.json",
+  "etapes": 118
+ },
+ {
+  "id": "gany-702",
+  "ordre": 52,
+  "name": "[GP52] Ecaflipus 3",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-702.json",
+  "etapes": 39
+ },
+ {
+  "id": "gany-1900",
+  "ordre": 53,
+  "name": "[GP53] Roc des Salbatroces",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1900.json",
+  "etapes": 26
+ },
+ {
+  "id": "gany-433",
+  "ordre": 54,
+  "name": "[GP54] Enutrosor 3",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-433.json",
+  "etapes": 65
+ },
+ {
+  "id": "gany-1237",
+  "ordre": 55,
+  "name": "[GP55] Saharach 3",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1237.json",
+  "etapes": 71
+ },
+ {
+  "id": "gany-1729",
+  "ordre": 56,
+  "name": "[GP56] DOFUS ABYSSAL",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1729.json",
+  "etapes": 174
+ },
+ {
+  "id": "gany-703",
+  "ordre": 57,
+  "name": "[GP57] Sidimote 5 : Vampyre ?",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-703.json",
+  "etapes": 25
+ },
+ {
+  "id": "gany-479",
+  "ordre": 58,
+  "name": "[GP58] Xélorium 3",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-479.json",
+  "etapes": 73
+ },
+ {
+  "id": "gany-427",
+  "ordre": 59,
+  "name": "[GP59] La Fratrie des Oubliés",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-427.json",
+  "etapes": 87
+ },
+ {
+  "id": "gany-2047",
+  "ordre": 60,
+  "name": "[GP60] ROYAUME DES MARTEGEL",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2047.json",
+  "etapes": 72
+ },
+ {
+  "id": "gany-705",
+  "ordre": 61,
+  "name": "[GP61] Dofus Ébène",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-705.json",
+  "etapes": 142
+ },
+ {
+  "id": "gany-2029",
+  "ordre": 62,
+  "name": "[GP62] DOFUS FORGELAVE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2029.json",
+  "etapes": 150
+ },
+ {
+  "id": "gany-482",
+  "ordre": 63,
+  "name": "[GP63] Srambad 3",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-482.json",
+  "etapes": 73
+ },
+ {
+  "id": "gany-483",
+  "ordre": 64,
+  "name": "[GP64] Dofus Nébuleux",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-483.json",
+  "etapes": 6
+ },
+ {
+  "id": "gany-1138",
+  "ordre": 65,
+  "name": "[GP65] Crocuzko",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1138.json",
+  "etapes": 40
+ },
+ {
+  "id": "gany-1714",
+  "ordre": 66,
+  "name": "[GP66] Eliocalypse Résonance",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1714.json",
+  "etapes": 101
+ },
+ {
+  "id": "gany-704",
+  "ordre": 67,
+  "name": "[GP67] Dofus Vulbis",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-704.json",
+  "etapes": 47
+ },
+ {
+  "id": "gany-1867",
+  "ordre": 68,
+  "name": "[GP68] DOFUS TACHETE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1867.json",
+  "etapes": 62
+ },
+ {
+  "id": "gany-2050",
+  "ordre": 69,
+  "name": "[GP69] PANDALA 3",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2050.json",
+  "etapes": 138
+ },
+ {
+  "id": "gany-2017",
+  "ordre": 69,
+  "name": "[GP70] APRES LA PLUIE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2017.json",
+  "etapes": 69
+ },
+ {
+  "id": "gany-2022",
+  "ordre": 71,
+  "name": "[GP71] RAVAGES",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2022.json",
+  "etapes": 32
+ },
+ {
+  "id": "gany-2044",
+  "ordre": 72,
+  "name": "[GP72] ATOLL DES POSSEDES",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2044.json",
+  "etapes": 41
+ },
+ {
+  "id": "gany-2010",
+  "ordre": 72,
+  "name": "[GP73] MISERE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2010.json",
+  "etapes": 43
+ },
+ {
+  "id": "gany-2011",
+  "ordre": 73,
+  "name": "[GP74] CORRUPTION",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2011.json",
+  "etapes": 40
+ },
+ {
+  "id": "gany-2007",
+  "ordre": 74,
+  "name": "[GP75] GUERRE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2007.json",
+  "etapes": 53
+ },
+ {
+  "id": "gany-2009",
+  "ordre": 75,
+  "name": "[GP76] SERVITUDE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2009.json",
+  "etapes": 29
+ },
+ {
+  "id": "gany-2035",
+  "ordre": 77,
+  "name": "[GP77] VALONIA 3",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2035.json",
+  "etapes": 79
+ },
+ {
+  "id": "gany-1914",
+  "ordre": 77,
+  "name": "[GP78] L'AVENIR DU FUTUR",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1914.json",
+  "etapes": 54
+ },
+ {
+  "id": "gany-2026",
+  "ordre": 79,
+  "name": "[GP79] AURORE POURPRE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2026.json",
+  "etapes": 65
+ },
+ {
+  "id": "gany-2023",
+  "ordre": 80,
+  "name": "[GP80] DOFUS DU CAUCHEMAR",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2023.json",
+  "etapes": 55
+ },
+ {
+  "id": "gany-1755",
+  "ordre": 80,
+  "name": "[GP81] QUATRE SUR SIX",
+  "auteur": "Guide de l'équipe Ganymède",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1755.json",
+  "etapes": 141
+ },
+ {
+  "id": "gany-1891",
+  "ordre": 81,
+  "name": "[GP82] SIX SUR SIX",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1891.json",
+  "etapes": 56
+ },
+ {
+  "id": "gany-1892",
+  "ordre": 82,
+  "name": "[GP83] DOFUS ARGENTE SCINTILLANT",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1892.json",
+  "etapes": 15
+ },
+ {
+  "id": "gany-2024",
+  "ordre": 84,
+  "name": "[GP84] LE SECRET DES DOFUS : PROLOGUE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2024.json",
+  "etapes": 21
+ },
+ {
+  "id": "gany-2025",
+  "ordre": 85,
+  "name": "[GP85] DOM DE PIN",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2025.json",
+  "etapes": 4
+ },
+ {
+  "id": "gany-2042",
+  "ordre": 86,
+  "name": "[GP86] L'ARBRE QUI CACHE LA FORÊT",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2042.json",
+  "etapes": 112
+ },
+ {
+  "id": "gany-2043",
+  "ordre": 87,
+  "name": "[GP87] DOFUS SYLVESTRE",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2043.json",
+  "etapes": 2
+ },
+ {
+  "id": "gany-2680",
+  "ordre": 88,
+  "name": "[GP88] Dimension Osavora",
+  "auteur": "Guide de l'équipe Ganymède",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2680.json",
+  "etapes": 97
+ },
+ {
+  "id": "gany-440",
+  "ordre": 99,
+  "name": "[GP] Halouine",
+  "auteur": "Guide de Kritune",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-440.json",
+  "etapes": 16
+ },
+ {
+  "id": "gany-2673",
+  "ordre": 99,
+  "name": "[GP] Vulkania",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2673.json",
+  "etapes": 113
+ },
+ {
+  "id": "gany-1551",
+  "ordre": 99,
+  "name": "[GP] Île de Nowel",
+  "auteur": "Guide de Mazette",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-1551.json",
+  "etapes": 103
+ },
+ {
+  "id": "gany-2045",
+  "ordre": 99,
+  "name": "[GP] Île de Pwâk",
+  "auteur": "Guide de Pynx",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-2045.json",
+  "etapes": 67
+ },
+ {
+  "id": "gany-3238",
+  "ordre": 0,
+  "name": "[GP89] 100% FRIGOST",
+  "auteur": "Guide de Fladam",
+  "source": "Ganymède",
+  "fichier": "data/guides-detailles/gany-3238.json",
+  "etapes": 288
+ }
+]

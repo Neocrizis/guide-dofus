@@ -210,6 +210,14 @@
       return section(`Dofus des Glaces · ${echap(z.titre)} (${faits}/${z.succes.length})`, listeSucces(z), "glaces");
     }).join("");
   }
+  // Passages des guides détaillés (Ganymède) qui couvrent les quêtes de l'étape : data/guides-detailles/liens.js.
+  function passagesDetailles(e) {
+    const liens = (window.LIENS_DETAILLES || {})[e.id];
+    if (!liens || G.id !== "progression") return "";
+    const ov = MODE_OV ? "&mode=overlay" : "";
+    return `<div class="detailles">${liens.map((l) => `<a class="detaille" href="lecteur.html?guide=${encodeURIComponent(l.guide)}&etape=${l.de}${ov}">
+      <b>${echap(l.nom)}</b><small>Étapes ${l.de} à ${l.a} · ${echap(l.auteur.replace(/^Guide de /, ""))} · Ganymède</small></a>`).join("")}</div>`;
+  }
   function contenuEtape(e, compact) {
     const conseilClasse = etat.classe && e.classes && e.classes[etat.classe];
     const donjons = [
@@ -218,6 +226,7 @@
       ...(e.donjons || []),
     ];
     return [
+      section("Pas à pas détaillé", passagesDetailles(e)),
       section("Succès et quêtes", listeSucces(e)),
       sectionGlaces(e),
       section("À faire", paragraphes(e.details)),
@@ -1026,6 +1035,7 @@
     toast,
     etat: () => etat,
     sauver: () => { sauver(); rendreAccueil(); },
+    rafraichir: () => { sauver(); toutRendre(); },
     noter,
     quetesGuide: () => quetesGuide(),
   };
