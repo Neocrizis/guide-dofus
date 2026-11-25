@@ -789,6 +789,24 @@ window.LIENS_DETAILLES = {
    "a": 60
   }
  ],
+ "e108": [
+  {
+   "guide": "gany-112",
+   "nom": "[GP43] DDG-FRIGOST 2",
+   "auteur": "Guide de Fladam",
+   "de": 31,
+   "a": 59
+  }
+ ],
+ "e109": [
+  {
+   "guide": "gany-112",
+   "nom": "[GP43] DDG-FRIGOST 2",
+   "auteur": "Guide de Fladam",
+   "de": 60,
+   "a": 100
+  }
+ ],
  "e110": [
   {
    "guide": "gany-113",
@@ -825,6 +843,15 @@ window.LIENS_DETAILLES = {
    "a": 47
   }
  ],
+ "e115": [
+  {
+   "guide": "gany-113",
+   "nom": "[GP50] DDG-FRIGOST 3",
+   "auteur": "Guide de Fladam",
+   "de": 118,
+   "a": 119
+  }
+ ],
  "e116": [
   {
    "guide": "gany-430",
@@ -834,13 +861,29 @@ window.LIENS_DETAILLES = {
    "a": 40
   }
  ],
- "e119": [
+ "e117": [
+  {
+   "guide": "gany-1729",
+   "nom": "[GP56] DOFUS ABYSSAL",
+   "auteur": "Guide de Fladam",
+   "de": 102,
+   "a": 144
+  },
   {
    "guide": "gany-2747",
    "nom": "[GP0] Guide complet Ganymède (NEW)",
    "auteur": "Guide de l'équipe Ganymède",
    "de": 74,
    "a": 127
+  }
+ ],
+ "e120": [
+  {
+   "guide": "gany-1729",
+   "nom": "[GP56] DOFUS ABYSSAL",
+   "auteur": "Guide de Fladam",
+   "de": 34,
+   "a": 85
   }
  ],
  "e121": [
@@ -868,6 +911,24 @@ window.LIENS_DETAILLES = {
    "auteur": "Guide de Mazette",
    "de": 1,
    "a": 26
+  }
+ ],
+ "e124": [
+  {
+   "guide": "gany-433",
+   "nom": "[GP54] Enutrosor 3",
+   "auteur": "Guide de Mazette",
+   "de": 2,
+   "a": 64
+  }
+ ],
+ "e125": [
+  {
+   "guide": "gany-1237",
+   "nom": "[GP55] Saharach 3",
+   "auteur": "Guide de Mazette",
+   "de": 41,
+   "a": 67
   }
  ],
  "e126": [
@@ -906,6 +967,15 @@ window.LIENS_DETAILLES = {
    "a": 37
   }
  ],
+ "e130": [
+  {
+   "guide": "gany-482",
+   "nom": "[GP63] Srambad 3",
+   "auteur": "Guide de Mazette",
+   "de": 70,
+   "a": 72
+  }
+ ],
  "e131": [
   {
    "guide": "gany-705",
@@ -915,12 +985,39 @@ window.LIENS_DETAILLES = {
    "a": 142
   }
  ],
+ "e132": [
+  {
+   "guide": "gany-1729",
+   "nom": "[GP56] DOFUS ABYSSAL",
+   "auteur": "Guide de Fladam",
+   "de": 144,
+   "a": 174
+  }
+ ],
  "e133": [
   {
    "guide": "gany-2047",
    "nom": "[GP60] ROYAUME DES MARTEGEL",
    "auteur": "Guide de Fladam",
    "de": 37,
+   "a": 72
+  }
+ ],
+ "e134": [
+  {
+   "guide": "gany-2029",
+   "nom": "[GP62] DOFUS FORGELAVE",
+   "auteur": "Guide de Fladam",
+   "de": 36,
+   "a": 149
+  }
+ ],
+ "e135": [
+  {
+   "guide": "gany-479",
+   "nom": "[GP58] Xélorium 3",
+   "auteur": "Guide de Mazette",
+   "de": 2,
    "a": 72
   }
  ],
@@ -940,6 +1037,15 @@ window.LIENS_DETAILLES = {
    "auteur": "Guide de Mazette",
    "de": 1,
    "a": 6
+  }
+ ],
+ "e138": [
+  {
+   "guide": "gany-2050",
+   "nom": "[GP69] PANDALA 3",
+   "auteur": "Guide de Fladam",
+   "de": 106,
+   "a": 119
   }
  ],
  "e140": [

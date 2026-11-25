@@ -22,12 +22,14 @@ def main():
     index = json.loads((RACINE / "data/guides-detailles/index.json").read_text(encoding="utf-8"))
     # quête -> [(guide, numéro d'étape)]
     ou = {}
+    quetes_carte = {}
     for g in index:
         d = json.loads((RACINE / g["fichier"]).read_text(encoding="utf-8"))
         for i, s in enumerate(d["steps"], 1):
             qs = set(re.findall(r'type="quest"[^>]*dofusdbid="(\d+)"', s.get("web_text") or ""))
             if len(qs) > 4:  # carte de sommaire (liste de toutes les quêtes du guide) : pas un passage
                 continue
+            quetes_carte[(g["id"], i)] = {int(q) for q in qs}
             for q in qs:
                 ou.setdefault(int(q), []).append((g["id"], i))
     infos = {g["id"]: g for g in index}
@@ -38,8 +40,11 @@ def main():
     sortie = {}
     for e in guides[0]["etapes"]:
         ids = []
-        for s in e.get("succes", []):
-            ids += liens_quetes.get(s) or liens_quetes.get(re.sub(r"^[^:]+ : ", "", s)) or []
+        for bloc in e.get("succes", []):
+            # Une case peut lister plusieurs succès / quêtes, une par ligne.
+            for s in [bloc] + [x.strip() for x in bloc.split("\n") if x.strip()]:
+                ids += liens_quetes.get(s) or liens_quetes.get(re.sub(r"^[^:]+ : ", "", s)) or []
+        ids = list(dict.fromkeys(ids))
         # Un succès regroupe parfois des quêtes de niveaux très différents (ex. « Ça va faire du vilain » : 10 à 200).
         # Si le texte de l'étape nomme certaines de ces quêtes, on ne garde qu'elles ; sinon on retire celles
         # déjà faites dans une étape précédente.
@@ -62,6 +67,13 @@ def main():
                 else: cur.append(n)
             groupes.append(cur)
             g = max(groupes, key=len)
+            # Bords du passage : on retire les cartes qui ne parlent que de quêtes d'autres étapes.
+            qs_de = lambda n: quetes_carte.get((gid, n), set())
+            de, a = g[0], g[-1]
+            while de < a and qs_de(de) and not (qs_de(de) & set(ids)): de += 1
+            while a > de and qs_de(a) and not (qs_de(a) & set(ids)): a -= 1
+            g = [x for x in g if de <= x <= a] or [de]
+            g[0], g[-1] = de, a
             if len(g) < min(3, len(ids)) or (res and len(g) < 3):  # trop peu de mentions : pas un vrai passage
                 continue
             res.append({"guide": gid, "nom": infos[gid]["name"], "auteur": infos[gid]["auteur"], "de": g[0], "a": g[-1]})
