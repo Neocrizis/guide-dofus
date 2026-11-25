@@ -1026,6 +1026,7 @@
     toast,
     etat: () => etat,
     sauver: () => { sauver(); rendreAccueil(); },
+    rafraichir: () => { sauver(); toutRendre(); },
     noter,
     quetesGuide: () => quetesGuide(),
   };
