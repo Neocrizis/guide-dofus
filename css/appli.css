@@ -144,3 +144,4 @@ html.mode-ov .ov__resume { border-top: 1px solid var(--d-sep); margin-top: 8px; 
 html.mode-ov .ov__resume > summary { color: var(--d-jaune); font-size: calc(13px * var(--ov-taille)); }
 html.mode-ov .ov__resume .section:first-child { border-top: 0; }
 html.ov-compact .parcours__credit, html.ov-compact .parcours__barre, html.ov-compact .parcours__zaap small { display: none; }
+html.mode-ov .parcours__zaap em { font-size: calc(10px * var(--ov-taille)); }

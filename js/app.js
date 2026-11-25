@@ -272,8 +272,8 @@
       <small class="parcours__credit">Parcours : ${echap(l.auteur)} (Ganymède), repris avec son accord · <a href="lecteur.html?guide=${encodeURIComponent(l.guide)}&etape=${n}${MODE_OV ? "&mode=overlay" : ""}">guide complet</a></small>
     </div>`;
   }
-  // Zaap le plus proche de la destination (data/zaaps.js), dans le même monde. Clic : copie le nom à coller
-  // dans la recherche du zaap.
+  // Zaap le plus proche de la destination (data/zaaps.js), dans le même monde.
+  // Clic : copie « /zaap X,Y;/zaap X,Y;/travel A,B » à coller dans le chat.
   const MONDES = { Douze: 1, Incarnam: 2, Harebourg: 12, Crocuzko: 22 };
   function zaapHTML(s) {
     const monde = MONDES[s.map || "Douze"];
@@ -286,9 +286,13 @@
     });
     if (!best) return "";
     const dist = best.d === 0 ? "sur place" : best.d === 1 ? "à 1 carte" : `à ${best.d} cartes`;
-    return `<button type="button" class="parcours__zaap" data-copier="${echap(best.nom)}" title="Copier « ${echap(best.nom)} » pour la recherche du zaap">
-      <span>Zaap le plus proche</span><b>${echap(best.nom)}</b><small>[${best.x},${best.y}] · ${dist}</small></button>`;
+    // /zaap X,Y emmène au zaap ; doublé avant /travel, il laisse le temps au chargement (bug depuis la 3.7).
+    const zaap = `/zaap ${best.x},${best.y}`;
+    const cmd = best.d === 0 ? zaap : `${zaap};${zaap};/travel ${s.pos_x},${s.pos_y}`;
+    return `<button type="button" class="parcours__zaap" data-copier="${echap(cmd)}" title="Copier ${echap(cmd)}">
+      <span>Zaap le plus proche</span><b>${echap(best.nom)}</b><small>[${best.x},${best.y}] · ${dist}</small><em>${best.d === 0 ? "/zaap" : "/zaap + /travel"}</em></button>`;
   }
+
   // Avance d'une carte ; au bout du parcours, passe à l'étape voisine (overlay).
   function avancerCarte(e, delta, deborder) {
     const cartes = cartesEtape(e);
@@ -1155,7 +1159,7 @@
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
     // Design propre à l'appli (n'affecte pas le site).
-    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=10">`);
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=11">`);
     appliquerPrefsOv();
     // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
     const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };
