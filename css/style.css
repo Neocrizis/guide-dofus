@@ -870,3 +870,7 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 .parcours .ligne.is-fait .qb__statut { text-decoration: none; }
 .parcours .ligne.is-fait .qb__statut::after { content: " ✓"; }
 .parcours > .gd-texte > p.ligne { padding: 2px 6px; margin-left: -6px; margin-right: -6px; }
+.pos--zaap { display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; }
+.pos--zaap::before { content: none; }
+.pos--zaap img { width: 18px; height: 18px; object-fit: contain; }
+.parcours .gd-texte .pos--zaap { color: #9ccaff; text-decoration-color: #9ccaff; }

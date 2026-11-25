@@ -62,6 +62,15 @@
     return b;
   }
 
+  function boutonZaap(x, y, doc = document) {
+    const b = doc.createElement("button");
+    b.type = "button"; b.className = "pos pos--zaap"; b.dataset.travel = `/zaap ${x},${y}`;
+    b.title = `Copier /zaap ${x},${y}`;
+    const i = doc.createElement("img"); i.src = abs("img/outils/zaap.webp"); i.alt = "";
+    b.append(i, `zaap [${x},${y}]`);
+    return b;
+  }
+
   // options : guide -> id du guide affiché, cle(i) -> identifiant de la i-ème case, coches -> { cle: true }, integres -> guides ouvrables (lecteur).
   function enrichir(racine, { cle, coches = {}, integres = [], guide } = {}) {
     const doc = racine.ownerDocument;
@@ -97,13 +106,15 @@
     // Positions écrites dans le texte ([x,y]) : clic = copie de la commande /travel.
     const marcheur = doc.createTreeWalker(racine, NodeFilter.SHOW_TEXT);
     const noeuds = [];
-    while (marcheur.nextNode()) if (/\[\s*-?\d+\s*,\s*-?\d+\s*\]/.test(marcheur.currentNode.nodeValue)) noeuds.push(marcheur.currentNode);
+    while (marcheur.nextNode()) if (/\[\s*(zaap\s*:\s*)?-?\d+\s*,\s*-?\d+\s*\]/i.test(marcheur.currentNode.nodeValue)) noeuds.push(marcheur.currentNode);
     noeuds.forEach((nd) => {
       const frag = doc.createDocumentFragment();
-      nd.nodeValue.split(/(\[\s*-?\d+\s*,\s*-?\d+\s*\])/).forEach((morceau, i) => {
+      nd.nodeValue.split(/(\[\s*(?:zaap\s*:\s*)?-?\d+\s*,\s*-?\d+\s*\])/i).forEach((morceau, i) => {
         if (i % 2 === 0) { if (morceau) frag.append(morceau); return; }
         const [x, y] = morceau.match(/-?\d+/g);
-        frag.append(boutonPos(x, y, morceau.replace(/\s/g, ""), doc));
+        // [zaap:x,y] (notation Ganymède) : bouton qui copie /zaap x,y
+        if (/zaap/i.test(morceau)) frag.append(boutonZaap(x, y, doc));
+        else frag.append(boutonPos(x, y, morceau.replace(/\s/g, ""), doc));
       });
       nd.replaceWith(frag);
     });
