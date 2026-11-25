@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=38">
-  <link rel="stylesheet" href="css/lecteur.css?v=3">
+  <link rel="stylesheet" href="css/lecteur.css?v=4">
   <script>
     try { const t = localStorage.getItem("guide-dofus:theme") ?? (/[?&]mode=overlay/.test(location.search) ? "vanilla" : ""); if (t) document.documentElement.dataset.theme = t; } catch {}
   </script>
@@ -28,6 +28,7 @@
     <section class="lecteur__accueil card" id="accueil">
       <h1>Lecteur de guide détaillé</h1>
       <h3 class="lecteur__soustitre">Guides détaillés</h3>
+      <input type="search" id="filtre" class="lecteur__filtre" placeholder="Chercher un guide (Frigost, Pandala, Dofus Ocre, Fladam…)" autocomplete="off">
       <div id="integres" class="lecteur__integres"></div>
       <h3 class="lecteur__soustitre">Ouvrir un autre guide</h3>
       <p>Ouvre un guide au format Ganymède (fichier <code>.json</code>) pour le suivre étape par étape : positions, trajets, ressources à préparer, quêtes à lancer et à valider, monstres et captures d'écran.</p>
@@ -59,6 +60,6 @@
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="js/lecteur.js?v=4"></script>
+  <script src="js/lecteur.js?v=5"></script>
 </body>
 </html>

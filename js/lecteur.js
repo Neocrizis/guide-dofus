@@ -8,7 +8,10 @@
   const lire = (cle, defaut) => { try { return JSON.parse(localStorage.getItem(cle)) ?? defaut; } catch { return defaut; } };
   const ecrire = (cle, val) => { try { localStorage.setItem(cle, JSON.stringify(val)); return true; } catch { return false; } };
 
-  if (/[?&]mode=overlay/.test(location.search)) document.body.classList.add("lecteur--overlay");
+  if (/[?&]mode=overlay/.test(location.search)) {
+    document.body.classList.add("lecteur--overlay");
+    document.querySelectorAll('a[href^="./"]').forEach((l) => { l.href = "./?mode=overlay"; });
+  }
 
   let guides = lire(CLE_GUIDES, {});   // id -> guide
   let etat = lire(CLE_ETAT, {});       // id -> { etape, coches: { "etape|n": true } }
@@ -39,7 +42,12 @@
         if (c.tagName === "A") { const h = c.getAttribute("href") || ""; if (/^https:\/\//.test(h)) { garde.href = h; garde.target = "_blank"; garde.rel = "noopener"; } }
         if (typ === "quest-block") { garde["data-statut"] = c.getAttribute("status") || ""; garde["data-quete"] = c.getAttribute("questname") || ""; }
         if (typ === "custom-tag") { garde["data-tag"] = c.getAttribute("type") || ""; const id = c.getAttribute("dofusdbid"); if (id) garde["data-dofusdb"] = id; }
-        if (typ === "guide-step") garde["data-guide"] = c.getAttribute("label") || c.getAttribute("guidename") || "";
+        if (typ === "guide-step") {
+          garde["data-guide"] = c.getAttribute("label") || c.getAttribute("guidename") || "";
+          const gi = c.getAttribute("guideid"), sn = c.getAttribute("stepnumber");
+          if (/^\d+$/.test(gi || "")) garde["data-vers"] = `gany-${gi}`;
+          if (/^\d+$/.test(sn || "")) garde["data-etape"] = sn;
+        }
         const style = c.getAttribute("style") || "";
         const m = style.match(/color:\s*rgb\(([^)]+)\)/);
         if (m && COULEURS[m[1].trim()]) garde["data-couleur"] = COULEURS[m[1].trim()];
@@ -64,7 +72,16 @@
       t.textContent = STATUTS[s] || "Quête";
       b.prepend(t);
     });
-    racine.querySelectorAll('[data-type="guide-step"]').forEach((t) => { if (t.querySelector("img")) return; const i = document.createElement("img"); i.src = "img/outils/quest.webp"; i.alt = ""; t.prepend(i); });
+    racine.querySelectorAll('[data-type="guide-step"]').forEach((t) => {
+      if (!t.querySelector("img")) { const i = document.createElement("img"); i.src = "img/outils/quest.webp"; i.alt = ""; t.prepend(i); }
+      // Lien vers un autre guide détaillé du site, s'il est intégré.
+      const vers = t.getAttribute("data-vers");
+      if (vers && integres.some((g) => g.id === vers)) {
+        const b = document.createElement("button"); b.type = "button"; b.setAttribute("data-type", "guide-step");
+        b.dataset.allerGuide = vers; b.dataset.allerEtape = t.getAttribute("data-etape") || "1";
+        b.append(...t.childNodes); t.replaceWith(b);
+      }
+    });
     racine.querySelectorAll('[data-type="custom-tag"]').forEach((t) => {
       const type = t.getAttribute("data-tag");
       const id = t.getAttribute("data-dofusdb");
@@ -117,7 +134,9 @@
 
   function rendreIntegres() {
     const zone = $("integres"); zone.innerHTML = "";
-    integres.forEach((g) => {
+    const q = ($("filtre")?.value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    const sans = (x) => x.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    integres.filter((g) => !q || sans(`${g.name} ${g.auteur}`).includes(q)).forEach((g) => {
       const e = etat[g.id];
       const b = document.createElement("button"); b.type = "button"; b.className = "integre card"; b.dataset.integre = g.id;
       const t = document.createElement("b"); t.textContent = g.name;
@@ -126,7 +145,7 @@
     });
   }
 
-  async function ouvrirIntegre(id) {
+  async function ouvrirIntegre(id, etape) {
     const g = integres.find((x) => x.id === id); if (!g) return;
     if (!guides[id] || !guides[id].integre) {
       try {
@@ -134,7 +153,7 @@
         guides[id] = { id, integre: true, name: d.name, auteur: d.auteur, source: d.source, source_url: d.source_url, licence: d.licence, steps: d.steps };
       } catch { toast("Impossible de charger ce guide"); return; }
     }
-    ouvrir(id);
+    ouvrir(id, etape);
   }
 
   function rendreBiblio() {
@@ -153,10 +172,10 @@
     });
   }
 
-  function ouvrir(id) {
+  function ouvrir(id, etape) {
     G = guides[id]; if (!G) return;
     etat[G.id] = etat[G.id] || { etape: 0, coches: {} };
-    n = Math.min(etat[G.id].etape || 0, G.steps.length - 1);
+    n = Math.max(0, Math.min((etape ? etape - 1 : etat[G.id].etape) || 0, G.steps.length - 1));
     $("accueil").hidden = true; $("guide").hidden = false;
     $("nom-guide").textContent = G.name;
     $("auteur").textContent = G.auteur ? `${G.auteur} · ${G.source || "via Ganymède"}${G.licence ? ` · ${G.licence}` : ""}` : "";
@@ -219,6 +238,7 @@
     if (t.dataset.travel) { copier(t.dataset.travel); return; }
     if (t.dataset.ouvrir) { ouvrir(t.dataset.ouvrir); return; }
     if (t.dataset.integre) { ouvrirIntegre(t.dataset.integre); return; }
+    if (t.dataset.allerGuide) { ouvrirIntegre(t.dataset.allerGuide, +t.dataset.allerEtape || 1); return; }
     if (t.dataset.retirer) { delete guides[t.dataset.retirer]; ecrire(CLE_GUIDES, Object.fromEntries(Object.entries(guides).filter(([, g]) => !g.integre))); rendreBiblio(); return; }
     if (t.id === "prec") aller(n - 1);
     if (t.id === "suiv") aller(n + 1);
@@ -233,6 +253,7 @@
     }
   });
   $("num").addEventListener("change", () => aller((+$("num").value || 1) - 1));
+  $("filtre").addEventListener("input", rendreIntegres);
   document.addEventListener("keydown", (ev) => {
     if (!G || $("guide").hidden || ev.target.tagName === "INPUT") return;
     if (ev.key === "ArrowRight") aller(n + 1);
@@ -242,8 +263,10 @@
   rendreBiblio();
   integresPret.then(() => {
     rendreIntegres();
-    const demande = new URLSearchParams(location.search).get("guide");
-    if (demande && integres.some((g) => g.id === demande)) ouvrirIntegre(demande);
+    const params = new URLSearchParams(location.search);
+    const demande = params.get("guide"), etape = +params.get("etape") || 0;
+    if (demande && integres.some((g) => g.id === demande)) ouvrirIntegre(demande, etape);
     else if (demande && guides[demande]) ouvrir(demande);
   });
 })();
+

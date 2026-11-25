@@ -750,3 +750,9 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 .ocr-note { position: fixed; left: 50%; bottom: 16px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; display: flex; align-items: center; gap: 10px; max-width: calc(100% - 24px); padding: 8px 10px 8px 14px; border-radius: 12px; background: var(--fond-toast); border: 1px solid var(--accent); color: var(--texte); font-size: 13px; z-index: 60; transition: opacity .2s, transform .2s; }
 .ocr-note.is-visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 .ocr-note span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Pas à pas détaillé : liens vers les guides Ganymède intégrés */
+.detailles { display: grid; gap: 6px; }
+.detaille { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 10px; background: var(--accent-soft); border: 1px solid var(--bord); color: var(--texte); text-decoration: none; }
+.detaille:hover { border-color: var(--accent); }
+.detaille small { color: var(--texte-3); font-size: 12px; }
