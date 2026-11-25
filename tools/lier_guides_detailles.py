@@ -16,6 +16,12 @@ def charger_js(chemin, nom):
     t = t[t.index("=", debut) + 1:].strip().rstrip(";")
     return json.loads(t)
 
+# Liens posés à la main quand les quêtes ne suffisent pas (étape -> guide, de, à).
+MANUEL = {
+    "e22": ("gany-182", 1, 12),    # Dofus Ocre : lancer l'Éternelle Moisson chez Otomaï, astuces, Metamob
+    "e102": ("gany-182", 13, 33),  # Dofus Ocre : rendre les âmes, donjon, fin de la quête et étapes d'archis
+}
+
 def main():
     guides = charger_js("data/guide.js", "GUIDES")
     liens_quetes = charger_js("data/quetes.js", "QUETES")["liens"]
@@ -77,6 +83,9 @@ def main():
             if len(g) < min(3, len(ids)) or (res and len(g) < 3):  # trop peu de mentions : pas un vrai passage
                 continue
             res.append({"guide": gid, "nom": infos[gid]["name"], "auteur": infos[gid]["auteur"], "de": g[0], "a": g[-1]})
+        if e["id"] in MANUEL:
+            gid, de, a = MANUEL[e["id"]]
+            res = [{"guide": gid, "nom": infos[gid]["name"], "auteur": infos[gid]["auteur"], "de": de, "a": a}]
         # Pas de recouvrement avec l'étape précédente dans le même guide : on reprend où elle s'arrêtait.
         for r in res:
             fin = derniere.get(r["guide"])

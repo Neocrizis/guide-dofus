@@ -117,6 +117,15 @@ window.LIENS_DETAILLES = {
    "a": 28
   }
  ],
+ "e22": [
+  {
+   "guide": "gany-182",
+   "nom": "[GP8] DOFUS OCRE",
+   "auteur": "Guide de Fladam",
+   "de": 1,
+   "a": 12
+  }
+ ],
  "e23": [
   {
    "guide": "gany-104",
@@ -742,6 +751,15 @@ window.LIENS_DETAILLES = {
    "auteur": "Guide de Fladam",
    "de": 66,
    "a": 87
+  }
+ ],
+ "e102": [
+  {
+   "guide": "gany-182",
+   "nom": "[GP8] DOFUS OCRE",
+   "auteur": "Guide de Fladam",
+   "de": 13,
+   "a": 33
   }
  ],
  "e103": [
