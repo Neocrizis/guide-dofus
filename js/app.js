@@ -336,8 +336,7 @@
     const liens = liensEtape(e);
     if (!liens.length) return "";
     const noms = [...new Set(liens.map((l) => { const g = nomGuide(l); return `${g.nom} · ${g.auteur}`; }))];
-    const l = liens[1] || liens[0];
-    return `<p class="parcours__credit">Guides : ${noms.map(echap).join(", ")} (Ganymède), repris avec leur accord · <a href="lecteur.html?guide=${encodeURIComponent(l.guide)}&etape=${l.de}${MODE_OV ? "&mode=overlay" : ""}">ouvrir dans le lecteur</a></p>`;
+    return `<p class="parcours__credit">Guides : ${noms.map(echap).join(", ")} (Ganymède)</p>`;
   }
   // Avance d'une carte ; au bout du parcours, passe à l'étape voisine (overlay).
   function avancerCarte(e, delta, deborder) {
