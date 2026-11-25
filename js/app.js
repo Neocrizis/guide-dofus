@@ -279,7 +279,7 @@
   // Clic : copie « /zaap X,Y;/zaap X,Y;/travel A,B » à coller dans le chat.
   const svg = (d) => `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const ICONE_PIN = svg('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>');
-  const ICONE_ZAAP = svg('<ellipse cx="12" cy="12" rx="5" ry="8"/><path d="M12 4v0M4 20h16M7 20l1.5-3M17 20l-1.5-3"/>');
+  const ICONE_ZAAP = `<img src="${new URL("img/outils/zaap.webp", location.href)}" alt="" width="22" height="22">`; // icône du jeu (filtre zaap de la carte du monde)
   const ICONE_COPIE = svg('<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>');
   const MONDES = { Douze: 1, Incarnam: 2, Harebourg: 12, Crocuzko: 22 };
   function zaapHTML(s) {

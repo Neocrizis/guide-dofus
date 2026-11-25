@@ -861,3 +861,4 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 .action__txt small { font-size: 12px; color: var(--texte-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .action__copie { flex: none; color: var(--texte-3); opacity: 0; transition: opacity .15s; }
 .action:hover .action__copie { opacity: 1; }
+.action--zaap .action__ico img { width: 24px; height: 24px; object-fit: contain; }
