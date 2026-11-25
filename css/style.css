@@ -809,19 +809,6 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 .parcours__info small { color: var(--texte-3); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .parcours__barre { height: 3px; border-radius: 3px; background: var(--bloc); margin: 0 0 14px; overflow: hidden; }
 .parcours__barre span { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); transition: width .25s ease; }
-.parcours__lieu { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-bottom: 14px; }
-.parcours__dest, .parcours__zaap { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px 6px 10px; border-radius: 999px; border: 0; font: inherit; font-size: 13px; cursor: pointer; transition: background .15s, box-shadow .15s; }
-.parcours__dest span, .parcours__zaap span { display: none; }
-.parcours__dest small, .parcours__zaap small, .parcours__zaap em { font-size: 12px; font-style: normal; opacity: .7; }
-.parcours__dest { background: var(--accent); color: var(--sur-accent); font-weight: 600; }
-.parcours__dest::before { content: "⌖"; font-size: 15px; }
-.parcours__dest:hover { background: var(--accent-hover); box-shadow: 0 0 14px var(--accent-glow); }
-.parcours__zaap { background: color-mix(in srgb, #7cb9ff 14%, transparent); color: var(--texte); }
-.parcours__zaap::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #7cb9ff; box-shadow: 0 0 8px #7cb9ff; }
-.parcours__zaap:hover { background: color-mix(in srgb, #7cb9ff 24%, transparent); }
-.parcours__zaap b::before { content: "Zaap "; font-weight: 400; opacity: .7; }
-.parcours__zaap em { color: #7cb9ff; opacity: 1; font-weight: 600; }
-.parcours__monde { padding: 4px 10px; border-radius: 999px; background: var(--bloc); color: var(--texte-2); font-size: 12px; font-weight: 600; }
 .parcours__credit { display: block; margin-top: 12px; color: var(--texte-3); font-size: 11px; }
 .parcours__credit a { color: inherit; }
 .parcours--attente { color: var(--texte-3); font-size: 13px; padding: 8px 0; }
@@ -858,3 +845,19 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 .ov__progres-barre { flex: 1; height: 6px; border-radius: 999px; background: var(--bloc); overflow: hidden; }
 .ov__progres-barre span { display: block; height: 100%; min-width: 6px; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); box-shadow: 0 0 10px var(--accent-glow); transition: width .3s ease; }
 .ov__progres b { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--texte-2); }
+
+/* Actions de la carte : lignes avec icône (aller en…, zaap le plus proche), sans cadre */
+.parcours__info { align-items: center; }
+.parcours__kicker { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--texte-3); }
+.parcours__kicker b { font-size: 16px; color: var(--texte); letter-spacing: 0; }
+.parcours__actions { display: grid; gap: 2px; margin: 0 -8px 14px; }
+.action { display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px; border: 0; border-radius: 14px; background: none; color: var(--texte); font: inherit; text-align: left; cursor: pointer; transition: background .15s; }
+.action:hover { background: var(--bloc); }
+.action__ico { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; }
+.action--travel .action__ico { background: var(--accent); color: var(--sur-accent); box-shadow: 0 0 16px var(--accent-glow); }
+.action--zaap .action__ico { background: color-mix(in srgb, #7cb9ff 22%, transparent); color: #9ccaff; box-shadow: 0 0 14px color-mix(in srgb, #7cb9ff 35%, transparent); }
+.action__txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.action__txt b { font-size: 14px; font-weight: 600; }
+.action__txt small { font-size: 12px; color: var(--texte-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.action__copie { flex: none; color: var(--texte-3); opacity: 0; transition: opacity .15s; }
+.action:hover .action__copie { opacity: 1; }

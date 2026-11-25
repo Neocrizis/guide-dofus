@@ -259,14 +259,17 @@
     return `<div class="parcours" data-parcours="${e.id}">
       <div class="parcours__tete">
         ${ov ? "" : fleche(-1, k === 0)}
-        <div class="parcours__info"><b>Carte ${k + 1} / ${cartes.length}</b><small>${echap(l.nom)} · ${echap(auteur)}</small></div>
+        <div class="parcours__info"><span class="parcours__kicker">Carte <b>${k + 1}</b> / ${cartes.length}</span><small>${echap(l.nom)} · ${echap(auteur)}</small></div>
         ${ov ? "" : fleche(1, k === cartes.length - 1)}
       </div>
       <div class="parcours__barre"><span style="width:${((k + 1) / cartes.length) * 100}%"></span></div>
-      ${aPos || s.map ? `<div class="parcours__lieu">
-        ${aPos ? `<button type="button" class="parcours__dest" data-travel="/travel ${s.pos_x},${s.pos_y}" title="Copier /travel ${s.pos_x},${s.pos_y}"><span>Destination</span><b>[${s.pos_x},${s.pos_y}]</b><small>/travel</small></button>` : ""}
-        ${aPos ? zaapHTML(s) : ""}
-        ${s.map && s.map !== "Douze" ? `<span class="parcours__monde">${echap(s.map)}</span>` : ""}
+      ${aPos ? `<div class="parcours__actions">
+        <button type="button" class="action action--travel" data-travel="/travel ${s.pos_x},${s.pos_y}" title="Copier /travel ${s.pos_x},${s.pos_y}">
+          <span class="action__ico">${ICONE_PIN}</span>
+          <span class="action__txt"><b>Aller en [${s.pos_x},${s.pos_y}]</b><small>${s.map && s.map !== "Douze" ? `${echap(s.map)} · ` : ""}Copier /travel</small></span>
+          <span class="action__copie">${ICONE_COPIE}</span>
+        </button>
+        ${zaapHTML(s)}
       </div>` : ""}
       <div class="gd-texte">${corps.innerHTML}</div>
       <small class="parcours__credit">Parcours : ${echap(l.auteur)} (Ganymède), repris avec son accord · <a href="lecteur.html?guide=${encodeURIComponent(l.guide)}&etape=${n}${MODE_OV ? "&mode=overlay" : ""}">guide complet</a></small>
@@ -274,6 +277,10 @@
   }
   // Zaap le plus proche de la destination (data/zaaps.js), dans le même monde.
   // Clic : copie « /zaap X,Y;/zaap X,Y;/travel A,B » à coller dans le chat.
+  const svg = (d) => `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const ICONE_PIN = svg('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>');
+  const ICONE_ZAAP = svg('<ellipse cx="12" cy="12" rx="5" ry="8"/><path d="M12 4v0M4 20h16M7 20l1.5-3M17 20l-1.5-3"/>');
+  const ICONE_COPIE = svg('<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>');
   const MONDES = { Douze: 1, Incarnam: 2, Harebourg: 12, Crocuzko: 22 };
   function zaapHTML(s) {
     const monde = MONDES[s.map || "Douze"];
@@ -289,8 +296,11 @@
     // /zaap X,Y emmène au zaap ; doublé avant /travel, il laisse le temps au chargement (bug depuis la 3.7).
     const zaap = `/zaap ${best.x},${best.y}`;
     const cmd = best.d === 0 ? zaap : `${zaap};${zaap};/travel ${s.pos_x},${s.pos_y}`;
-    return `<button type="button" class="parcours__zaap" data-copier="${echap(cmd)}" title="Copier ${echap(cmd)}">
-      <span>Zaap le plus proche</span><b>${echap(best.nom)}</b><small>[${best.x},${best.y}] · ${dist}</small><em>${best.d === 0 ? "/zaap" : "/zaap + /travel"}</em></button>`;
+    return `<button type="button" class="action action--zaap" data-copier="${echap(cmd)}" title="Copier ${echap(cmd)}">
+      <span class="action__ico">${ICONE_ZAAP}</span>
+      <span class="action__txt"><b>Zaap ${echap(best.nom)}</b><small>[${best.x},${best.y}] · ${dist} · Copier ${best.d === 0 ? "/zaap" : "/zaap + /travel"}</small></span>
+      <span class="action__copie">${ICONE_COPIE}</span>
+    </button>`;
   }
 
   // Avance d'une carte ; au bout du parcours, passe à l'étape voisine (overlay).
@@ -769,9 +779,9 @@
         ${contenuEtape(e, true)}
       </div>
       <div class="ov__nav">
-        <button type="button" class="btn" data-action="precedente" ${i === 0 && k === 0 ? "disabled" : ""} title="${cartes.length ? "Carte précédente" : "Étape précédente"}">←</button>
+        <button type="button" class="btn" data-action="precedente" ${i === 0 && k === 0 ? "disabled" : ""} title="${cartes.length ? "Carte précédente" : "Étape précédente"}" aria-label="Précédent"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
         <button type="button" class="btn btn--accent" data-action="terminer">Terminée ✓</button>
-        <button type="button" class="btn" data-action="suivante" ${i === etapes.length - 1 && k >= cartes.length - 1 ? "disabled" : ""} title="${cartes.length ? "Carte suivante" : "Étape suivante"}">→</button>
+        <button type="button" class="btn" data-action="suivante" ${i === etapes.length - 1 && k >= cartes.length - 1 ? "disabled" : ""} title="${cartes.length ? "Carte suivante" : "Étape suivante"}" aria-label="Suivant"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
       </div>`;
     racine.querySelector(".ov__resume")?.toggleAttribute("open", resumeOuvert);
     if (memeEtape) racine.querySelector(".ov__card").scrollTop = scroll;
@@ -1163,7 +1173,7 @@
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
     // Design propre à l'appli (n'affecte pas le site).
-    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=14">`);
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=15">`);
     appliquerPrefsOv();
     // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
     const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };
