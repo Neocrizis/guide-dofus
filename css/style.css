@@ -862,3 +862,11 @@ a.btn:not(.btn--accent) { color: var(--texte); }
 .action__copie { flex: none; color: var(--texte-3); opacity: 0; transition: opacity .15s; }
 .action:hover .action__copie { opacity: 1; }
 .action--zaap .action__ico img { width: 24px; height: 24px; object-fit: contain; }
+/* Lignes du parcours cochables d'un clic : rayées une fois faites */
+.parcours .ligne { cursor: pointer; border-radius: 10px; transition: opacity .2s, background .15s; }
+.parcours .ligne:hover { background: color-mix(in srgb, var(--texte) 5%, transparent); }
+.parcours .ligne.is-fait { opacity: .45; }
+.parcours .ligne.is-fait, .parcours .ligne.is-fait * { text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.parcours .ligne.is-fait .qb__statut { text-decoration: none; }
+.parcours .ligne.is-fait .qb__statut::after { content: " ✓"; }
+.parcours > .gd-texte > p.ligne { padding: 2px 6px; margin-left: -6px; margin-right: -6px; }

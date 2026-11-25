@@ -33,7 +33,7 @@
         }
         if (c.tagName === "INPUT") { if (c.getAttribute("type") !== "checkbox") { c.remove(); return; } garde.type = "checkbox"; }
         if (c.tagName === "A") { const h = c.getAttribute("href") || ""; if (/^https:\/\//.test(h)) { garde.href = h; garde.target = "_blank"; garde.rel = "noopener"; } }
-        if (typ === "quest-block") { garde["data-statut"] = c.getAttribute("status") || ""; garde["data-quete"] = c.getAttribute("questname") || ""; }
+        if (typ === "quest-block") { garde["data-statut"] = c.getAttribute("status") || ""; garde["data-nom-quete"] = c.getAttribute("questname") || ""; }
         if (typ === "custom-tag") { garde["data-tag"] = c.getAttribute("type") || ""; const id = c.getAttribute("dofusdbid"); if (id) garde["data-dofusdb"] = id; }
         if (typ === "guide-step") {
           garde["data-guide"] = c.getAttribute("label") || c.getAttribute("guidename") || "";

@@ -247,6 +247,25 @@
     const doc = document.implementation.createHTMLDocument("");
     const aPos = s.pos_x != null && s.pos_y != null;
     const corps = GD.enrichir(GD.nettoyer(s.web_text), { cle: (i) => `${l.guide}|${n}|${i}`, coches: etat.cochesG || {}, guide: l.guide });
+    // Lignes cochables d'un clic (rayées) : blocs de quête et paragraphes hors listes de tâches.
+    const cochesG = etat.cochesG || {};
+    [...corps.querySelectorAll(':scope > [data-type="quest-block"], :scope > p')]
+      .filter((x) => x.textContent.trim())
+      .forEach((x, j) => {
+        const cle = `${l.guide}|${n}|L${j}`;
+        x.classList.add("ligne");
+        x.dataset.ligne = cle;
+        if (cochesG[cle]) x.classList.add("is-fait");
+      });
+    // Listes de tâches : la ligne entière se raye d'un clic, sans case (même clé que l'ancienne case).
+    corps.querySelectorAll('li[data-type="taskItem"]').forEach((li) => {
+      const c = li.querySelector("input.check");
+      if (!c) return;
+      li.classList.add("ligne");
+      li.dataset.ligne = c.dataset.cle;
+      li.classList.toggle("is-fait", !!cochesG[c.dataset.cle]);
+      c.closest("label")?.remove();
+    });
     // « Étape 8 » du même guide : saut direct à la carte correspondante si elle fait partie du parcours.
     corps.querySelectorAll(`[data-type="guide-step"][data-vers="${l.guide}"]`).forEach((t) => {
       const cible = cartes.findIndex((c) => c.l.guide === l.guide && c.n === +t.getAttribute("data-etape"));
@@ -254,12 +273,11 @@
       const b = doc.createElement("button"); b.type = "button"; b.setAttribute("data-type", "guide-step");
       b.dataset.carteAller = cible; b.dataset.carteEtape = e.id; b.append(...t.childNodes); t.replaceWith(b);
     });
-    const auteur = l.auteur.replace(/^Guide de /, "");
     const fleche = (d, off) => `<button type="button" class="btn btn--small" data-carte="${d}" data-carte-etape="${e.id}" ${off ? "disabled" : ""} title="${d < 0 ? "Carte précédente" : "Carte suivante"}">${d < 0 ? "←" : "→"}</button>`;
     return `<div class="parcours" data-parcours="${e.id}">
       <div class="parcours__tete">
         ${ov ? "" : fleche(-1, k === 0)}
-        <div class="parcours__info"><span class="parcours__kicker">Carte <b>${k + 1}</b> / ${cartes.length}</span><small>${echap(l.nom)} · ${echap(auteur)}</small></div>
+        <div class="parcours__info"><span class="parcours__kicker">Carte <b>${k + 1}</b> / ${cartes.length}</span></div>
         ${ov ? "" : fleche(1, k === cartes.length - 1)}
       </div>
       <div class="parcours__barre"><span style="width:${((k + 1) / cartes.length) * 100}%"></span></div>
@@ -272,7 +290,7 @@
         ${zaapHTML(s)}
       </div>` : ""}
       <div class="gd-texte">${corps.innerHTML}</div>
-      <small class="parcours__credit">Parcours : ${echap(l.auteur)} (Ganymède), repris avec son accord · <a href="lecteur.html?guide=${encodeURIComponent(l.guide)}&etape=${n}${MODE_OV ? "&mode=overlay" : ""}">guide complet</a></small>
+
     </div>`;
   }
   // Zaap le plus proche de la destination (data/zaaps.js), dans le même monde.
@@ -303,6 +321,13 @@
     </button>`;
   }
 
+  // Crédit des auteurs du parcours (accord de l'équipe Ganymède), affiché discrètement dans le résumé.
+  function creditParcours(e) {
+    const liens = G.id === "progression" && (window.LIENS_DETAILLES || {})[e.id];
+    if (!liens) return "";
+    const noms = [...new Set(liens.map((l) => `${l.nom} · ${l.auteur.replace(/^Guide de /, "")}`))];
+    return `<p class="parcours__credit">Parcours : ${noms.map(echap).join(", ")} (Ganymède), repris avec leur accord · <a href="lecteur.html?guide=${encodeURIComponent(liens[0].guide)}&etape=${liens[0].de}${MODE_OV ? "&mode=overlay" : ""}">guide complet</a></p>`;
+  }
   // Avance d'une carte ; au bout du parcours, passe à l'étape voisine (overlay).
   function avancerCarte(e, delta, deborder) {
     const cartes = cartesEtape(e);
@@ -336,8 +361,9 @@
     const parcours = parcoursHTML(e, compact || ouvertes.has(e.id), compact);
     if (!parcours) return resume;
     // Dans l'appli, le parcours prend la place ; le résumé Skyzio reste à un clic.
+    const credit = creditParcours(e);
     if (compact) return `${parcours}<details class="ov__resume"><summary>Résumé de l'étape</summary>${resume}</details>`;
-    return section("Parcours détaillé", parcours) + resume;
+    return section("Parcours détaillé", parcours) + resume + credit;
   }
 
   // ---------- Page principale ----------
@@ -545,6 +571,14 @@
     }
     const onglet = t.closest("[data-guide]");
     if (onglet) { chargerGuide(onglet.dataset.guide); sauver(); toutRendre(); return; }
+    const ligne = t.closest("[data-ligne]");
+    if (ligne && !t.closest("a, button, input")) {
+      etat.cochesG = etat.cochesG || {};
+      const fait = !etat.cochesG[ligne.dataset.ligne];
+      if (fait) etat.cochesG[ligne.dataset.ligne] = true; else delete etat.cochesG[ligne.dataset.ligne];
+      ligne.classList.toggle("is-fait", fait);
+      sauver(); carteFinie(ligne); return;
+    }
     const saut = t.closest("[data-carte-aller]");
     if (saut) { const e = etapes.find((x) => x.id === saut.dataset.carteEtape); if (e) { definirCarte(e, +saut.dataset.carteAller); sauver(); rendrePage(); rendreOverlay(); } return; }
     const carte = t.closest("[data-carte]");
@@ -553,6 +587,17 @@
     if (resume) { ev.preventDefault(); resumeOuvert = !resumeOuvert; resume.parentElement.toggleAttribute("open", resumeOuvert); return; }
     const act = t.closest("[data-action]");
     if (act) ({ precedente: () => avancerOv(-1), suivante: () => avancerOv(1), terminer: terminerCourante })[act.dataset.action]();
+  }
+  // Tout est rayé sur la carte : on passe à la suivante (et à l'étape suivante au bout, dans l'overlay).
+  function carteFinie(el) {
+    const bloc = el.closest(".parcours");
+    if (!bloc) return;
+    const restes = [...bloc.querySelectorAll("[data-ligne]:not(.is-fait)")];
+    if (restes.length) return;
+    const e = etapes.find((x) => x.id === bloc.dataset.parcours);
+    if (!e) return;
+    clearTimeout(carteFinie.t);
+    carteFinie.t = setTimeout(() => avancerCarte(e, 1, !!el.closest(".ov")), 450);
   }
   // Flèches de l'overlay : carte par carte quand l'étape a un parcours détaillé, sinon étape par étape.
   function avancerOv(delta) {
@@ -567,7 +612,7 @@
       etat.cochesG = etat.cochesG || {};
       if (t.checked) etat.cochesG[t.dataset.cle] = true; else delete etat.cochesG[t.dataset.cle];
       t.closest("li")?.classList.toggle("is-fait", t.checked);
-      sauver(); return;
+      sauver(); carteFinie(t); return;
     }
     if (t.dataset.archi) cocherArchi(+t.dataset.archi, t.checked);
     if (t.dataset.succes) {
