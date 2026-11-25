@@ -210,13 +210,77 @@
       return section(`Dofus des Glaces · ${echap(z.titre)} (${faits}/${z.succes.length})`, listeSucces(z), "glaces");
     }).join("");
   }
-  // Passages des guides détaillés (Ganymède) qui couvrent les quêtes de l'étape : data/guides-detailles/liens.js.
-  function passagesDetailles(e) {
-    const liens = (window.LIENS_DETAILLES || {})[e.id];
-    if (!liens || G.id !== "progression") return "";
-    const ov = MODE_OV ? "&mode=overlay" : "";
-    return `<div class="detailles">${liens.map((l) => `<a class="detaille" href="lecteur.html?guide=${encodeURIComponent(l.guide)}&etape=${l.de}${ov}">
-      <b>${echap(l.nom)}</b><small>Étapes ${l.de} à ${l.a} · ${echap(l.auteur.replace(/^Guide de /, ""))} · Ganymède</small></a>`).join("")}</div>`;
+  // ---------- Parcours détaillé (guides Ganymède) dans les étapes du guide ----------
+  // L'étape Skyzio donne l'ordre ; le parcours donne le chemin carte par carte (data/guides-detailles/liens.js).
+  // etat.cartes[étape] = carte affichée, etat.cochesG["guide|n|i"] = cases cochées dans le parcours.
+  const GD = window.GuideDetaille;
+  function cartesEtape(e) {
+    const liens = G.id === "progression" && (window.LIENS_DETAILLES || {})[e.id];
+    if (!liens || !GD) return [];
+    return liens.flatMap((l) => Array.from({ length: l.a - l.de + 1 }, (_, j) => ({ l, n: l.de + j })));
+  }
+  const carteCourante = (e, cartes = cartesEtape(e)) => Math.min(cartes.length - 1, Math.max(0, (etat.cartes || {})[e.id] || 0));
+  function definirCarte(e, k) {
+    etat.cartes = etat.cartes || {};
+    if (k) etat.cartes[e.id] = k; else delete etat.cartes[e.id];
+  }
+  const enAttente = new Set();
+  function chargerParcours(ids) {
+    ids.filter((id) => !GD.charge(id) && !enAttente.has(id)).forEach((id) => {
+      enAttente.add(id);
+      GD.charger(id).then(() => { enAttente.delete(id); rendrePage(); rendreOverlay(); })
+        .catch(() => { enAttente.delete(id); toast("Parcours détaillé indisponible"); });
+    });
+  }
+  // charger = false : étape repliée sur le site, on ne télécharge pas le guide pour rien.
+  function parcoursHTML(e, charger, ov) {
+    const cartes = cartesEtape(e);
+    if (!cartes.length) return "";
+    const k = carteCourante(e, cartes);
+    const { l, n } = cartes[k];
+    const guide = GD.charge(l.guide);
+    if (!guide) {
+      if (charger) chargerParcours([l.guide]);
+      return `<div class="parcours parcours--attente">Chargement du parcours détaillé…</div>`;
+    }
+    const s = guide.steps[n - 1] || {};
+    const doc = document.implementation.createHTMLDocument("");
+    const pos = doc.createElement("div"); pos.className = "parcours__pos";
+    if (s.pos_x != null && s.pos_y != null) pos.append(GD.boutonPos(s.pos_x, s.pos_y, "", doc));
+    if (s.map) { const m = doc.createElement("span"); m.className = "parcours__map"; m.textContent = s.map; pos.append(m); }
+    const corps = GD.enrichir(GD.nettoyer(s.web_text), { cle: (i) => `${l.guide}|${n}|${i}`, coches: etat.cochesG || {}, guide: l.guide });
+    // « Étape 8 » du même guide : saut direct à la carte correspondante si elle fait partie du parcours.
+    corps.querySelectorAll(`[data-type="guide-step"][data-vers="${l.guide}"]`).forEach((t) => {
+      const cible = cartes.findIndex((c) => c.l.guide === l.guide && c.n === +t.getAttribute("data-etape"));
+      if (cible < 0) return;
+      const b = doc.createElement("button"); b.type = "button"; b.setAttribute("data-type", "guide-step");
+      b.dataset.carteAller = cible; b.dataset.carteEtape = e.id; b.append(...t.childNodes); t.replaceWith(b);
+    });
+    const auteur = l.auteur.replace(/^Guide de /, "");
+    const fleche = (d, off) => `<button type="button" class="btn btn--small" data-carte="${d}" data-carte-etape="${e.id}" ${off ? "disabled" : ""} title="${d < 0 ? "Carte précédente" : "Carte suivante"}">${d < 0 ? "←" : "→"}</button>`;
+    return `<div class="parcours" data-parcours="${e.id}">
+      <div class="parcours__tete">
+        ${ov ? "" : fleche(-1, k === 0)}
+        <div class="parcours__info"><b>Carte ${k + 1} / ${cartes.length}</b><small>${echap(l.nom)} · ${echap(auteur)}</small></div>
+        ${ov ? "" : fleche(1, k === cartes.length - 1)}
+      </div>
+      <div class="parcours__barre"><span style="width:${((k + 1) / cartes.length) * 100}%"></span></div>
+      ${pos.childNodes.length ? pos.outerHTML : ""}
+      <div class="gd-texte">${corps.innerHTML}</div>
+      <small class="parcours__credit">Parcours : ${echap(l.auteur)} (Ganymède), repris avec son accord · <a href="lecteur.html?guide=${encodeURIComponent(l.guide)}&etape=${n}${MODE_OV ? "&mode=overlay" : ""}">guide complet</a></small>
+    </div>`;
+  }
+  // Avance d'une carte ; au bout du parcours, passe à l'étape voisine (overlay).
+  function avancerCarte(e, delta, deborder) {
+    const cartes = cartesEtape(e);
+    const k = carteCourante(e, cartes) + delta;
+    if (k >= 0 && k < cartes.length) { definirCarte(e, k); sauver(); rendrePage(); rendreOverlay(); return; }
+    if (!deborder) return;
+    const i = index(e.id) + delta;
+    if (i < 0 || i >= etapes.length) return;
+    if (delta < 0) { const p = etapes[i]; const n = cartesEtape(p).length; if (n) definirCarte(p, n - 1); }
+    else definirCarte(etapes[i], 0);
+    aller(delta);
   }
   function contenuEtape(e, compact) {
     const conseilClasse = etat.classe && e.classes && e.classes[etat.classe];
@@ -225,8 +289,7 @@
       ...(e.tornade || []).map((d) => `Tornade : ${d}`),
       ...(e.donjons || []),
     ];
-    return [
-      section("Pas à pas détaillé", passagesDetailles(e)),
+    const resume = [
       section("Succès et quêtes", listeSucces(e)),
       sectionGlaces(e),
       section("À faire", paragraphes(e.details)),
@@ -237,6 +300,11 @@
       compact ? "" : section("Équipements", e.equipements ? paragraphes(e.equipements) : ""),
       compact ? "" : section("Idoles", e.idoles ? paragraphes(e.idoles) : ""),
     ].join("");
+    const parcours = parcoursHTML(e, compact || ouvertes.has(e.id), compact);
+    if (!parcours) return resume;
+    // Dans l'appli, le parcours prend la place ; le résumé Skyzio reste à un clic.
+    if (compact) return `${parcours}<details class="ov__resume"><summary>Résumé de l'étape</summary>${resume}</details>`;
+    return section("Parcours détaillé", parcours) + resume;
   }
 
   // ---------- Page principale ----------
@@ -442,12 +510,30 @@
     }
     const onglet = t.closest("[data-guide]");
     if (onglet) { chargerGuide(onglet.dataset.guide); sauver(); toutRendre(); return; }
+    const saut = t.closest("[data-carte-aller]");
+    if (saut) { const e = etapes.find((x) => x.id === saut.dataset.carteEtape); if (e) { definirCarte(e, +saut.dataset.carteAller); sauver(); rendrePage(); rendreOverlay(); } return; }
+    const carte = t.closest("[data-carte]");
+    if (carte) { const e = etapes.find((x) => x.id === carte.dataset.carteEtape); if (e) avancerCarte(e, +carte.dataset.carte, false); return; }
+    const resume = t.closest(".ov__resume > summary");
+    if (resume) { ev.preventDefault(); resumeOuvert = !resumeOuvert; resume.parentElement.toggleAttribute("open", resumeOuvert); return; }
     const act = t.closest("[data-action]");
-    if (act) ({ precedente: () => aller(-1), suivante: () => aller(1), terminer: terminerCourante })[act.dataset.action]();
+    if (act) ({ precedente: () => avancerOv(-1), suivante: () => avancerOv(1), terminer: terminerCourante })[act.dataset.action]();
   }
+  // Flèches de l'overlay : carte par carte quand l'étape a un parcours détaillé, sinon étape par étape.
+  function avancerOv(delta) {
+    const e = courante();
+    if (overlayDoc() && cartesEtape(e).length) avancerCarte(e, delta, true); else aller(delta);
+  }
+  let resumeOuvert = false;
   function gererChangement(ev) {
     const t = ev.target;
     if (t.dataset.faite) basculerFaite(t.dataset.faite, t.checked);
+    if (t.dataset.cle && t.closest(".parcours")) {
+      etat.cochesG = etat.cochesG || {};
+      if (t.checked) etat.cochesG[t.dataset.cle] = true; else delete etat.cochesG[t.dataset.cle];
+      t.closest("li")?.classList.toggle("is-fait", t.checked);
+      sauver(); return;
+    }
     if (t.dataset.archi) cocherArchi(+t.dataset.archi, t.checked);
     if (t.dataset.succes) {
       if (t.checked) etat.succes[t.dataset.succes] = true; else delete etat.succes[t.dataset.succes];
@@ -635,8 +721,12 @@
     const total = etapes.filter((x) => etat.faites[x.id]).length;
     const racine = doc.getElementById("ov");
     const scroll = racine.querySelector(".ov__card")?.scrollTop || 0;
-    const memeEtape = racine.dataset.id === e.id;
-    racine.dataset.id = e.id;
+    const cartes = cartesEtape(e);
+    const k = cartes.length ? carteCourante(e, cartes) : 0;
+    const cleVue = `${e.id}|${k}|${cartes.length && GD.charge(cartes[k].l.guide) ? 1 : 0}`;
+    const memeEtape = racine.dataset.id === cleVue;
+    if (racine.dataset.id?.split("|")[0] !== e.id) resumeOuvert = false;
+    racine.dataset.id = cleVue;
     racine.innerHTML = `
       ${enteteOv()}
       <div class="ov__top">
@@ -650,10 +740,11 @@
         ${contenuEtape(e, true)}
       </div>
       <div class="ov__nav">
-        <button type="button" class="btn" data-action="precedente" ${i === 0 ? "disabled" : ""} title="Étape précédente">←</button>
+        <button type="button" class="btn" data-action="precedente" ${i === 0 && k === 0 ? "disabled" : ""} title="${cartes.length ? "Carte précédente" : "Étape précédente"}">←</button>
         <button type="button" class="btn btn--accent" data-action="terminer">Terminée ✓</button>
-        <button type="button" class="btn" data-action="suivante" ${i === etapes.length - 1 ? "disabled" : ""} title="Étape suivante">→</button>
+        <button type="button" class="btn" data-action="suivante" ${i === etapes.length - 1 && k >= cartes.length - 1 ? "disabled" : ""} title="${cartes.length ? "Carte suivante" : "Étape suivante"}">→</button>
       </div>`;
+    racine.querySelector(".ov__resume")?.toggleAttribute("open", resumeOuvert);
     if (memeEtape) racine.querySelector(".ov__card").scrollTop = scroll;
   }
 
@@ -675,8 +766,8 @@
     doc.addEventListener("keydown", (ev) => {
       if (ovQuete && (ev.key === "Escape" || ev.key === "Backspace")) { fermerQueteOverlay(); return; }
       if (ovQuete) return;
-      if (ev.key === "ArrowRight") aller(1);
-      if (ev.key === "ArrowLeft") aller(-1);
+      if (ev.key === "ArrowRight") avancerOv(1);
+      if (ev.key === "ArrowLeft") avancerOv(-1);
     });
     win.addEventListener("pagehide", () => { overlay = null; ovQuete = null; });
     rendreOverlay();
@@ -1043,7 +1134,7 @@
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
     // Design propre à l'appli (n'affecte pas le site).
-    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=8">`);
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=9">`);
     appliquerPrefsOv();
     // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
     const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };
@@ -1062,8 +1153,8 @@
       if (ev.target.matches?.("input, textarea")) return;
       if (ovQuete && (ev.key === "Escape" || ev.key === "Backspace")) { fermerQueteOverlay(); return; }
       if (ovQuete) return;
-      if (ev.key === "ArrowRight") aller(1);
-      if (ev.key === "ArrowLeft") aller(-1);
+      if (ev.key === "ArrowRight") avancerOv(1);
+      if (ev.key === "ArrowLeft") avancerOv(-1);
     });
     // Progression modifiée dans un autre onglet du site (même navigateur) : on recharge.
     window.addEventListener("storage", (ev) => { if (ev.key === CLE) location.reload(); });

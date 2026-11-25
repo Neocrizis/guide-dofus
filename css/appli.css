@@ -116,3 +116,24 @@ html.ov-travers .ov-poignee { display: none; }
 /* Lignes d'objectif grisables */
 html.mode-ov .qetapes__aide { color: var(--d-texte-3); font-size: 11px; }
 html.mode-ov .qobj[data-qobj]:hover { background: rgba(255, 255, 255, .07); }
+
+/* Parcours détaillé (Ganymède) dans le journal : une carte à la fois */
+html.mode-ov .parcours__tete { padding: 2px 0 6px; }
+html.mode-ov .parcours__info b { font-size: calc(13px * var(--ov-taille)); color: #fff; }
+html.mode-ov .parcours__info small { font-size: calc(11px * var(--ov-taille)); color: var(--d-texte-3); }
+html.mode-ov .parcours__barre { background: rgba(0, 0, 0, .35); border-radius: 0; height: 2px; margin-bottom: 8px; }
+html.mode-ov .parcours__barre span { background: var(--d-jaune); }
+html.mode-ov .parcours .pos { background: none; color: var(--d-jaune); padding: 0; font-size: calc(14px * var(--ov-taille)); }
+html.mode-ov .parcours .pos:hover { color: #fff; box-shadow: none; }
+html.mode-ov .parcours__map { font-size: calc(12px * var(--ov-taille)); color: var(--d-texte-3); }
+html.mode-ov .gd-texte { font-size: calc(13px * var(--ov-taille)); color: var(--d-texte-2); line-height: 1.4; }
+html.mode-ov .gd-texte p { margin: 0 0 4px; }
+html.mode-ov .gd-texte [data-type="quest-block"] { background: rgba(0, 0, 0, .25); border-radius: 3px; padding: 6px 8px; margin: 6px 0; }
+html.mode-ov .gd-texte [data-type="custom-tag"], html.mode-ov .gd-texte [data-type="guide-step"] { background: rgba(255, 255, 255, .07); border-radius: 3px; }
+html.mode-ov .gd-texte [data-type="custom-tag"] img, html.mode-ov .gd-texte [data-type="guide-step"] img { width: 18px; height: 18px; }
+html.mode-ov .gd-texte img.img-large { border-radius: 3px; border-color: var(--d-sep); }
+html.mode-ov .parcours__credit { font-size: calc(10px * var(--ov-taille)); color: var(--d-texte-3); }
+html.mode-ov .ov__resume { border-top: 1px solid var(--d-sep); margin-top: 8px; padding-top: 6px; }
+html.mode-ov .ov__resume > summary { color: var(--d-jaune); font-size: calc(13px * var(--ov-taille)); }
+html.mode-ov .ov__resume .section:first-child { border-top: 0; }
+html.ov-compact .parcours__credit, html.ov-compact .parcours__barre { display: none; }

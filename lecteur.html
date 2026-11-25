@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=38">
-  <link rel="stylesheet" href="css/lecteur.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=41">
+  <link rel="stylesheet" href="css/lecteur.css?v=5">
   <script>
     try { const t = localStorage.getItem("guide-dofus:theme") ?? (/[?&]mode=overlay/.test(location.search) ? "vanilla" : ""); if (t) document.documentElement.dataset.theme = t; } catch {}
   </script>
@@ -54,12 +54,13 @@
 
       <article class="lecteur__etape card" id="etape">
         <div class="lecteur__pos" id="pos"></div>
-        <div class="lecteur__texte" id="texte"></div>
+        <div class="lecteur__texte gd-texte" id="texte"></div>
       </article>
     </section>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="js/lecteur.js?v=5"></script>
+  <script src="js/guide-detaille.js?v=1"></script>
+  <script src="js/lecteur.js?v=6"></script>
 </body>
 </html>
