@@ -185,3 +185,13 @@ html.mode-ov .ov__nav .btn { flex: none; width: 40px; height: 40px; padding: 0; 
 html.mode-ov .ov__nav .btn.btn--accent { flex: 1; width: auto; border-radius: 999px; font-size: calc(14px * var(--ov-taille)); box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 35%, transparent); }
 html.mode-ov .ov__nav .btn:disabled { opacity: .35; }
 html.mode-ov .ov__resume > summary { padding: 6px 0; }
+
+/* Navigation façon Ganymède : guide + n° d'étape, sommaire */
+html.mode-ov .parcours__guide { font-size: calc(14px * var(--ov-taille)); color: #fff; }
+html.mode-ov .parcours__num { font-size: calc(11px * var(--ov-taille)); }
+html.mode-ov .parcours__guide + .parcours__kicker { font-size: calc(10px * var(--ov-taille)); }
+html.mode-ov .som__tete b { color: #fff; }
+html.mode-ov .som__titre { font-size: calc(13px * var(--ov-taille)); color: var(--d-texte); }
+html.mode-ov .ov__card.som { padding-bottom: 16px; }
+html.mode-ov .ov__nav .btn.ov__sommaire-btn { display: flex; align-items: center; justify-content: center; gap: 8px; }
+html.mode-ov .ov__fermer:hover { background: rgba(232, 72, 72, .85); color: #fff; }
