@@ -214,6 +214,7 @@
   // L'étape Skyzio donne l'ordre ; le parcours donne le chemin carte par carte (data/guides-detailles/liens.js).
   // etat.cartes[étape] = carte affichée, etat.cochesG["guide|n|i"] = cases cochées dans le parcours.
   const GD = window.GuideDetaille;
+  const GP0 = "gany-2747"; // guide complet Ganymède : sa carte ouvre chaque étape
   // Passages de l'étape (data/guide-complet.js) ; ceux de l'autre cité sont masqués une fois la cité choisie.
   function liensEtape(e) {
     const liens = e.liens || (G.id === "progression" && (window.LIENS_DETAILLES || {})[e.id]) || [];
@@ -287,7 +288,10 @@
     return `<div class="parcours" data-parcours="${e.id}">
       <div class="parcours__tete">
         ${ov ? "" : fleche(-1, k === 0)}
-        <div class="parcours__info"><span class="parcours__kicker">Carte <b>${k + 1}</b> / ${cartes.length}</span></div>
+        <div class="parcours__info">
+          ${l.guide === GP0 ? `<span class="parcours__guide">Objectifs de l'étape</span>` : `<span class="parcours__guide">${echap(nomGuide(l).nom)} <span class="parcours__num">étape <b>${n}</b> / ${guide.steps.length}</span></span>`}
+          <span class="parcours__kicker">Carte ${k + 1} / ${cartes.length}</span>
+        </div>
         ${ov ? "" : fleche(1, k === cartes.length - 1)}
       </div>
       <div class="parcours__barre"><span style="width:${((k + 1) / cartes.length) * 100}%"></span></div>
@@ -344,6 +348,7 @@
     const k = carteCourante(e, cartes) + delta;
     if (k >= 0 && k < cartes.length) { definirCarte(e, k); sauver(); rendrePage(); rendreOverlay(); return; }
     if (!deborder) return;
+    if (delta > 0) marquerFaite(e);
     const i = index(e.id) + delta;
     if (i < 0 || i >= etapes.length) return;
     if (delta < 0) { const p = etapes[i]; const n = cartesEtape(p).length; if (n) definirCarte(p, n - 1); }
@@ -604,6 +609,9 @@
     if (carte) { const e = etapes.find((x) => x.id === carte.dataset.carteEtape); if (e) avancerCarte(e, +carte.dataset.carte, false); return; }
     const resume = t.closest(".ov__resume > summary");
     if (resume) { ev.preventDefault(); resumeOuvert = !resumeOuvert; resume.parentElement.toggleAttribute("open", resumeOuvert); return; }
+    if (t.closest("[data-ov-sommaire]")) { ovSommaire = !ovSommaire; rendreOverlay(); return; }
+    const som = t.closest("[data-som-etape]");
+    if (som) { allerEtape(som.dataset.somEtape, som.dataset.somCarte); return; }
     const act = t.closest("[data-action]");
     if (act) ({ precedente: () => avancerOv(-1), suivante: () => avancerOv(1), terminer: terminerCourante })[act.dataset.action]();
   }
@@ -621,11 +629,19 @@
   // Flèches de l'overlay : carte par carte quand l'étape a un parcours détaillé, sinon étape par étape.
   function avancerOv(delta) {
     const e = courante();
-    if (overlayDoc() && cartesEtape(e).length) avancerCarte(e, delta, true); else aller(delta);
+    if (overlayDoc() && cartesEtape(e).length) { avancerCarte(e, delta, true); return; }
+    if (delta > 0) marquerFaite(e);
+    aller(delta);
+  }
+  function marquerFaite(e) {
+    if (etat.faites[e.id]) return;
+    noter(e.titre, G.id === "progression" ? "Étape du guide" : G.titre);
+    etat.faites[e.id] = true;
   }
   let resumeOuvert = false;
   function gererChangement(ev) {
     const t = ev.target;
+    if (t.matches("[data-som-numero]")) { const e = etapes[Math.min(etapes.length, Math.max(1, +t.value || 1)) - 1]; if (e) allerEtape(e.id); return; }
     if (t.dataset.faite) basculerFaite(t.dataset.faite, t.checked);
     if (t.dataset.cle && t.closest(".parcours")) {
       etat.cochesG = etat.cochesG || {};
@@ -815,6 +831,7 @@
     const doc = overlayDoc();
     if (!doc) return;
     if (ovQuete) return; // on garde le détail affiché jusqu'au retour
+    if (ovSommaire) { rendreSommaire(doc); return; }
     const e = courante();
     const i = index(e.id);
     const total = etapes.filter((x) => etat.faites[x.id]).length;
@@ -844,11 +861,46 @@
       </div>
       <div class="ov__nav">
         <button type="button" class="btn" data-action="precedente" ${i === 0 && k === 0 ? "disabled" : ""} title="${cartes.length ? "Carte précédente" : "Étape précédente"}" aria-label="Précédent"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-        <button type="button" class="btn btn--accent" data-action="terminer">Terminée ✓</button>
+        <button type="button" class="btn btn--accent ov__sommaire-btn" data-ov-sommaire title="Sommaire : choisir une étape"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Étape ${i + 1} / ${etapes.length}</span></button>
         <button type="button" class="btn" data-action="suivante" ${i === etapes.length - 1 && k >= cartes.length - 1 ? "disabled" : ""} title="${cartes.length ? "Carte suivante" : "Étape suivante"}" aria-label="Suivant"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
       </div>`;
     racine.querySelector(".ov__resume")?.toggleAttribute("open", resumeOuvert);
     if (memeEtape) racine.querySelector(".ov__card").scrollTop = scroll;
+  }
+
+  // Sommaire de l'overlay : toutes les étapes, leurs guides, et « aller à l'étape n° ».
+  let ovSommaire = false;
+  function rendreSommaire(doc) {
+    const racine = doc.getElementById("ov");
+    const cour = index(etat.courante);
+    let html = "", niv = null;
+    etapes.forEach((e, i) => {
+      if (e.niveau !== niv) { niv = e.niveau; html += `<h2 class="som__groupe">${echap(nomGroupe(niv))}</h2>`; }
+      const guides = [];
+      cartesEtape(e).forEach((c, k) => { if (c.l.guide !== GP0 && !guides.some((g) => g.id === c.l.guide)) guides.push({ id: c.l.guide, k, nom: nomGuide(c.l).nom }); });
+      html += `<div class="som__etape ${i === cour ? "is-current" : ""} ${etat.faites[e.id] ? "is-done" : ""}">
+        <button type="button" class="som__titre" data-som-etape="${e.id}"><span class="som__n">${i + 1}</span><span>${echap(e.titre)}</span>${etat.faites[e.id] ? `<span class="som__ok">✓</span>` : ""}</button>
+        ${guides.length ? `<div class="som__guides">${guides.map((g) => `<button type="button" data-som-etape="${e.id}" data-som-carte="${g.k}">${echap(g.nom)}</button>`).join("")}</div>` : ""}
+      </div>`;
+    });
+    racine.dataset.id = "sommaire";
+    racine.innerHTML = `${enteteOv()}
+      <div class="som__tete">
+        <b>Sommaire</b>
+        <label class="som__aller">Aller à l'étape <input type="number" min="1" max="${etapes.length}" inputmode="numeric" data-som-numero placeholder="n°"></label>
+        <button type="button" class="som__fermer" data-ov-sommaire aria-label="Fermer le sommaire">✕</button>
+      </div>
+      <div class="ov__card card som">${html}</div>`;
+    racine.querySelector(".som__etape.is-current")?.scrollIntoView({ block: "center" });
+  }
+  function allerEtape(id, carte) {
+    const e = etapes.find((x) => x.id === id);
+    if (!e) return;
+    etat.courante = e.id;
+    ouvertes.add(e.id);
+    if (carte != null) definirCarte(e, +carte);
+    ovSommaire = false;
+    sauver(); toutRendre();
   }
 
   function preparerOverlay(win) {
@@ -867,6 +919,7 @@
     doc.addEventListener("click", (ev) => gererClic(ev, doc));
     doc.addEventListener("change", gererChangement);
     doc.addEventListener("keydown", (ev) => {
+      if (ovSommaire) { if (ev.key === "Escape") { ovSommaire = false; rendreOverlay(); } return; }
       if (ovQuete && (ev.key === "Escape" || ev.key === "Backspace")) { fermerQueteOverlay(); return; }
       if (ovQuete) return;
       if (ev.key === "ArrowRight") avancerOv(1);
@@ -1210,6 +1263,8 @@
 
   // Petite interface pour js/compte.js (comptes en ligne).
   window.GuideDofus = {
+    // Raccourcis clavier globaux de l'appli Windows (Ctrl+Maj+→ / ←) : carte suivante / précédente.
+    avancer(delta) { if (ovQuete) return; if (ovSommaire) { ovSommaire = false; } avancerOv(delta >= 0 ? 1 : -1); },
     compte: () => JSON.parse(JSON.stringify(compte)),
     remplacer(nouveau) {
       compte.persos = nouveau.persos.map((p) => nouveauPerso(p.nom, p.classe, p));
@@ -1237,7 +1292,7 @@
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
     // Design propre à l'appli (n'affecte pas le site).
-    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=15">`);
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=16">`);
     appliquerPrefsOv();
     // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
     const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };
@@ -1254,6 +1309,7 @@
     appliquerOpacite(document);
     document.addEventListener("keydown", (ev) => {
       if (ev.target.matches?.("input, textarea")) return;
+      if (ovSommaire) { if (ev.key === "Escape") { ovSommaire = false; rendreOverlay(); } return; }
       if (ovQuete && (ev.key === "Escape" || ev.key === "Backspace")) { fermerQueteOverlay(); return; }
       if (ovQuete) return;
       if (ev.key === "ArrowRight") avancerOv(1);
