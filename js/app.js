@@ -569,6 +569,8 @@
       location.hash = "guide"; return;
     }
     if (t.closest("[data-ov-compte]")) { $("#compte-btn").click(); return; }
+    // Appli Windows : fermer la fenêtre du journal ferme l'appli (permission core:window:allow-close).
+    if (t.closest("[data-ov-fermer]")) { window.__TAURI_INTERNALS__?.invoke("plugin:window|close", { label: "journal" }).catch(() => toast("Mets l'appli à jour pour la fermer d'ici")); return; }
     if (t.closest("[data-ov-recharger]")) { const u = new URL(location.href); u.searchParams.set("r", Date.now()); location.replace(u); return; }
     if (t.closest("[data-ov-menu]")) { reglagesOuverts = !reglagesOuverts; doc.querySelector(".ov__reglages")?.toggleAttribute("hidden", !reglagesOuverts); return; }
     const taille = t.closest("[data-ov-taille]");
@@ -793,8 +795,9 @@
       <img class="ov__barre-ico" src="${new URL("img/outils/quest.webp", location.href)}" alt="" data-tauri-drag-region>
       <span class="ov__barre-titre" data-tauri-drag-region>Dofus Guide</span>
       ${MODE_OV ? `<button type="button" class="ov__compte" data-ov-compte title="Mon compte (synchronisation avec le site)" aria-label="Mon compte"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 21c0-4.4 4-7 9-7s9 2.6 9 7z"/></svg></button>
-      <button type="button" class="ov__menu-btn ov__recharger" data-ov-recharger title="Recharger le guide" aria-label="Recharger le guide"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg></button>
-      <button type="button" class="ov__menu-btn" data-ov-menu title="Réglages" aria-label="Réglages">⋮</button>` : ""}
+      <button type="button" class="ov__menu-btn ov__recharger" data-ov-recharger title="Actualiser : dernière version du guide et synchro de ta progression" aria-label="Actualiser"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg></button>
+      <button type="button" class="ov__menu-btn" data-ov-menu title="Réglages" aria-label="Réglages">⋮</button>
+      ${window.__TAURI_INTERNALS__ ? `<button type="button" class="ov__menu-btn ov__fermer" data-ov-fermer title="Fermer l'appli" aria-label="Fermer l'appli"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>` : ""}` : ""}
     </div>
     ${MODE_OV ? `<div class="ov__reglages" ${reglagesOuverts ? "" : "hidden"}>
       <label>Fond <input type="range" min="0" max="100" value="${opaciteOv()}" data-ov-opacite aria-label="Opacité du fond"></label>
@@ -1292,7 +1295,7 @@
   if (MODE_OV) {
     document.documentElement.classList.add("mode-ov");
     // Design propre à l'appli (n'affecte pas le site).
-    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=16">`);
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="css/appli.css?v=17">`);
     appliquerPrefsOv();
     // Poignées de redimensionnement sur les bords et les coins (fenêtre sans cadre).
     const DIRS = { n: "North", s: "South", e: "East", w: "West", ne: "NorthEast", nw: "NorthWest", se: "SouthEast", sw: "SouthWest" };

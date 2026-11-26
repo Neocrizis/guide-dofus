@@ -194,3 +194,4 @@ html.mode-ov .som__tete b { color: #fff; }
 html.mode-ov .som__titre { font-size: calc(13px * var(--ov-taille)); color: var(--d-texte); }
 html.mode-ov .ov__card.som { padding-bottom: 16px; }
 html.mode-ov .ov__nav .btn.ov__sommaire-btn { display: flex; align-items: center; justify-content: center; gap: 8px; }
+html.mode-ov .ov__fermer:hover { background: rgba(232, 72, 72, .85); color: #fff; }
